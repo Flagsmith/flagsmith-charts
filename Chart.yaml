@@ -1,0 +1,15 @@
+apiVersion: v2
+name: bullettrain
+description: Bullettrain
+type: application
+version: 0.1.0
+appVersion: 2.2.0
+dependencies:
+  - name: postgresql
+    repository: https://charts.helm.sh/stable
+    version: 8.6.4
+    condition: postgresql.enabled
+icon: https://bullet-train.io/static/images/favicon.ico
+# maintainers:
+#   - name: TBD
+#     email: TBD@bullettrain
