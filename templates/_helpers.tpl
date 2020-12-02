@@ -2,7 +2,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "bullettrain.name" -}}
+{{- define "flagsmith.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -11,7 +11,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "bullettrain.fullname" -}}
+{{- define "flagsmith.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -28,7 +28,7 @@ If release name contains chart name it will be used as a full name.
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
-{{- define "bullettrain.postgresql.fullname" -}}
+{{- define "flagsmith.postgresql.fullname" -}}
 {{- if .Values.postgresql.fullnameOverride -}}
 {{- .Values.postgresql.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -44,9 +44,9 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{/*
 Set postgres host
 */}}
-{{- define "bullettrain.postgresql.host" -}}
+{{- define "flagsmith.postgresql.host" -}}
 {{- if .Values.postgresql.enabled -}}
-{{- template "bullettrain.postgresql.fullname" . -}}
+{{- template "flagsmith.postgresql.fullname" . -}}
 {{- else -}}
 {{- .Values.postgresql.postgresqlHost | quote -}}
 {{- end -}}
@@ -55,18 +55,18 @@ Set postgres host
 {{/*
 Set postgres secret
 */}}
-{{- define "bullettrain.postgresql.secret" -}}
+{{- define "flagsmith.postgresql.secret" -}}
 {{- if .Values.postgresql.enabled -}}
-{{- template "bullettrain.postgresql.fullname" . -}}
+{{- template "flagsmith.postgresql.fullname" . -}}
 {{- else -}}
-{{- template "bullettrain.fullname" . -}}
+{{- template "flagsmith.fullname" . -}}
 {{- end -}}
 {{- end -}}
 
 {{/*
 Set postgres secretKey
 */}}
-{{- define "bullettrain.postgresql.secretKey" -}}
+{{- define "flagsmith.postgresql.secretKey" -}}
 {{- if .Values.postgresql.enabled -}}
 "postgresql-password"
 {{- else -}}
@@ -77,7 +77,7 @@ Set postgres secretKey
 {{/*
 Set postgres port
 */}}
-{{- define "bullettrain.postgresql.port" -}}
+{{- define "flagsmith.postgresql.port" -}}
 {{- if .Values.postgresql.enabled -}}
     "5432"
 {{- else -}}
@@ -88,9 +88,9 @@ Set postgres port
 {{/*
 Set redis host
 */}}
-{{- define "bullettrain.redis.host" -}}
+{{- define "flagsmith.redis.host" -}}
 {{- if .Values.redis.enabled -}}
-{{- template "bullettrain.redis.fullname" . -}}-master
+{{- template "flagsmith.redis.fullname" . -}}-master
 {{- else -}}
 {{- .Values.redis.host | quote -}}
 {{- end -}}
@@ -99,18 +99,18 @@ Set redis host
 {{/*
 Set redis secret
 */}}
-{{- define "bullettrain.redis.secret" -}}
+{{- define "flagsmith.redis.secret" -}}
 {{- if .Values.redis.enabled -}}
-{{- template "bullettrain.redis.fullname" . -}}
+{{- template "flagsmith.redis.fullname" . -}}
 {{- else -}}
-{{- template "bullettrain.fullname" . -}}
+{{- template "flagsmith.fullname" . -}}
 {{- end -}}
 {{- end -}}
 
 {{/*
 Set redis secretKey
 */}}
-{{- define "bullettrain.redis.secretKey" -}}
+{{- define "flagsmith.redis.secretKey" -}}
 {{- if .Values.redis.enabled -}}
 "redis-password"
 {{- else -}}
@@ -121,7 +121,7 @@ Set redis secretKey
 {{/*
 Set redis port
 */}}
-{{- define "bullettrain.redis.port" -}}
+{{- define "flagsmith.redis.port" -}}
 {{- if .Values.redis.enabled -}}
     "6379"
 {{- else -}}

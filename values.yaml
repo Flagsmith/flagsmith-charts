@@ -1,4 +1,4 @@
-# Default values for bullettrain.
+# Default values for flagsmith.
 
 api:
     image:
@@ -77,10 +77,10 @@ frontend:
 
 postgresql:
     enabled: true
-    nameOverride: bullettrain-postgresql
-    postgresqlDatabase: bullettrain
+    nameOverride: flagsmith-postgresql
+    postgresqlDatabase: flagsmith
     postgresqlUsername: postgres
-    postgresqlPassword: bullettrain
+    postgresqlPassword: flagsmith
 
 influxdb:
     nameOverride: influxdb

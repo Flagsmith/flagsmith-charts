@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "bullettrain.fullname" . }}-api
+  name: {{ template "flagsmith.fullname" . }}-api
   annotations:
     {{- range $key, $value := .Values.service.api.annotations }}
       {{ $key }}: {{ $value | quote }}
     {{- end }}
   labels:
-    app: {{ template "bullettrain.fullname" . }}
+    app: {{ template "flagsmith.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
@@ -30,7 +30,7 @@ spec:
 {{ toYaml .Values.service.api.externalIPs | indent 4 }}
 {{- end }}
   selector:
-    app: {{ template "bullettrain.fullname" . }}
+    app: {{ template "flagsmith.fullname" . }}
     role: api
   {{- with .Values.service.api.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:

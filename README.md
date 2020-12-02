@@ -13,7 +13,7 @@ You can test and run the application locally on OSX using `minikube` like this:
 
 brew install minikube
 minikube start --memory 8192 --cpus 4
-helm install bullettrain --debug ./bullettrain
+helm install flagsmith --debug ./flagsmith
 minikube dashboard
 ```
 
@@ -22,13 +22,13 @@ minikube dashboard
 Install Chart without building a package:
 
 ```bash
-helm install bullettrain --debug ./bullettrain
+helm install flagsmith --debug ./flagsmith
 ```
 
 Run template and check kubernetes resouces are made:
 
 ```bash
-helm template bullettrain bullettrain --debug -f bullettrain/values.yaml
+helm template flagsmith flagsmith --debug -f flagsmith/values.yaml
 ```
 
 ## build chart package
@@ -36,7 +36,7 @@ helm template bullettrain bullettrain --debug -f bullettrain/values.yaml
 To build chart package run:
 
 ```bash
-helm package ./bullettrain
+helm package ./flagsmith
 ```
 
 ## Configuration
@@ -45,7 +45,7 @@ The following table lists the configurable parameters of the Sentry chart and th
 
 Parameter                          | Description                                                                                                | Default
 :--------------------------------- | :--------------------------------------------------------------------------------------------------------- | :---------------------------------------------------
-`api.image` | docker image for bullettrain (contains `repository` and `tag`) ||
+`api.image` | docker image for flagsmith (contains `repository` and `tag`) ||
 `frontend.enabled` | if `true`, creates frontend deployment and pods | `false`
 `api.env` | if not `null` will add values to container environment variables
 `postgresql.enabled` | if `true`, creates postgresql database | `true`
