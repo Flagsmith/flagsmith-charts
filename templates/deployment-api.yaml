@@ -73,7 +73,7 @@ spec:
         - name: DJANGO_DB_PORT
           value: "5432"
         - name: DJANGO_DB_HOST
-          value: 'flagsmith-flagsmith-postgresql.default.svc.cluster.local'
+          value: 'flagsmith-flagsmith-postgresql.{{ .Release.Namespace }}.svc.cluster.local'
 {{- if .Values.api.env }}
 {{ toYaml .Values.api.env | indent 8 }}
 {{- end }}
