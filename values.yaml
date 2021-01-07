@@ -2,7 +2,7 @@
 
 api:
     image:
-        repository: bullettrain/api
+        repository: flagsmith/flagsmith-api
         tag: latest
         imagePullPolicy: IfNotPresent
         imagePullSecrets: []
@@ -42,7 +42,7 @@ api:
 frontend:
     enabled: true
     image:
-        repository: bullettrain/frontend
+        repository: flagsmith/flagsmith-frontend
         tag: latest
         imagePullPolicy: IfNotPresent
         imagePullSecrets: []
