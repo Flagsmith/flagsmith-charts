@@ -52,7 +52,7 @@ spec:
         image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
         imagePullPolicy: {{ .Values.frontend.image.imagePullPolicy }}
         ports:
-        - containerPort: {{ .Values.service.frontend.internalPort }}
+        - containerPort: {{ .Values.service.frontend.port }}
         env:
 {{- if .Values.frontend.env }}
 {{ toYaml .Values.frontend.env | indent 8 }}
@@ -61,7 +61,7 @@ spec:
           failureThreshold: {{ .Values.frontend.livenessProbe.failureThreshold }}
           httpGet:
             path: /health
-            port: {{ .Values.service.frontend.internalPort }}
+            port: {{ .Values.service.frontend.port }}
             scheme: HTTP
           initialDelaySeconds: {{ .Values.frontend.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.frontend.livenessProbe.periodSeconds }}
@@ -71,7 +71,7 @@ spec:
           failureThreshold: {{ .Values.frontend.readinessProbe.failureThreshold }}
           httpGet:
             path: /health
-            port: {{ .Values.service.frontend.internalPort }}
+            port: {{ .Values.service.frontend.port }}
             scheme: HTTP
           initialDelaySeconds: {{ .Values.frontend.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.frontend.readinessProbe.periodSeconds }}

@@ -53,7 +53,7 @@ spec:
         imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
         # command: ["sleep", "3600"]
         ports:
-        - containerPort: {{ .Values.service.api.internalPort }}
+        - containerPort: {{ .Values.service.api.port }}
         env:
         - name: DJANGO_DB_NAME
           valueFrom:
@@ -81,7 +81,7 @@ spec:
           failureThreshold: {{ .Values.api.livenessProbe.failureThreshold }}
           httpGet:
             path: /
-            port: {{ .Values.service.api.internalPort }}
+            port: {{ .Values.service.api.port }}
             scheme: HTTP
           initialDelaySeconds: {{ .Values.api.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.api.livenessProbe.periodSeconds }}
@@ -91,7 +91,7 @@ spec:
           failureThreshold: {{ .Values.api.readinessProbe.failureThreshold }}
           httpGet:
             path: /
-            port: {{ .Values.service.api.internalPort }}
+            port: {{ .Values.service.api.port }}
             scheme: HTTP
           initialDelaySeconds: {{ .Values.api.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.api.readinessProbe.periodSeconds }}
