@@ -17,10 +17,6 @@ api:
     #     memory: 300Mi
     podLables: {}
     env:
-        - name: API_URL
-          value: "/api/api/v1"
-        - name: ASSET_URL
-          value: "/"
         - name: DJANGO_ALLOWED_HOSTS
           value: '*'
     nodeSelector: {}
@@ -43,7 +39,7 @@ frontend:
     enabled: true
     image:
         repository: flagsmith/flagsmith-frontend
-        tag: latest
+        tag: test
         imagePullPolicy: IfNotPresent
         imagePullSecrets: []
     replicacount: 1
@@ -55,8 +51,9 @@ frontend:
     #     cpu: 300m
     #     memory: 300Mi
     env:
+    # TODO: Set the API URL to be the hostname of the API image above. Full url should be e.g. API_URL=http[s]://<api-hostname>/api/vi
         - name: API_URL
-          value: '/api/api/v1'
+          value: '/api/v1/'
         - name: ASSET_URL
           value: '/'
     nodeSelector: {}
