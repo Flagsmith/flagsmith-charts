@@ -1,0 +1,30 @@
+{{- if .Values.openshift }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: flagsmith-frontend
+  labels:
+    app: {{ template "flagsmith.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  host: flagsmith-{{ .Release.Namespace }}.{{ .Values.openshiftdomain }}
+  port:
+    targetPort: http
+  to:
+    kind: Service
+    name: flagsmith-frontend
+    weight: 100
+  wildcardPolicy: None
+status: 
+  ingress:
+    - conditions:
+      - lastTransitionTime: "2019-12-06T03:24:58Z"
+        status: "True"
+        type: Admitted
+      host: <host>
+      routerCanonicalHostname: <host>
+      routerName: default
+      wildcardPolicy: None
+{{- end }}

@@ -1,0 +1,8 @@
+postgresql:
+  volumePermissions:
+    securityContext:
+      runAsUser:"auto"
+  securityContext:
+    enabled: false
+    fsGroup: "0"
+openshift: true

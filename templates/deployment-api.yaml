@@ -74,6 +74,9 @@ spec:
           value: "5432"
         - name: DJANGO_DB_HOST
           value: 'flagsmith-flagsmith-postgresql.{{ .Release.Namespace }}.svc.cluster.local'
+        - name: DATABASE_URL
+          value: postgres://{{.Values.postgresql.postgresqlUsername}}:{{ .Values.postgresql.postgresqlPassword}}@flagsmith-flagsmith-postgresql.{{ .Release.Namespace }}.svc.cluster.local:5432/{{ .Values.postgresql.postgresqlDatabase}}
+          
 {{- if .Values.api.env }}
 {{ toYaml .Values.api.env | indent 8 }}
 {{- end }}
