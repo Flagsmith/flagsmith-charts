@@ -130,6 +130,13 @@ Set redis port
 {{- end -}}
 
 {{/*
+Postgres hostname
+*/}}
+{{- define "flagsmith.postgres.hostname" -}}
+{{- printf "%s-%s" .Release.Name .Values.postgresql.nameOverride -}}.{{ .Release.Namespace }}.svc.cluster.local
+{{- end -}}
+
+{{/*
 Expand the name of the chart.
 */}}
 {{- define "influxdb.name" -}}
