@@ -1,0 +1,4 @@
+chart-repos:
+  - stable=https://charts.helm.sh/stable
+target-branch: main
+validate-maintainers: false
