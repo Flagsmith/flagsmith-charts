@@ -8,14 +8,14 @@ api:
         imagePullSecrets: []
     replicacount: 1
     podAnnotations: {}
-    resouces: {}
+    resources: {}
     # limits:
     #     cpu: 500m
     #     memory: 500Mi
     # requests:
     #     cpu: 300m
     #     memory: 300Mi
-    podLables: {}
+    podLabels: {}
     env:
         - name: DJANGO_ALLOWED_HOSTS
           value: '*'
@@ -43,7 +43,7 @@ frontend:
         imagePullPolicy: IfNotPresent
         imagePullSecrets: []
     replicacount: 1
-    resouces: {}
+    resources: {}
     # limits:
     #     cpu: 500m
     #     memory: 500Mi
