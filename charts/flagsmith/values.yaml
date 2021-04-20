@@ -107,9 +107,6 @@ influxdb:
     tolerations: []
     affinity: {}
 
-metrics:
-    enabled: false
-
 hooks:
     enabled: false
     removeOnSuccess: true
