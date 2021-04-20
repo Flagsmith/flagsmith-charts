@@ -24,16 +24,22 @@ api:
     affinity: {}
     livenessProbe:
         failureThreshold: 5
-        initialDelaySeconds: 80
+        initialDelaySeconds: 10
         periodSeconds: 10
         successThreshold: 1
         timeoutSeconds: 2
     readinessProbe:
         failureThreshold: 10
-        initialDelaySeconds: 50
+        initialDelaySeconds: 10
         periodSeconds: 10
         successThreshold: 1
         timeoutSeconds: 2
+    dbWaiter:
+        image:
+            repository: willwill/wait-for-it
+            tag: latest
+            imagePullPolicy: IfNotPresent
+        timeoutSeconds: 30
 
 frontend:
     enabled: true
