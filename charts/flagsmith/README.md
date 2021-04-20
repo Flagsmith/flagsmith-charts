@@ -56,6 +56,7 @@ access `https://flagsmith.[MYDOMAIN]` in a browser.
 If using minikube, enable ingress with `minikube addons enable ingress`.
 
 Then set the following values for flagsmith:
+
 ```yaml
 ingress:
   frontend:
@@ -71,12 +72,13 @@ ingress:
         paths:
           - /api/
 ```
+
 and apply. This will create two ingress resources.
 
 Run `minikube ip`. Set this ip and `flagsmith.local` in your `/etc/hosts`, eg:
 
-```
-192.168.99.99	flagsmith.local
+```txt
+192.168.99.99 flagsmith.local
 ```
 
 Then access `http://flagsmith.local` in a browser.
@@ -84,6 +86,7 @@ Then access `http://flagsmith.local` in a browser.
 #### Port forwarding
 
 Set the following values for flagsmith:
+
 ```yaml
 frontend:
   env:
@@ -92,10 +95,13 @@ frontend:
 ```
 
 In one terminal, run:
+
 ```bash
 kubectl -n [flagsmith-namespace] port-forward svc/[flagsmith-release-name]-api 8000:8000
 ```
+
 and in another, run:
+
 ```bash
 kubectl -n [flagsmith-namespace] port-forward svc/[flagsmith-release-name]-frontend 8080:8080
 ```
@@ -106,7 +112,14 @@ Then access `http://localhost:8080` in a browser.
 
 By default, the chart creates its own PostgreSQL server within the cluster.
 
-TODO: add configuration for (and document) using an external hosted database.
+To connect the Flagsmith API to an external PostgreSQL server set the
+environment variable:
+
+* `DATABASE_URL`: should be a standard format database url
+e.g. postgres://user:password@host:port/db_name
+
+There are more details on environment variables within the
+[API readme](https://github.com/Flagsmith/flagsmith-api/blob/master/readme.md)
 
 ### Resource allocation
 
@@ -126,9 +139,13 @@ TODO: create a pod-disruption-budget
 
 ### InfluxDB
 
-By default, uses InfluxDB to store additional data.
+By default, Flagsmith uses InfluxDB to store time series data.
+Currently this is used to measure:
 
-TODO: explain some options here, eg how to run in production, what it is for etc.
+* SDK API traffic
+* SDK Flag Evaluations
+
+[Setting up InfluxDB is discussed in more detail in the Docs](https://docs.flagsmith.com/deployment-overview/#influxdb).
 
 ## Configuration
 
@@ -217,7 +234,6 @@ their default values.
 | `ingress.api.hosts[].host`                    |                                                          | `chart-example.local`          |
 | `ingress.api.hosts[].paths`                   |                                                          | `[]`                           |
 | `ingress.api.tls`                             |                                                          | `[]`                           |
-
 
 ---
 
