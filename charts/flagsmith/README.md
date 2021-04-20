@@ -38,6 +38,7 @@ ingress:
       - host: flagsmith.[MYDOMAIN]
         paths:
           - /api/
+          - /health/
 
 frontend:
   env:
