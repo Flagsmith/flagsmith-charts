@@ -3,7 +3,7 @@
 api:
     image:
         repository: flagsmith/flagsmith-api
-        tag: latest
+        tag: null  # defaults to .Chart.AppVersion
         imagePullPolicy: IfNotPresent
         imagePullSecrets: []
     replicacount: 1
@@ -24,7 +24,7 @@ api:
     affinity: {}
     livenessProbe:
         failureThreshold: 5
-        initialDelaySeconds: 50
+        initialDelaySeconds: 80
         periodSeconds: 10
         successThreshold: 1
         timeoutSeconds: 2
@@ -39,7 +39,7 @@ frontend:
     enabled: true
     image:
         repository: flagsmith/flagsmith-frontend
-        tag: test
+        tag: null  # defaults to .Chart.AppVersion
         imagePullPolicy: IfNotPresent
         imagePullSecrets: []
     replicacount: 1
