@@ -100,5 +100,5 @@ spec:
           periodSeconds: {{ .Values.api.readinessProbe.periodSeconds }}
           successThreshold: {{ .Values.api.readinessProbe.successThreshold }}
           timeoutSeconds: {{ .Values.api.readinessProbe.timeoutSeconds }}
-      resources:
-{{ toYaml .Values.api.resources | indent 12 }}
+        resources:
+{{ toYaml .Values.api.resources | indent 10 }}

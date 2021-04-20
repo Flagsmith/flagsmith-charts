@@ -77,5 +77,5 @@ spec:
           periodSeconds: {{ .Values.frontend.readinessProbe.periodSeconds }}
           successThreshold: {{ .Values.frontend.readinessProbe.successThreshold }}
           timeoutSeconds: {{ .Values.frontend.readinessProbe.timeoutSeconds }}
-      resources:
-{{ toYaml .Values.frontend.resources | indent 12 }}
+        resources:
+{{ toYaml .Values.frontend.resources | indent 10 }}
