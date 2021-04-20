@@ -138,7 +138,7 @@ their default values.
 | Parameter                                     | Description                                              | Default                        |
 | ---------                                     | ------------                                             | -------                        |
 | `api.image.repository`                        | docker image repository for flagsmith api                | `flagsmith/flagsmith-api`      |
-| `api.image.tag`                               | docker image tag for flagsmith api                       | `latest`                       |
+| `api.image.tag`                               | docker image tag for flagsmith api                       | `v2.6.0`                       |
 | `api.image.imagePullPolicy`                   |                                                          | `IfNotPresent`                 |
 | `api.image.imagePullSecrets`                  |                                                          | `[]`                           |
 | `api.replicacount`                            | number of replicas for the flagsmith api                 | 1                              |
@@ -149,7 +149,7 @@ their default values.
 | `api.tolerations`                             |                                                          | `[]`                           |
 | `api.affinity`                                |                                                          | `{}`                           |
 | `api.livenessProbe.failureThreshold`          |                                                          | 5                              |
-| `api.livenessProbe.initialDelaySeconds`       |                                                          | 50                             |
+| `api.livenessProbe.initialDelaySeconds`       |                                                          | 80                             |
 | `api.livenessProbe.periodSeconds`             |                                                          | 10                             |
 | `api.livenessProbe.successThreshold`          |                                                          | 1                              |
 | `api.livenessProbe.timeoutSeconds`            |                                                          | 2                              |
@@ -160,7 +160,7 @@ their default values.
 | `api.readinessProbe.timeoutSeconds`           |                                                          | 2                              |
 | `frontend.enabled`                            | Whether the flagsmith frontend is enabled                | `true`                         |
 | `frontend.image.repository`                   | docker image repository for flagsmith frontend           | `flagsmith/flagsmith-frontend` |
-| `frontend.image.tag`                          | docker image tag for flagsmith frontend                  | `test`                         |
+| `frontend.image.tag`                          | docker image tag for flagsmith frontend                  | `v2.6.0`                         |
 | `frontend.image.imagePullPolicy`              |                                                          | `IfNotPresent`                 |
 | `frontend.image.imagePullSecrets`             |                                                          | `[]`                           |
 | `frontend.replicacount`                       | number of replicas for the flagsmith frontend            | 1                              |
