@@ -1,0 +1,20 @@
+# Flagsmith pods are now starting in the cluster #
+
+See documentation at https://artifacthub.io/packages/helm/flagsmith/flagsmith/{{ .Chart.Version }}
+for more configuration options.
+
+{{ if not (and .Values.ingress.frontend.enabled .Values.ingress.api.enabled) }}
+
+{{- $noIngressFor := (list) -}}
+{{- if not .Values.ingress.api.enabled -}}{{- $noIngressFor = append $noIngressFor "api" -}}{{- end -}}
+{{- if not .Values.ingress.frontend.enabled -}}{{- $noIngressFor = append $noIngressFor "frontend" -}}{{- end -}}
+{{- $commaParts := (slice $noIngressFor 0 (sub (len $noIngressFor) 1)) -}}
+{{- $andPart := (last $noIngressFor) -}}
+{{- $stringParts := (compact (list (join ", " $commaParts) $andPart)) -}}
+## Ingress not enabled for {{ join " and " $stringParts }} ##
+
+See documentation at https://artifacthub.io/packages/helm/flagsmith/flagsmith/{{ .Chart.Version }}#ingress-configuration
+for information about how to gain web access to the application.
+
+{{- end }}
+
