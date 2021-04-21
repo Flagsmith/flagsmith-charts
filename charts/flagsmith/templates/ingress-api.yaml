@@ -14,10 +14,8 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}-api
   labels:
-    app: {{ template "flagsmith.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
   {{- with .Values.ingress.api.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

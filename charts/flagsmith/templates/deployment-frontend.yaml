@@ -3,16 +3,13 @@ kind: Deployment
 metadata:
   name: {{ template "flagsmith.fullname" . }}
   labels:
-    app: {{ template "flagsmith.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: frontend
 spec:
   selector:
     matchLabels:
-      app: {{ template "flagsmith.fullname" . }}
-      release: "{{ .Release.Name }}"
-      role: frontend
+      {{- include "flagsmith.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: frontend
   replicas: {{ .Values.frontend.replicacount }}
   template:
     metadata:
@@ -21,9 +18,8 @@ spec:
 {{ toYaml .Values.frontend.podAnnotations | indent 8 }}
       {{- end }}
       labels:
-        app: {{ template "flagsmith.fullname" . }}
-        release: "{{ .Release.Name }}"
-        role: frontend
+        {{- include "flagsmith.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: frontend
         {{- if .Values.frontend.podLabels }}
 {{ toYaml .Values.frontend.podLabels | indent 8 }}
         {{- end }}
