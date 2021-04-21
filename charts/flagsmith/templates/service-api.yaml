@@ -3,10 +3,8 @@ kind: Service
 metadata:
   name: {{ include "flagsmith.fullname" . }}-api
   labels:
-    app: {{ template "flagsmith.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
 spec:
   type: {{ .Values.service.api.type }}
   ports:

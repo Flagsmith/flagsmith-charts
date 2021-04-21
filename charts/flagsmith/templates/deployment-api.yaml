@@ -3,16 +3,13 @@ kind: Deployment
 metadata:
   name: {{ template "flagsmith.fullname" . }}-api
   labels:
-    app: {{ template "flagsmith.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
 spec:
   selector:
     matchLabels:
-      app: {{ template "flagsmith.fullname" . }}
-      release: "{{ .Release.Name }}"
-      role: api
+      {{- include "flagsmith.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: api
   replicas: {{ .Values.api.replicacount }}
   template:
     metadata:
@@ -21,9 +18,8 @@ spec:
 {{ toYaml .Values.api.podAnnotations | indent 8 }}
       {{- end }}
       labels:
-        app: {{ template "flagsmith.fullname" . }}
-        release: "{{ .Release.Name }}"
-        role: api
+        {{- include "flagsmith.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: api
         {{- if .Values.api.podLabels }}
 {{ toYaml .Values.api.podLabels | indent 8 }}
         {{- end }}
