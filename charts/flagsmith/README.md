@@ -7,8 +7,7 @@ helm repo add flagsmith https://flagsmith.github.io/flagsmith-charts/
 helm install flagsmith flagsmith/flagsmith
 ```
 
-This will install using default options. (Pods may error and restart
-while waiting for other pods to become ready.).
+This will install using default options.
 
 ### Ingress configuration
 
@@ -166,15 +165,19 @@ their default values.
 | `api.tolerations`                             |                                                          | `[]`                           |
 | `api.affinity`                                |                                                          | `{}`                           |
 | `api.livenessProbe.failureThreshold`          |                                                          | 5                              |
-| `api.livenessProbe.initialDelaySeconds`       |                                                          | 80                             |
+| `api.livenessProbe.initialDelaySeconds`       |                                                          | 10                             |
 | `api.livenessProbe.periodSeconds`             |                                                          | 10                             |
 | `api.livenessProbe.successThreshold`          |                                                          | 1                              |
 | `api.livenessProbe.timeoutSeconds`            |                                                          | 2                              |
 | `api.readinessProbe.failureThreshold`         |                                                          | 10                             |
-| `api.readinessProbe.initialDelaySeconds`      |                                                          | 50                             |
+| `api.readinessProbe.initialDelaySeconds`      |                                                          | 10                             |
 | `api.readinessProbe.periodSeconds`            |                                                          | 10                             |
 | `api.readinessProbe.successThreshold`         |                                                          | 1                              |
 | `api.readinessProbe.timeoutSeconds`           |                                                          | 2                              |
+| `api.dbWaiter.image.repository`               |                                                          | `willwill/wait-for-it`         |
+| `api.dbWaiter.image.tag`                      |                                                          | `latest`                       |
+| `api.dbWaiter.image.imagePullPolicy`          |                                                          | `IfNotPresent`                 |
+| `api.dbWaiter.timeoutSeconds`                 | Time before init container will retry                    | 30                             |
 | `frontend.enabled`                            | Whether the flagsmith frontend is enabled                | `true`                         |
 | `frontend.image.repository`                   | docker image repository for flagsmith frontend           | `flagsmith/flagsmith-frontend` |
 | `frontend.image.tag`                          | docker image tag for flagsmith frontend                  | appVersion                     |

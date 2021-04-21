@@ -47,6 +47,15 @@ spec:
       imagePullSecrets:
 {{ toYaml .Values.api.image.imagePullSecrets | indent 4 }}
       {{- end }}
+      initContainers:
+      - name: wait-for-db
+        image: {{ .Values.api.dbWaiter.image.repository }}:{{ .Values.api.dbWaiter.image.tag }}
+        imagePullPolicy: {{ .Values.api.dbWaiter.image.imagePullPolicy }}
+        command:
+          - /wait-for-it.sh
+          - --host={{ template "flagsmith.postgres.hostname" . }}
+          - --port=5432
+          - --timeout={{ .Values.api.dbWaiter.timeoutSeconds }}
       containers:
       - name: {{ .Chart.Name }}-api
         image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "v%s" .Chart.AppVersion) }}
