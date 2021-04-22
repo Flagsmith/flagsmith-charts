@@ -1,3 +1,4 @@
+{{- if .Values.influxdb.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -11,3 +12,4 @@ spec:
       protocol: TCP
       name: http
   selector: {{- include "influxdb.selectorLabels" . | nindent 4 }}
+{{- end }}
