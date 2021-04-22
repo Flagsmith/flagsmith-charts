@@ -50,11 +50,12 @@ spec:
         ports:
         - containerPort: {{ .Values.service.frontend.port }}
         env:
-        # TODO: Set the API URL to be the hostname of the API image above. Full url should be e.g. API_URL=http[s]://<api-hostname>/api/vi
-        - name: API_URL
-          value: '/api/v1/'
         - name: ASSET_URL
           value: '/'
+{{- if .Values.frontend.apiProxy.enabled }}
+        - name: PROXY_API_URL
+          value: http://{{ include "flagsmith.fullname" . }}-api.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.api.port }}
+{{- end }}
 {{- range $envName, $envValue := .Values.frontend.extraEnv }}
         - name: {{ $envName }}
           value: {{ $envValue | quote }}

@@ -1,20 +1,56 @@
 # Flagsmith Helm chart
 
-## Installation
+## Quick-start
 
 ```bash
 helm repo add flagsmith https://flagsmith.github.io/flagsmith-charts/
-helm install flagsmith flagsmith/flagsmith
+helm install -n flagsmith --create-namespace flagsmith flagsmith/flagsmith
+kubectl -n flagsmith port-forward svc/flagsmith-frontend 8080:8080
 ```
 
-This will install using default options.
+Then view `http://localhost:8080` in a browser. This will install
+using default options, in a new namespace `flagsmith`.
 
 ### Ingress configuration
 
 The above will start pods in the cluster, but to gain web access to
 Flagsmith, do one of the following:
 
-#### In a cluster that has an ingress controller
+#### Port forwarding
+
+In a terminal, run:
+
+```bash
+kubectl -n [flagsmith-namespace] port-forward svc/[flagsmith-release-name]-frontend 8080:8080
+```
+
+Then access `http://localhost:8080` in a browser.
+
+#### In a cluster that has an ingress controller, using the frontend proxy
+
+In this configuration, api requests are proxied by the frontend. This
+is simpler to configure, but introduces some latency.
+
+Set the following values for flagsmith, with changes as needed to
+accommodate your ingress controller, and any associated DNS
+changes.
+
+Eg:
+
+```yaml
+ingress:
+  frontend:
+    enabled: true
+    hosts:
+      - host: flagsmith.[MYDOMAIN]
+        paths:
+          - /
+```
+
+Then, once any out-of-cluster DNS or CDN changes have been applied,
+access `https://flagsmith.[MYDOMAIN]` in a browser.
+
+#### In a cluster that has an ingress controller, using separate ingresses for frontend and api
 
 Set the following values for flagsmith, with changes as needed to
 accommodate your ingress controller, and any associated DNS
@@ -63,12 +99,6 @@ ingress:
       - host: flagsmith.local
         paths:
           - /
-  api:
-    enabled: true
-    hosts:
-      - host: flagsmith.local
-        paths:
-          - /api/
 ```
 
 and apply. This will create two ingress resources.
@@ -80,30 +110,6 @@ Run `minikube ip`. Set this ip and `flagsmith.local` in your `/etc/hosts`, eg:
 ```
 
 Then access `http://flagsmith.local` in a browser.
-
-#### Port forwarding
-
-Set the following values for flagsmith:
-
-```yaml
-frontend:
-  extraEnv:
-    API_URL: 'http://localhost:8000/api/v1/'
-```
-
-In one terminal, run:
-
-```bash
-kubectl -n [flagsmith-namespace] port-forward svc/[flagsmith-release-name]-api 8000:8000
-```
-
-and in another, run:
-
-```bash
-kubectl -n [flagsmith-namespace] port-forward svc/[flagsmith-release-name]-frontend 8080:8080
-```
-
-Then access `http://localhost:8080` in a browser.
 
 ### Database configuration
 
@@ -211,6 +217,7 @@ their default values.
 | `frontend.image.imagePullSecrets`                  |                                                                | `[]`                           |
 | `frontend.replicacount`                            | number of replicas for the flagsmith frontend                  | 1                              |
 | `frontend.resources`                               | resources per pod for the flagsmith frontend                   | `{}`                           |
+| `frontend.apiProxy.enabled`                        | proxy API requests to the API service within the cluster       | `true`                         |
 | `frontend.extraEnv`                                | extra environment variables to set for the flagsmith frontend  | `{}`                           |
 | `frontend.nodeSelector`                            |                                                                | `{}`                           |
 | `frontend.tolerations`                             |                                                                | `[]`                           |

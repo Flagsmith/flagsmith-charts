@@ -3,6 +3,12 @@
 See documentation at https://artifacthub.io/packages/helm/flagsmith/flagsmith/{{ .Chart.Version }}
 for more configuration options.
 
+To access Flagsmith using port-forwarding, run:
+
+kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "flagsmith.fullname" . }}-frontend 8080:{{ .Values.service.frontend.port }}
+
+Then access http://localhost:8080 in a browser.
+
 {{ if not (and .Values.ingress.frontend.enabled .Values.ingress.api.enabled) }}
 
 {{- $noIngressFor := (list) -}}
