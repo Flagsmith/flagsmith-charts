@@ -20,13 +20,13 @@ api:
   affinity: {}
   livenessProbe:
     failureThreshold: 5
-    initialDelaySeconds: 10
+    initialDelaySeconds: 5
     periodSeconds: 10
     successThreshold: 1
     timeoutSeconds: 2
   readinessProbe:
     failureThreshold: 10
-    initialDelaySeconds: 10
+    initialDelaySeconds: 1
     periodSeconds: 10
     successThreshold: 1
     timeoutSeconds: 2
@@ -131,10 +131,6 @@ influxdbExternal:
     enabled: false
     name: null
     key: null
-
-hooks:
-  enabled: false
-  removeOnSuccess: true
 
 service:
   influxdb:

@@ -272,8 +272,6 @@ their default values.
 | `influxdbExternal.tokenFromExistingSecret.enabled` | Use reference to a k8s secret not managed by this chart        | `false`                        |
 | `influxdbExternal.tokenFromExistingSecret.name`    | Referenced secret name                                         |                                |
 | `influxdbExternal.tokenFromExistingSecret.key`     | Key within the referenced secret to use                        |                                |
-| `hooks.enabled`                                    | Enables hooks (to migrate the db)                              | `false`                        |
-| `hooks.removeOnSuccess`                            |                                                                | `true`                         |
 | `service.influxdb.externalPort`                    |                                                                | `8080`                         |
 | `service.api.type`                                 |                                                                | `ClusterIP`                    |
 | `service.api.port`                                 |                                                                | `8000`                         |
