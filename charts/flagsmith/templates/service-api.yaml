@@ -12,7 +12,5 @@ spec:
       targetPort: {{ .Values.service.api.port }}
       protocol: TCP
       name: http
-  selector:
-  selector:
-    app: {{ template "flagsmith.fullname" . }}
-    role: api
+  selector: {{- include "flagsmith.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: api

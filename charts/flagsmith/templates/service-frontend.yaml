@@ -12,6 +12,5 @@ spec:
       targetPort: {{ .Values.service.frontend.port }}
       protocol: TCP
       name: http
-  selector:
-    app: {{ template "flagsmith.fullname" . }}
-    role: frontend
+  selector: {{- include "flagsmith.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: frontend
