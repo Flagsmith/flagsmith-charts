@@ -14,6 +14,7 @@ spec:
   template:
     metadata:
       annotations:
+        checksum/secrets-api: {{ include (print $.Template.BasePath "/secrets-api.yaml") . | sha256sum }}
         {{- if .Values.influxdb.enabled }}
         checksum/secrets-influxdb: {{ include (print $.Template.BasePath "/secrets-influxdb.yaml") . | sha256sum }}
         {{- end }}
@@ -66,27 +67,16 @@ spec:
         ports:
         - containerPort: {{ .Values.service.api.port }}
         env:
-        - name: DJANGO_DB_NAME
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "flagsmith.fullname" . }}
-              key: dbname
-        - name: DJANGO_DB_USER
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "flagsmith.fullname" . }}
-              key: dbuser
-        - name: DJANGO_DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "flagsmith.fullname" . }}
-              key: dbpassword
-        - name: DJANGO_DB_PORT
-          value: "5432"
-        - name: DJANGO_DB_HOST
-          value: {{ template "flagsmith.postgres.hostname" . }}
         - name: DATABASE_URL
-          value: postgres://{{.Values.postgresql.postgresqlUsername}}:{{ .Values.postgresql.postgresqlPassword}}@{{ template "flagsmith.postgres.hostname" . }}:5432/{{ .Values.postgresql.postgresqlDatabase}}
+          valueFrom:
+            secretKeyRef:
+              {{- if and .Values.databaseExternal.enabled .Values.databaseExternal.urlFromExistingSecret.enabled }}
+              name: {{ .Values.databaseExternal.urlFromExistingSecret.name }}
+              name: {{ .Values.databaseExternal.urlFromExistingSecret.key }}
+              {{- else }}
+              name: {{ template "flagsmith.fullname" . }}
+              key: DATABASE_URL
+              {{- end }}
 {{- if .Values.influxdb.enabled }}
         - name: INFLUXDB_URL
           value: http://{{- template "flagsmith.influx.hostname" . -}}:8086
