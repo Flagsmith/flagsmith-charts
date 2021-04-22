@@ -80,6 +80,20 @@ postgresql:
     postgresqlUsername: postgres
     postgresqlPassword: flagsmith
 
+databaseExternal:
+    enabled: false
+    url: null
+    type: postgres
+    host: null
+    port: 5432
+    database: null
+    username: null
+    password: null
+    urlFromExistingSecret:
+        enabled: false
+        name: null
+        key: null
+
 influxdb:
     enabled: true
     nameOverride: influxdb
