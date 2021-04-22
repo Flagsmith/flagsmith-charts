@@ -89,7 +89,7 @@ spec:
           value: postgres://{{.Values.postgresql.postgresqlUsername}}:{{ .Values.postgresql.postgresqlPassword}}@{{ template "flagsmith.postgres.hostname" . }}:5432/{{ .Values.postgresql.postgresqlDatabase}}
 {{- if .Values.influxdb.enabled }}
         - name: INFLUXDB_URL
-          value: http://{{- template "flagsmith.influx.hostname" -}}:8086
+          value: http://{{- template "flagsmith.influx.hostname" . -}}:8086
         - name: INFLUXDB_BUCKET
           value: {{ .Values.influxdb.adminUser.bucket }}
         - name: INFLUXDB_ORG

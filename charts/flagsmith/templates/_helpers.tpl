@@ -167,7 +167,7 @@ Postgres hostname
 Influxdb hostname
 */}}
 {{- define "flagsmith.influx.hostname" -}}
-{{- printf "%s-%s" .Release.Name .Values.influx.nameOverride -}}.{{ .Release.Namespace }}.svc.cluster.local
+{{ template "influxdb.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
 {{- end -}}
 
 {{/*
