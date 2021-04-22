@@ -50,8 +50,14 @@ spec:
         ports:
         - containerPort: {{ .Values.service.frontend.port }}
         env:
-{{- if .Values.frontend.env }}
-{{ toYaml .Values.frontend.env | indent 8 }}
+        # TODO: Set the API URL to be the hostname of the API image above. Full url should be e.g. API_URL=http[s]://<api-hostname>/api/vi
+        - name: API_URL
+          value: '/api/v1/'
+        - name: ASSET_URL
+          value: '/'
+{{- range $envName, $envValue := .Values.frontend.extraEnv }}
+        - name: {{ $envName }}
+          value: {{ $envValue | quote }}
 {{- end }}
         livenessProbe:
           failureThreshold: {{ .Values.frontend.livenessProbe.failureThreshold }}

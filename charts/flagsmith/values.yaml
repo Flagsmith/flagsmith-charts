@@ -16,9 +16,7 @@ api:
     #     cpu: 300m
     #     memory: 300Mi
     podLabels: {}
-    env:
-        - name: DJANGO_ALLOWED_HOSTS
-          value: '*'
+    extraEnv: {}
     nodeSelector: {}
     tolerations: []
     affinity: {}
@@ -56,12 +54,7 @@ frontend:
     # requests:
     #     cpu: 300m
     #     memory: 300Mi
-    env:
-    # TODO: Set the API URL to be the hostname of the API image above. Full url should be e.g. API_URL=http[s]://<api-hostname>/api/vi
-        - name: API_URL
-          value: '/api/v1/'
-        - name: ASSET_URL
-          value: '/'
+    extraEnv: {}
     nodeSelector: {}
     tolerations: []
     affinity: {}

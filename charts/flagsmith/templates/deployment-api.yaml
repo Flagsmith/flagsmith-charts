@@ -117,10 +117,13 @@ spec:
               key: admin-token
               {{- end }}
 {{- end }}
-          
-{{- if .Values.api.env }}
-{{ toYaml .Values.api.env | indent 8 }}
+        - name: DJANGO_ALLOWED_HOSTS
+          value: '*'
+{{- range $envName, $envValue := .Values.api.extraEnv }}
+        - name: {{ $envName }}
+          value: {{ $envValue | quote }}
 {{- end }}
+
         livenessProbe:
           failureThreshold: {{ .Values.api.livenessProbe.failureThreshold }}
           httpGet:
