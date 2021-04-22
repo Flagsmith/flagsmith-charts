@@ -88,6 +88,7 @@ postgresql:
     postgresqlPassword: flagsmith
 
 influxdb:
+    enabled: true
     nameOverride: influxdb
     image:
         repository: quay.io/influxdb/influxdb
@@ -112,6 +113,17 @@ influxdb:
     nodeSelector: {}
     tolerations: []
     affinity: {}
+
+influxdbExternal:
+    enabled: false
+    url: null
+    bucket: null
+    organization: null
+    token: null
+    tokenFromExistingSecret:
+        enabled: false
+        name: null
+        key: null
 
 hooks:
     enabled: false

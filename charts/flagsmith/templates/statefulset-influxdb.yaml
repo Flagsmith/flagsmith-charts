@@ -1,3 +1,4 @@
+{{- if .Values.influxdb.enabled }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -64,3 +65,4 @@ spec:
       tolerations:
         {{ toYaml . | nindent 8 | trim }}
       {{- end }}
+{{- end }}
