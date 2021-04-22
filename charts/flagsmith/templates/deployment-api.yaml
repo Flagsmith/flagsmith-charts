@@ -59,6 +59,14 @@ spec:
           - --host={{ template "flagsmith.postgres.hostname" . }}
           - --port=5432
           - --timeout={{ .Values.api.dbWaiter.timeoutSeconds }}
+      - name: migrate-db
+        image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "v%s" .Chart.AppVersion) }}
+        imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
+        command:
+          - python
+          - src/manage.py
+          - migrate
+        env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
       containers:
       - name: {{ .Chart.Name }}-api
         image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "v%s" .Chart.AppVersion) }}
@@ -66,54 +74,7 @@ spec:
         # command: ["sleep", "3600"]
         ports:
         - containerPort: {{ .Values.service.api.port }}
-        env:
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              {{- if and .Values.databaseExternal.enabled .Values.databaseExternal.urlFromExistingSecret.enabled }}
-              name: {{ .Values.databaseExternal.urlFromExistingSecret.name }}
-              name: {{ .Values.databaseExternal.urlFromExistingSecret.key }}
-              {{- else }}
-              name: {{ template "flagsmith.fullname" . }}
-              key: DATABASE_URL
-              {{- end }}
-{{- if .Values.influxdb.enabled }}
-        - name: INFLUXDB_URL
-          value: http://{{- template "flagsmith.influx.hostname" . -}}:8086
-        - name: INFLUXDB_BUCKET
-          value: {{ .Values.influxdb.adminUser.bucket }}
-        - name: INFLUXDB_ORG
-          value: {{ .Values.influxdb.adminUser.organization }}
-        - name: INFLUXDB_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "influxdb.fullname" . }}-auth
-              key: admin-token
-{{- else if .Values.influxdbExternal.enabled }}
-        - name: INFLUXDB_URL
-          value: {{ .Values.influxdbExternal.url | required "Must specify a URL for an external InfluxDB" }}
-        - name: INFLUXDB_BUCKET
-          value: {{ .Values.influxdbExternal.bucket | required "Must specify a bucket for an external InfluxDB" }}
-        - name: INFLUXDB_ORG
-          value: {{ .Values.influxdbExternal.organization | required "Must specify an organization for an external InfluxDB" }}
-        - name: INFLUXDB_TOKEN
-          valueFrom:
-            secretKeyRef:
-              {{- if .Values.influxdbExternal.tokenFromExistingSecret.enabled }}
-              name: {{ .Values.influxdbExternal.tokenFromExistingSecret.name | required "Must set secret name for external InfluxDB secret" }}
-              key: {{ .Values.influxdbExternal.tokenFromExistingSecret.key | required "Must set key for external InfluxDB secret" }}
-              {{- else }}
-              name: {{ template "influxdb.fullname" . }}-external-auth
-              key: admin-token
-              {{- end }}
-{{- end }}
-        - name: DJANGO_ALLOWED_HOSTS
-          value: '*'
-{{- range $envName, $envValue := .Values.api.extraEnv }}
-        - name: {{ $envName }}
-          value: {{ $envValue | quote }}
-{{- end }}
-
+        env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
         livenessProbe:
           failureThreshold: {{ .Values.api.livenessProbe.failureThreshold }}
           httpGet:
