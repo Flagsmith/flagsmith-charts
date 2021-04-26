@@ -13,8 +13,9 @@ using default options, in a new namespace `flagsmith`.
 
 ### Ingress configuration
 
-The above will start pods in the cluster, but to gain web access to
-Flagsmith, do one of the following:
+The above is a quick and simple way of gaining access to Flagsmith,
+but in many cases will need to configure ingress to work with an
+ingress controller.
 
 #### Port forwarding
 
