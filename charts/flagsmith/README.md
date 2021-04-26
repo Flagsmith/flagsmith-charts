@@ -197,6 +197,8 @@ their default values.
 | `api.nodeSelector`                                 |                                                                | `{}`                           |
 | `api.tolerations`                                  |                                                                | `[]`                           |
 | `api.affinity`                                     |                                                                | `{}`                           |
+| `api.podSecurityContext`                           |                                                                | `{}`                           |
+| `api.defaultPodSecurityContext.enabled`            | whether to use the default security context                    | `true`                         |
 | `api.livenessProbe.failureThreshold`               |                                                                | 5                              |
 | `api.livenessProbe.initialDelaySeconds`            |                                                                | 10                             |
 | `api.livenessProbe.periodSeconds`                  |                                                                | 10                             |
@@ -223,6 +225,8 @@ their default values.
 | `frontend.nodeSelector`                            |                                                                | `{}`                           |
 | `frontend.tolerations`                             |                                                                | `[]`                           |
 | `frontend.affinity`                                |                                                                | `{}`                           |
+| `api.podSecurityContext`                           |                                                                | `{}`                           |
+| `api.defaultPodSecurityContext.enabled`            | whether to use the default security context                    | `true`                         |
 | `frontend.livenessProbe.failureThreshold`          |                                                                | 20                             |
 | `frontend.livenessProbe.initialDelaySeconds`       |                                                                | 20                             |
 | `frontend.livenessProbe.periodSeconds`             |                                                                | 10                             |
