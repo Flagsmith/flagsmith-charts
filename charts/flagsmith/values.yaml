@@ -18,6 +18,12 @@ api:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  podSecurityContext: {}
+  defaultPodSecurityContext:
+    enabled: true
+    # runAsNonRoot: true  # TODO: enable this, conditional on tag semver
+    # runAsUser: 1000
+    # runAsGroup: 1000
   livenessProbe:
     failureThreshold: 5
     initialDelaySeconds: 5
@@ -58,6 +64,12 @@ frontend:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  podSecurityContext: {}
+  defaultPodSecurityContext:
+    enabled: true
+    # runAsNonRoot: true  # TODO: enable this, conditional on tag semver
+    # runAsUser: 1000
+    # runAsGroup: 1000
   livenessProbe:
     failureThreshold: 20
     initialDelaySeconds: 20

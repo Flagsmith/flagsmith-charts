@@ -50,6 +50,12 @@ spec:
       imagePullSecrets:
 {{ toYaml .Values.api.image.imagePullSecrets | indent 4 }}
       {{- end }}
+      securityContext:
+        {{- $securityContext := .Values.api.podSecurityContext | default (dict) | deepCopy }}
+        {{- if .Values.api.defaultPodSecurityContext.enabled }}
+        {{- $securityContext = $securityContext | merge (omit .Values.api.defaultPodSecurityContext "enabled") }}
+        {{- end }}
+        {{- toYaml $securityContext | nindent 8 }}
       initContainers:
       - name: wait-for-db
         image: {{ .Values.api.dbWaiter.image.repository }}:{{ .Values.api.dbWaiter.image.tag }}

@@ -43,6 +43,12 @@ spec:
       imagePullSecrets:
 {{ toYaml .Values.frontend.image.imagePullSecrets | indent 4 }}
       {{- end }}
+      securityContext:
+        {{- $securityContext := .Values.frontend.podSecurityContext | default (dict) | deepCopy }}
+        {{- if .Values.frontend.defaultPodSecurityContext.enabled }}
+        {{- $securityContext = $securityContext | merge (omit .Values.frontend.defaultPodSecurityContext "enabled") }}
+        {{- end }}
+        {{- toYaml $securityContext | nindent 8 }}
       containers:
       - name: {{ .Chart.Name }}-frontend
         image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag | default (printf "v%s" .Chart.AppVersion) }}
