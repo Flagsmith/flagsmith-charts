@@ -3,6 +3,22 @@ entries:
   flagsmith:
   - apiVersion: v2
     appVersion: 2.6.0
+    created: "2021-06-09T16:59:19.563367294Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.helm.sh/stable
+      version: 8.6.4
+    description: Flagsmith
+    digest: c769a8c2769a57f04203aab8926fb6fead1015590eea2f5fd2817dbc7a829632
+    icon: https://docs.flagsmith.com/images/square-icon.png
+    name: flagsmith
+    type: application
+    urls:
+    - https://github.com/Flagsmith/flagsmith-charts/releases/download/flagsmith-0.2.11/flagsmith-0.2.11.tgz
+    version: 0.2.11
+  - apiVersion: v2
+    appVersion: 2.6.0
     created: "2021-04-26T12:43:16.108323147Z"
     dependencies:
     - condition: postgresql.enabled
@@ -321,4 +337,4 @@ entries:
     urls:
     - https://github.com/Flagsmith/flagsmith-charts/releases/download/flagsmith-0.1.0/flagsmith-0.1.0.tgz
     version: 0.1.0
-generated: "2021-04-26T12:43:16.108570047Z"
+generated: "2021-06-09T16:59:19.563533595Z"
