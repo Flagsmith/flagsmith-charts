@@ -5,9 +5,9 @@
 apiVersion: networking.k8s.io/v1
 {{- else -}}
 {{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
-frontendVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 {{- else -}}
-frontendVersion: extensions/v1beta1
+apiVersion: extensions/v1beta1
 {{- end }}
 {{- end }}
 kind: Ingress
@@ -43,7 +43,7 @@ spec:
             backend:
               service:
                 name: {{ $fullName}}-frontend
-                port: 
+                port:
                   number: {{ $svcPort }}
             {{- else }}
             backend:
