@@ -7,11 +7,13 @@ Official Helm charts for Flagsmith, [https://flagsmith.github.io/flagsmith-chart
 ## Usage
 
 Add this repository using:
-```
-$ helm repo add flagsmith https://flagsmith.github.io/flagsmith-charts/
+
+```bash
+helm repo add flagsmith https://flagsmith.github.io/flagsmith-charts/
 ```
 
 Or by adding the following into `helmfile.yaml`:
+
 ```yaml
 repositories:
   # ...
