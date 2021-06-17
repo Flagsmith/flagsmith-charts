@@ -57,6 +57,7 @@ spec:
         {{- end }}
         {{- toYaml $securityContext | nindent 8 }}
       initContainers:
+{{- if eq .Values.databaseExternal.enabled false }}
       - name: wait-for-db
         image: {{ .Values.api.dbWaiter.image.repository }}:{{ .Values.api.dbWaiter.image.tag }}
         imagePullPolicy: {{ .Values.api.dbWaiter.image.imagePullPolicy }}
@@ -65,6 +66,7 @@ spec:
           - --host={{ template "flagsmith.postgres.hostname" . }}
           - --port=5432
           - --timeout={{ .Values.api.dbWaiter.timeoutSeconds }}
+{{- end }}
       - name: migrate-db
         image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "v%s" .Chart.AppVersion) }}
         imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
