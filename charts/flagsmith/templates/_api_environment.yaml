@@ -3,7 +3,7 @@
     secretKeyRef:
       {{- if and .Values.databaseExternal.enabled .Values.databaseExternal.urlFromExistingSecret.enabled }}
       name: {{ .Values.databaseExternal.urlFromExistingSecret.name }}
-      name: {{ .Values.databaseExternal.urlFromExistingSecret.key }}
+      key: {{ .Values.databaseExternal.urlFromExistingSecret.key }}
       {{- else }}
       name: {{ template "flagsmith.fullname" . }}
       key: DATABASE_URL
