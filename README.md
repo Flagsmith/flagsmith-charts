@@ -20,3 +20,4 @@ repositories:
   - name: flagsmith
     url: https://flagsmith.github.io/flagsmith-charts/
 ```
+
