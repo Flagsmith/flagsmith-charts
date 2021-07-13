@@ -21,3 +21,4 @@ repositories:
     url: https://flagsmith.github.io/flagsmith-charts/
 ```
 
+
