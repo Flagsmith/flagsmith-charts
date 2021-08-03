@@ -51,7 +51,7 @@ spec:
         {{- toYaml $securityContext | nindent 8 }}
       containers:
       - name: {{ .Chart.Name }}-frontend
-        image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag | default (printf "v%s" .Chart.AppVersion) }}
+        image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag | default (printf "%s" .Chart.AppVersion) }}
         imagePullPolicy: {{ .Values.frontend.image.imagePullPolicy }}
         ports:
         - containerPort: {{ .Values.service.frontend.port }}
