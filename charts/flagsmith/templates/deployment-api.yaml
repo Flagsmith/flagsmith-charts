@@ -72,7 +72,7 @@ spec:
         imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
         command:
           - python
-          - src/manage.py
+          - manage.py
           - migrate
         env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
       containers:
