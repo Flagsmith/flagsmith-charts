@@ -1,4 +1,5 @@
-{{- if .Values.openshift }}
+{{- if .Values.openshift }}{{- if .Values.openshift.route }}{{- if .Values.openshift.route.api }}{{- if .Values.openshift.route.api.enabled }}
+{{- $fullName := include "flagsmith.fullname" . -}}
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
@@ -7,22 +8,14 @@ metadata:
     {{- include "flagsmith.labels" . | nindent 4 }}
     app.kubernetes.io/component: api
 spec:
-  host: flagsmith-api-{{ .Release.Namespace }}.{{ .Values.openshiftdomain }}
+  {{- if .Values.openshift.route.api.host }}
+  host: {{ .Values.openshift.route.api.host }}
+  {{- end }}
   port:
     targetPort: http
   to:
     kind: Service
-    name: flagsmith-api
+    name: {{ $fullName }}-api
     weight: 100
   wildcardPolicy: None
-status:
-  ingress:
-    - conditions:
-      - lastTransitionTime: "2019-12-06T03:24:58Z"
-        status: "True"
-        type: Admitted
-      host: <host>
-      routerCanonicalHostname: <host>
-      routerName: default
-      wildcardPolicy: None
-{{- end }}
+{{- end }}{{- end }}{{- end }}{{- end }}
