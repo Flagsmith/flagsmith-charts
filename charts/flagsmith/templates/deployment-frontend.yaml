@@ -26,15 +26,15 @@ spec:
     spec:
       {{- if .Values.frontend.affinity }}
       affinity:
-{{ toYaml .Values.frontend.affinity | indent 4 }}
+{{ toYaml .Values.frontend.affinity | indent 8 }}
       {{- end }}
       {{- if .Values.frontend.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.frontend.nodeSelector | indent 4 }}
+{{ toYaml .Values.frontend.nodeSelector | indent 8 }}
       {{- end }}
       {{- if .Values.frontend.tolerations }}
       tolerations:
-{{ toYaml .Values.frontend.tolerations | indent 4 }}
+{{ toYaml .Values.frontend.tolerations | indent 8 }}
       {{- end }}
       {{- if .Values.frontend.schedulerName }}
       schedulerName: "{{ .Values.frontend.schedulerName }}"
