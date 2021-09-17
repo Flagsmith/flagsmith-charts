@@ -146,7 +146,7 @@ influxdbExternal:
 
 service:
   influxdb:
-    externalPort: 8080
+    externalPort: 8086
   api:
     type: ClusterIP
     port: 8000

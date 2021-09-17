@@ -10,7 +10,7 @@
       {{- end }}
 {{- if .Values.influxdb.enabled }}
 - name: INFLUXDB_URL
-  value: http://{{- template "flagsmith.influx.hostname" . -}}:8086
+  value: http://{{- template "flagsmith.influx.hostname" . -}}:{{ .Values.service.influxdb.externalPort }}
 - name: INFLUXDB_BUCKET
   value: {{ .Values.influxdb.adminUser.bucket }}
 - name: INFLUXDB_ORG
