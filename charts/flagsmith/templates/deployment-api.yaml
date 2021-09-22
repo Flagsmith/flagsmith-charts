@@ -15,9 +15,6 @@ spec:
     metadata:
       annotations:
         checksum/secrets-api: {{ include (print $.Template.BasePath "/secrets-api.yaml") . | sha256sum }}
-        {{- if .Values.influxdb.enabled }}
-        checksum/secrets-influxdb: {{ include (print $.Template.BasePath "/secrets-influxdb.yaml") . | sha256sum }}
-        {{- end }}
         {{- if and .Values.influxdbExternal.enabled (not .Values.influxdbExternal.tokenFromExistingSecret.enabled) }}
         checksum/secrets-influxdb-external: {{ include (print $.Template.BasePath "/secrets-influxdb-external.yaml") . | sha256sum }}
         {{- end }}

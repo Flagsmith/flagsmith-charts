@@ -8,17 +8,17 @@
       name: {{ template "flagsmith.fullname" . }}
       key: DATABASE_URL
       {{- end }}
-{{- if .Values.influxdb.enabled }}
+{{- if .Values.influxdb2.enabled }}
 - name: INFLUXDB_URL
-  value: http://{{- template "flagsmith.influx.hostname" . -}}:8086
+  value: http://{{- template "flagsmith.influxdb.hostname" . -}}:80
 - name: INFLUXDB_BUCKET
-  value: {{ .Values.influxdb.adminUser.bucket }}
+  value: {{ .Values.influxdb2.adminUser.bucket }}
 - name: INFLUXDB_ORG
-  value: {{ .Values.influxdb.adminUser.organization }}
+  value: {{ .Values.influxdb2.adminUser.organization }}
 - name: INFLUXDB_TOKEN
   valueFrom:
     secretKeyRef:
-      name: {{ template "influxdb.fullname" . }}-auth
+      name: {{ template "flagsmith.influxdb.fullname" . }}-auth
       key: admin-token
 {{- else if .Values.influxdbExternal.enabled }}
 - name: INFLUXDB_URL
@@ -34,7 +34,7 @@
       name: {{ .Values.influxdbExternal.tokenFromExistingSecret.name | required "Must set secret name for external InfluxDB secret" }}
       key: {{ .Values.influxdbExternal.tokenFromExistingSecret.key | required "Must set key for external InfluxDB secret" }}
       {{- else }}
-      name: {{ template "influxdb.fullname" . }}-external-auth
+      name: {{ template "flagsmith.influxdb.fullname" . }}-external-auth
       key: admin-token
       {{- end }}
 {{- end }}
