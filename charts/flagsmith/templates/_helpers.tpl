@@ -164,6 +164,13 @@ Postgres hostname
 {{- end -}}
 
 {{/*
+PgBouncer hostname
+*/}}
+{{- define "flagsmith.pgbouncer.hostname" -}}
+{{- printf "%s-%s" .Release.Name "pgbouncer" -}}.{{ .Release.Namespace }}.svc.cluster.local
+{{- end -}}
+
+{{/*
 Expand the name of the chart.
 */}}
 {{- define "flagsmith.influxdb.name" -}}
@@ -194,3 +201,43 @@ Influxdb hostname
 {{- define "flagsmith.influxdb.hostname" -}}
 {{ template "flagsmith.influxdb.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
 {{- end -}}
+
+{{/*
+Database URL
+*/}}
+{{- define "flagsmith.api.realDatabaseUrl" -}}
+{{- if .Values.databaseExternal.enabled -}}
+{{- with .Values.databaseExternal -}}
+{{- if not .urlFromExistingSecret.enabled -}}
+{{- if .url -}}
+{{- .url -}}
+{{- else -}}
+{{- printf "%s://%s:%s@%s:%s/%s" (required "Must specify a database type" .type) (required "Must specify a database username" .username) (required "Must specify a database password" .password) (required "Must specify a database host" .host) (required "Must specify a database port" .port) (required "Must specify a database database name" .database) -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- else if .Values.postgresql.enabled -}}
+{{- printf "%s://%s:%s@%s:%s/%s" "postgres" (required "Must specify a postgres username" .Values.postgresql.postgresqlUsername) (required "Must specify a postgres password" .Values.postgresql.postgresqlPassword) (include "flagsmith.postgres.hostname" . ) "5432" (required "Must specify a postgres database name" .Values.postgresql.postgresqlDatabase) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+PgBouncer URL
+*/}}
+{{- define "flagsmith.api.pgBouncerDatabaseUrl" -}}
+{{- $url := (include "flagsmith.api.realDatabaseUrl" .) -}}
+{{- $urlParts := (urlParse $url) -}}
+{{- $merged := merge (dict "host" (include "flagsmith.pgbouncer.hostname" . | trim)) $urlParts -}}
+{{ urlJoin $merged }}
+{{- end }}
+
+{{/*
+Database URL for application
+*/}}
+{{- define "flagsmith.api.databaseUrl" -}}
+{{- if .Values.pgbouncer.enabled }}
+{{ include "flagsmith.api.pgBouncerDatabaseUrl" . }}
+{{- else }}
+{{ include "flagsmith.api.realDatabaseUrl" . }}
+{{- end }}
+{{- end }}

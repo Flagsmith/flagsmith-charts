@@ -60,7 +60,11 @@ spec:
         imagePullPolicy: {{ .Values.api.dbWaiter.image.imagePullPolicy }}
         command:
           - /wait-for-it.sh
+          {{- if .Values.pgbouncer.enabled }}
+          - --host={{ template "flagsmith.pgbouncer.hostname" . }}
+          {{- else }}
           - --host={{ template "flagsmith.postgres.hostname" . }}
+          {{- end }}
           - --port=5432
           - --timeout={{ .Values.api.dbWaiter.timeoutSeconds }}
 {{- end }}

@@ -106,6 +106,46 @@ databaseExternal:
     name: null
     key: null
 
+pgbouncer:
+  enabled: false
+  image:
+    repository: bitnami/pgbouncer
+    tag: 1.16.0
+    imagePullPolicy: IfNotPresent
+    imagePullSecrets: []
+  replicaCount: 1
+  podAnnotations: {}
+  resources: {}
+  podLabels: {}
+  extraEnv: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podSecurityContext: {}
+  defaultPodSecurityContext:
+    enabled: true
+    # runAsNonRoot: true
+  securityContext: {}
+  defaultSecurityContext:
+    enabled: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - all
+
+  livenessProbe:
+    failureThreshold: 5
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 2
+  readinessProbe:
+    failureThreshold: 10
+    initialDelaySeconds: 1
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 2
+
 influxdb2:
   enabled: true
   adminUser:
