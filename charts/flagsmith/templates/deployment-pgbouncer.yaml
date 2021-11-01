@@ -1,0 +1,122 @@
+{{- if .Values.pgbouncer.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "flagsmith.fullname" . }}-pgbouncer
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: pgbouncer
+spec:
+  selector:
+    matchLabels:
+      {{- include "flagsmith.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: pgbouncer
+  replicas: {{ .Values.pgbouncer.replicacount }}
+  template:
+    metadata:
+      annotations:
+        checksum/secrets-pgbouncer: {{ include (print $.Template.BasePath "/secrets-pgbouncer.yaml") . | sha256sum }}
+{{- if .Values.pgbouncer.podAnnotations }}
+{{ toYaml .Values.pgbouncer.podAnnotations | nindent 8 }}
+{{- end }}
+      labels:
+        {{- include "flagsmith.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: pgbouncer
+        {{- if .Values.pgbouncer.podLabels }}
+{{ toYaml .Values.pgbouncer.podLabels | indent 8 }}
+        {{- end }}
+    spec:
+      {{- if .Values.pgbouncer.affinity }}
+      affinity:
+{{ toYaml .Values.pgbouncer.affinity | indent 8 }}
+      {{- end }}
+      {{- if .Values.pgbouncer.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.pgbouncer.nodeSelector | indent 8 }}
+      {{- end }}
+      {{- if .Values.pgbouncer.tolerations }}
+      tolerations:
+{{ toYaml .Values.pgbouncer.tolerations | indent 8 }}
+      {{- end }}
+      {{- if .Values.pgbouncer.schedulerName }}
+      schedulerName: "{{ .Values.pgbouncer.schedulerName }}"
+      {{- end }}
+      {{- if .Values.pgbouncer.image.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.pgbouncer.image.imagePullSecrets | indent 4 }}
+      {{- end }}
+      securityContext:
+        {{- $securityContext := .Values.pgbouncer.podSecurityContext | default (dict) | deepCopy }}
+        {{- if .Values.pgbouncer.defaultPodSecurityContext.enabled }}
+        {{- $securityContext = $securityContext | merge (omit .Values.pgbouncer.defaultPodSecurityContext "enabled") }}
+        {{- end }}
+        {{- toYaml $securityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}-pgbouncer
+        image: {{ .Values.pgbouncer.image.repository }}:{{ .Values.pgbouncer.image.tag }}
+        imagePullPolicy: {{ .Values.pgbouncer.image.imagePullPolicy }}
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRESQL_HOST
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "flagsmith.fullname" . }}-pgbouncer
+              key: POSTGRESQL_HOST
+        - name: POSTGRESQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "flagsmith.fullname" . }}-pgbouncer
+              key: POSTGRESQL_DATABASE
+        # Expose the database with its actual name
+        - name: PGBOUNCER_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "flagsmith.fullname" . }}-pgbouncer
+              key: POSTGRESQL_DATABASE
+        - name: POSTGRESQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "flagsmith.fullname" . }}-pgbouncer
+              key: POSTGRESQL_USER
+        - name: POSTGRESQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "flagsmith.fullname" . }}-pgbouncer
+              key: POSTGRESQL_PASSWORD
+        - name: PGBOUNCER_PORT
+          value: '5432'
+        {{- range $envName, $envValue := .Values.frontend.extraEnv }}
+        - name: {{ $envName }}
+          value: {{ $envValue | quote }}
+        {{- end }}
+        lifecycle:
+          preStop:
+            exec:
+              # Allow existing queries clients to complete within 120 seconds
+              command: ["/bin/sh", "-c", "killall -INT pgbouncer && sleep 120"]
+        livenessProbe:
+          failureThreshold: {{ .Values.pgbouncer.livenessProbe.failureThreshold }}
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: {{ .Values.pgbouncer.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.pgbouncer.livenessProbe.periodSeconds }}
+          successThreshold: {{ .Values.pgbouncer.livenessProbe.successThreshold }}
+          timeoutSeconds: {{ .Values.pgbouncer.livenessProbe.timeoutSeconds }}
+        readinessProbe:
+          failureThreshold: {{ .Values.pgbouncer.readinessProbe.failureThreshold }}
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: {{ .Values.pgbouncer.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.pgbouncer.readinessProbe.periodSeconds }}
+          successThreshold: {{ .Values.pgbouncer.readinessProbe.successThreshold }}
+          timeoutSeconds: {{ .Values.pgbouncer.readinessProbe.timeoutSeconds }}
+        securityContext:
+          {{- $securityContext := .Values.pgbouncer.securityContext | default (dict) | deepCopy }}
+          {{- if .Values.pgbouncer.defaultSecurityContext.enabled }}
+          {{- $securityContext = $securityContext | merge (omit .Values.pgbouncer.defaultSecurityContext "enabled") }}
+          {{- end }}
+          {{- toYaml $securityContext | nindent 10 }}
+        resources:
+{{ toYaml .Values.pgbouncer.resources | indent 10 }}
+{{- end }}
