@@ -9,8 +9,8 @@ spec:
   type: {{ .Values.service.frontend.type }}
   ports:
     - port: {{ .Values.service.frontend.port }}
-      targetPort: {{ .Values.service.frontend.port }}
+      targetPort: {{ .Values.api.separateApiAndFrontend | ternary .Values.service.frontend.port .Values.service.api.port }}
       protocol: TCP
       name: http
   selector: {{- include "flagsmith.selectorLabels" . | nindent 4 }}
-    app.kubernetes.io/component: frontend
+    app.kubernetes.io/component: {{ if .Values.api.separateApiAndFrontend }}frontend{{ else }}api{{ end }}
