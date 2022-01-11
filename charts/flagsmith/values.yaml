@@ -4,6 +4,15 @@ api:
     tag: null  # defaults to .Chart.AppVersion
     imagePullPolicy: IfNotPresent
     imagePullSecrets: []
+  # Note that if setting this to false, need to set
+  # api.image.repository to flagsmith/flagsmith (or some other
+  # repository hosting the image with combined frontend and backend)
+  # and that the image tag exists (for flagsmith/flagsmith, >=2.10.0)
+  #
+  # Also, note that the ingress and service for the frontend remain
+  # (unless explicitly switched off), but both are handled by the api
+  # deployment's pods.
+  separateApiAndFrontend: true
   replicacount: 1
   podAnnotations: {}
   resources: {}
