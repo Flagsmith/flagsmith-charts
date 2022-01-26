@@ -212,7 +212,7 @@ Database URL
 {{- if .url -}}
 {{- .url -}}
 {{- else -}}
-{{- printf "%s://%s:%s@%s:%v/%s" (required "Must specify a database type" .type) (required "Must specify a database username" .username) (required "Must specify a database password" .password) (required "Must specify a database host" .host) (required "Must specify a database port" .port) (required "Must specify a database database name" .database) -}}
+{{- printf "%s://%s:%s@%s:%v/%s" (required "Must specify a database type" .type) (required "Must specify a database username" .username) (required "Must specify a database password" .password) (required "Must specify a database host" .host) (required "Must specify a database port" .port) (required "Must specify a database name" .database) -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
