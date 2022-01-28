@@ -61,9 +61,9 @@ spec:
           value: '/'
 {{- if .Values.frontend.apiProxy.enabled }}
         - name: PROXY_API_URL
-          value: http://{{ include "flagsmith.fullname" . }}-api.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.api.port }}
+          value: http://{{ include "flagsmith.fullname" . }}-api.{{ .Release.Namespace }}:{{ .Values.service.api.port }}
         - name: FLAGSMITH_PROXY_API_URL
-          value: http://{{ include "flagsmith.fullname" . }}-api.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.api.port }}
+          value: http://{{ include "flagsmith.fullname" . }}-api.{{ .Release.Namespace }}:{{ .Values.service.api.port }}
 {{- end }}
 {{- range $envName, $envValue := .Values.frontend.extraEnv }}
         - name: {{ $envName }}
