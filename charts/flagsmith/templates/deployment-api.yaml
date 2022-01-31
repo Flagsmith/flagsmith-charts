@@ -71,16 +71,14 @@ spec:
       - name: migrate-db
         image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
         imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
-        command:
-          - python
-          - manage.py
-          - migrate
+        args: ["migrate"]
         env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
       containers:
       - name: {{ .Chart.Name }}-api
         image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
         imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
         # command: ["sleep", "3600"]
+        args: ["serve"]
         ports:
         - containerPort: {{ .Values.service.api.port }}
         env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
