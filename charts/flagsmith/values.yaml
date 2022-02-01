@@ -191,9 +191,11 @@ service:
   api:
     type: ClusterIP
     port: 8000
+    annotations: {}
   frontend:
     type: ClusterIP
     port: 8080
+    annotations: {}
 
 ingress:
   frontend:
