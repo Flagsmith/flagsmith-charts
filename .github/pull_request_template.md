@@ -1,4 +1,4 @@
-Thanks for submitted a PR! Please check the boxes below:
+Thanks for submitting a PR! Please check the boxes below:
 
 - [ ] I have filled in the "Changes" section below?
 - [ ] I have filled in the "How did you test this code" section below?
