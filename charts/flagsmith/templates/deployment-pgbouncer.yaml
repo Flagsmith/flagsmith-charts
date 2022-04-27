@@ -86,7 +86,7 @@ spec:
               key: POSTGRESQL_PASSWORD
         - name: PGBOUNCER_PORT
           value: '5432'
-        {{- range $envName, $envValue := .Values.frontend.extraEnv }}
+        {{- range $envName, $envValue := .Values.pgbouncer.extraEnv }}
         - name: {{ $envName }}
           value: {{ $envValue | quote }}
         {{- end }}
