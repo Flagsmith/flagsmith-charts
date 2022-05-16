@@ -53,6 +53,10 @@ api:
     timeoutSeconds: 30
 
 frontend:
+  # Set this to `false` to switch off the frontend (deployment,
+  # service and ingress). Set api.separateApiAndFrontend to false to
+  # switch off the deployment but retain the service and ingress
+  # pointing at the single Docker image that serves both.
   enabled: true
   image:
     repository: flagsmith/flagsmith-frontend

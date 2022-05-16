@@ -1,3 +1,4 @@
+{{- if .Values.frontend.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -18,3 +19,4 @@ spec:
       name: http
   selector: {{- include "flagsmith.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: {{ if .Values.api.separateApiAndFrontend }}frontend{{ else }}api{{ end }}
+{{- end }}
