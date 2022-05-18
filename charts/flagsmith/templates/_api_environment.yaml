@@ -55,3 +55,7 @@
 - name: USE_X_FORWARDED_HOST
   value: 'true'
 {{- end }}
+{{- if and .Values._destructiveTests.enabled .Values._destructiveTests.testToken }}
+- name: E2E_TEST_AUTH_TOKEN
+  value: {{ .Values._destructiveTests.testToken | quote }}
+{{- end }}

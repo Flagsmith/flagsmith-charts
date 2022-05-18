@@ -203,6 +203,28 @@ Influxdb hostname
 {{- end -}}
 
 {{/*
+Frontend environment
+*/}}
+{{- define "flagsmith.frontend.environment" -}}
+- name: ASSET_URL
+  value: '/'
+{{- if .Values.frontend.apiProxy.enabled }}
+- name: PROXY_API_URL
+  value: http://{{ include "flagsmith.fullname" . }}-api.{{ .Release.Namespace }}:{{ .Values.service.api.port }}
+- name: FLAGSMITH_PROXY_API_URL
+  value: http://{{ include "flagsmith.fullname" . }}-api.{{ .Release.Namespace }}:{{ .Values.service.api.port }}
+{{- end }}
+{{- if and .Values._destructiveTests.enabled .Values._destructiveTests.testToken }}
+- name: E2E_TEST_TOKEN_PROD
+  value: {{ .Values._destructiveTests.testToken | quote }}
+{{- end }}
+{{- range $envName, $envValue := .Values.frontend.extraEnv }}
+- name: {{ $envName }}
+  value: {{ $envValue | quote }}
+{{- end }}
+{{- end }}
+
+{{/*
 Database URL
 */}}
 {{- define "flagsmith.api.realDatabaseUrl" -}}

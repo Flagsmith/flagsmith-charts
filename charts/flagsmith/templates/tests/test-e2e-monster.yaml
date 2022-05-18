@@ -1,0 +1,74 @@
+{{- if .Values.frontend.enabled }}
+{{- if and .Values._destructiveTests.enabled .Values._destructiveTests.e2eMonster.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ template "flagsmith.fullname" . }}-test-e2e-monster
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: test-e2e
+  annotations:
+    "helm.sh/hook": test
+spec:
+{{- if .Values.api.image.imagePullSecrets }}
+  imagePullSecrets:
+{{ toYaml .Values.api.image.imagePullSecrets | indent 4 }}
+{{- end }}
+  initContainers:
+    - name: api
+      image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
+      imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
+      command:
+        - bash
+        - -c
+        - 'cp ./CI_COMMIT_SHA /git_commit_sha/commit_sha.txt'
+      volumeMounts:
+        - name: git-commit-sha
+          mountPath: /git_commit_sha/
+  containers:
+    - name: e2e
+      image: {{ .Values._destructiveTests.e2eMonster.image.repository }}:{{ .Values._destructiveTests.e2eMonster.image.tag }}
+      imagePullPolicy: {{ .Values.frontend.image.imagePullPolicy }}
+      command:
+        - bash
+        - -cex
+        - >-
+          apt -qq update &&
+          apt -qq install -y curl wget gpg git xvfb >> /dev/null &&
+          wget -qO - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg &&
+          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | tee /etc/apt/sources.list.d/google-chrome.list &&
+          apt -qq update &&
+          apt -qq install -y google-chrome-stable >> /dev/null &&
+          google-chrome --version &&
+          curl -fsSL https://deb.nodesource.com/setup_16.x | bash - &&
+          apt -qq install -y nodejs >> /dev/null &&
+          node --version &&
+          npm --version &&
+          git clone https://github.com/Flagsmith/flagsmith.git &&
+          TARGET_GIT_SHA="$(cat /git_commit_sha/commit_sha.txt)" &&
+          echo "TARGET_GIT_SHA=$TARGET_GIT_SHA" &&
+          (cd flagsmith &&
+          git checkout "$TARGET_GIT_SHA" &&
+          (cd frontend &&
+          export NODE_ENV=test &&
+          npm i &&
+          AUTH_TOKEN_PROJECT_NAME="$(node -e "console.log(require(\"./env/project_dev\").env.toUpperCase())")" &&
+          echo "AUTH_TOKEN_PROJECT_NAME=$AUTH_TOKEN_PROJECT_NAME" &&
+          eval "export E2E_TEST_TOKEN_$AUTH_TOKEN_PROJECT_NAME=$E2E_TEST_TOKEN_PROD" &&
+          env | grep E2E_ &&
+          npm run env &&
+          npm run test)) &&
+          echo "Tests ran successfully"
+
+      env: {{ include "flagsmith.frontend.environment" . | nindent 8 }}
+      resources: {{ .Values._destructiveTests.e2eMonster.resources | toYaml | nindent 8 }}
+      volumeMounts:
+        - name: git-commit-sha
+          mountPath: /git_commit_sha/
+          readOnly: true
+  restartPolicy: Never
+  volumes:
+    - name: git-commit-sha
+      emptyDir: {}
+{{- end }}
+{{- end }}

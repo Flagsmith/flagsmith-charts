@@ -56,19 +56,7 @@ spec:
         imagePullPolicy: {{ .Values.frontend.image.imagePullPolicy }}
         ports:
         - containerPort: {{ .Values.service.frontend.port }}
-        env:
-        - name: ASSET_URL
-          value: '/'
-{{- if .Values.frontend.apiProxy.enabled }}
-        - name: PROXY_API_URL
-          value: http://{{ include "flagsmith.fullname" . }}-api.{{ .Release.Namespace }}:{{ .Values.service.api.port }}
-        - name: FLAGSMITH_PROXY_API_URL
-          value: http://{{ include "flagsmith.fullname" . }}-api.{{ .Release.Namespace }}:{{ .Values.service.api.port }}
-{{- end }}
-{{- range $envName, $envValue := .Values.frontend.extraEnv }}
-        - name: {{ $envName }}
-          value: {{ $envValue | quote }}
-{{- end }}
+        env: {{- include "flagsmith.frontend.environment" . | nindent 8 }}
         livenessProbe:
           failureThreshold: {{ .Values.frontend.livenessProbe.failureThreshold }}
           httpGet:
