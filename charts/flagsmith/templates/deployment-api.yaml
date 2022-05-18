@@ -95,7 +95,7 @@ spec:
         readinessProbe:
           failureThreshold: {{ .Values.api.readinessProbe.failureThreshold }}
           httpGet:
-            path: /
+            path: /health
             port: {{ .Values.service.api.port }}
             scheme: HTTP
           initialDelaySeconds: {{ .Values.api.readinessProbe.initialDelaySeconds }}
