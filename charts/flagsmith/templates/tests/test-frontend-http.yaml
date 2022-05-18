@@ -1,0 +1,24 @@
+{{- if .Values.frontend.enabled }}
+{{- if and .Values.tests.enabled .Values.tests.frontend.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ template "flagsmith.fullname" . }}-test-frontend-http
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: test-frontend-http
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: curlimages/curl
+      command: ['curl']
+      args:
+        - --fail
+        - --max-time
+        - {{ .Values.tests.frontend.maxTime | squote }}
+        - '{{ include "flagsmith.fullname" . }}-frontend:{{ .Values.service.frontend.port }}'
+  restartPolicy: Never
+{{- end }}
+{{- end }}

@@ -1,0 +1,22 @@
+{{- if and .Values.tests.enabled .Values.tests.api.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ template "flagsmith.fullname" . }}-test-api-http
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: test-api-http
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: curlimages/curl
+      command: ['curl']
+      args:
+        - --fail
+        - --max-time
+        - {{ .Values.tests.api.maxTime | squote }}
+        - '{{ include "flagsmith.fullname" . }}-api:{{ .Values.service.api.port }}'
+  restartPolicy: Never
+{{- end }}
