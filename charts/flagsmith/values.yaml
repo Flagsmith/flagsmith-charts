@@ -24,6 +24,8 @@ api:
   #   memory: 300Mi
   podLabels: {}
   extraEnv: {}
+  # See https://docs.flagsmith.com/deployment/locally-api#creating-a-secret-key
+  secretKey: null
   nodeSelector: {}
   tolerations: []
   affinity: {}
