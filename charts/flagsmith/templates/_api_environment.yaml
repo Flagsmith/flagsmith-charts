@@ -44,3 +44,8 @@
 - name: {{ $envName }}
   value: {{ $envValue | quote }}
 {{- end }}
+- name: DJANGO_SECRET_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ template "flagsmith.fullname" . }}
+      key: DJANGO_SECRET_KEY
