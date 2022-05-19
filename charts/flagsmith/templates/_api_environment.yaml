@@ -44,3 +44,7 @@
 - name: {{ $envName }}
   value: {{ $envValue | quote }}
 {{- end }}
+{{- if .Values.frontend.apiProxy.enabled }}
+- name: USE_X_FORWARDED_HOST
+  value: 'true'
+{{- end }}
