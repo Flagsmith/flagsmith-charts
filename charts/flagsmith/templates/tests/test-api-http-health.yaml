@@ -2,21 +2,21 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: {{ template "flagsmith.fullname" . }}-test-api-http
+  name: {{ template "flagsmith.fullname" . }}-test-api-http-health
   labels:
     {{- include "flagsmith.labels" . | nindent 4 }}
-    app.kubernetes.io/component: test-api-http
+    app.kubernetes.io/component: test-api-http-health
   annotations:
     "helm.sh/hook": test
 spec:
   containers:
-    - name: index
+    - name: health
       image: curlimages/curl
       command: ['curl']
       args:
         - --fail
         - --max-time
         - {{ .Values.tests.api.maxTime | squote }}
-        - '{{ include "flagsmith.fullname" . }}-api:{{ .Values.service.api.port }}'
+        - '{{ include "flagsmith.fullname" . }}-api:{{ .Values.service.api.port }}/health'
   restartPolicy: Never
 {{- end }}
