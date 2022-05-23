@@ -10,7 +10,7 @@ metadata:
     "helm.sh/hook": test
 spec:
   containers:
-    - name: wget
+    - name: index
       image: curlimages/curl
       command: ['curl']
       args:
