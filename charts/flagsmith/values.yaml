@@ -230,3 +230,15 @@ ingress:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
+
+# These tests just make non-destructive requests to the services in
+# the cluster. Enabling this and running helm test is safe.
+tests:
+  # A test is enabled if both this and the specific test is enabled
+  enabled: false
+  api:
+    enabled: true
+    maxTime: 10
+  frontend:
+    enabled: true
+    maxTime: 10
