@@ -17,7 +17,6 @@ spec:
         - --fail
         - --max-time
         - {{ .Values.tests.api.maxTime | squote }}
-        # - '{{ include "flagsmith.fullname" . }}-api:{{ .Values.service.api.port }}'
-        - '{{ include "flagsmith.fullname" . }}-api:1234'  # wrong port, so this should always fail
+        - '{{ include "flagsmith.fullname" . }}-api:{{ .Values.service.api.port }}'
   restartPolicy: Never
 {{- end }}
