@@ -5,7 +5,8 @@ _destructiveTests:
 api:
   extraEnv:
     EMAIL_BACKEND: 'django.core.mail.backends.console.EmailBackend'
+    ENABLE_INFLUXDB_FEATURES: 'true'
+    FE_E2E_TEST_USER_EMAIL: 'nightwatch@solidstategroup.com'
+  influxdbEnsureSetup: true
 influxdb2:
-  # Needed to set this for the tests to not fail. Possibly related to
-  # https://github.com/Flagsmith/flagsmith/issues/340
-  enabled: false
+  enabled: true

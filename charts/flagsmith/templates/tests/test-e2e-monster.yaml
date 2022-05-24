@@ -74,6 +74,11 @@ spec:
           eval "export E2E_TEST_TOKEN_$AUTH_TOKEN_PROJECT_NAME=$E2E_TEST_TOKEN_PROD" &&
           env | grep E2E_ &&
           npm run env &&
+          cat ./common/project.js &&
+          sed -i -e 's|^\s*api:.*|api: process.env.PROXY_API_URL + "/api/v1/",|' ./common/project.js &&
+          sed -i -e 's|^\s*flagsmithClientAPI:.*|flagsmithClientAPI: process.env.PROXY_API_URL + "/api/v1/",|' ./common/project.js &&
+          sed -i -e 's|^\s*flagsmithClientEdgeAPI:.*|flagsmithClientEdgeAPI: process.env.PROXY_API_URL + "/api/v1/",|' ./common/project.js &&
+          cat ./common/project.js &&
           npm run test)) &&
           echo "Tests ran successfully"
 
