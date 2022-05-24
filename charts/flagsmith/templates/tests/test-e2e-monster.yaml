@@ -61,7 +61,7 @@ spec:
 {{- if .Values._destructiveTests.e2eMonster.useFirefox }}
           sed -i 's/chrome/firefox/g' ./e2e/index.cafe.js ./.testcaferc.js &&
           sed -i '/other settings/a\ \ \ \ src: ["./e2e/cafe/environment.cafe.js", "./e2e/cafe/invite.cafe.js", "./e2e/cafe/project.cafe.js"],' .testcaferc.js &&
-          sed -i '/src.*e2e\/cafe/' ./e2e/index.cafe.js &&
+          sed -i '/src.*e2e\/cafe/d' ./e2e/index.cafe.js &&
 {{- end }}
           sed -i '/videoPath/d' ./.testcaferc.js &&
           sed -i 's/videoOptions/__videoOptions/' ./.testcaferc.js &&
