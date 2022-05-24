@@ -261,6 +261,7 @@ _destructiveTests:
       repository: ubuntu
       tag: jammy
       imagePullPolicy: IfNotPresent
+    useFirefox: false
     resources:
       requests:
         memory: 1Gi

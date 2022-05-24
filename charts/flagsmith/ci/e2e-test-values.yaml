@@ -1,5 +1,7 @@
 _destructiveTests:
   enabled: true
+  e2eMonster:
+    useFirefox: true
 api:
   extraEnv:
     EMAIL_BACKEND: 'django.core.mail.backends.console.EmailBackend'

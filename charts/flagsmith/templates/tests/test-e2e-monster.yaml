@@ -35,11 +35,19 @@ spec:
         - >-
           apt -qq update &&
           apt -qq install -y curl wget gpg git xvfb >> /dev/null &&
+{{- if .Values._destructiveTests.e2eMonster.useFirefox }}
+          apt -qq install -y software-properties-common >> /dev/null &&
+          add-apt-repository ppa:mozillateam/ppa &&
+          (echo && echo 'Package: *' && echo 'Pin: release o=LP-PPA-mozillateam' && echo 'Pin-Priority: 1001' && echo) | tee /etc/apt/preferences.d/mozilla-firefox &&
+          apt -qq install -y firefox >> /dev/null &&
+          firefox --version &&
+{{- else }}
           wget -qO - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg &&
           echo "deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | tee /etc/apt/sources.list.d/google-chrome.list &&
           apt -qq update &&
           apt -qq install -y google-chrome-stable >> /dev/null &&
           google-chrome --version &&
+{{- end }}
           curl -fsSL https://deb.nodesource.com/setup_16.x | bash - &&
           apt -qq install -y nodejs >> /dev/null &&
           node --version &&
@@ -50,6 +58,9 @@ spec:
           (cd flagsmith &&
           git checkout "$TARGET_GIT_SHA" &&
           (cd frontend &&
+{{- if .Values._destructiveTests.e2eMonster.useFirefox }}
+          sed -i 's/chrome/firefox/g' ./e2e/index.cafe.js ./.testcaferc.js &&
+{{- end }}
           export NODE_ENV=test &&
           npm i &&
           AUTH_TOKEN_PROJECT_NAME="$(node -e "console.log(require(\"./env/project_dev\").env.toUpperCase())")" &&
