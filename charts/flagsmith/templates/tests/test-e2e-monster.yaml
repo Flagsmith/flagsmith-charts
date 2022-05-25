@@ -60,7 +60,7 @@ spec:
           (cd frontend &&
 {{- if .Values._destructiveTests.e2eMonster.useFirefox }}
           sed -i 's/chrome/firefox/g' ./e2e/index.cafe.js ./.testcaferc.js &&
-          sed -i 's|e2e/cafe|e2e/cafe/{environment,invite.test,project}.cafe.js|' ./e2e/index.cafe.js &&
+          sed -i 's|concurrency([0-9]*)|concurrency(1)|' ./e2e/index.cafe.js &&
           cat ./e2e/index.cafe.js &&
 {{- end }}
           sed -i '/videoPath/d' ./.testcaferc.js &&
