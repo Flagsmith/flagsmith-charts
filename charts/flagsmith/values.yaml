@@ -24,6 +24,11 @@ api:
   #   memory: 300Mi
   podLabels: {}
   extraEnv: {}
+  # extraEnvFromSecret:
+  #   NAME:
+  #    secretName: mysecret
+  #    secretKey: mykey
+  extraEnvFromSecret: {}
   # See https://docs.flagsmith.com/deployment/locally-api#creating-a-secret-key
   secretKey: null
   nodeSelector: {}
@@ -76,6 +81,7 @@ frontend:
   apiProxy:
     enabled: true
   extraEnv: {}
+  extraEnvFromSecret: {}
   nodeSelector: {}
   tolerations: []
   affinity: {}
