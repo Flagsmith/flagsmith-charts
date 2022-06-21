@@ -68,7 +68,7 @@ spec:
           sed -i 's/videoEncodingOptions/__videoEncodingOptions/' ./.testcaferc.js &&
           cat ./.testcaferc.js &&
           export NODE_ENV=test &&
-          npm i &&
+          npm i --production --legacy-peer-deps &&
           AUTH_TOKEN_PROJECT_NAME="$(node -e "console.log(require(\"./env/project_dev\").env.toUpperCase())")" &&
           echo "AUTH_TOKEN_PROJECT_NAME=$AUTH_TOKEN_PROJECT_NAME" &&
           eval "export E2E_TEST_TOKEN_$AUTH_TOKEN_PROJECT_NAME=$E2E_TEST_TOKEN_PROD" &&
