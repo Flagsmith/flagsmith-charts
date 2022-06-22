@@ -55,6 +55,7 @@ api:
       tag: latest
       imagePullPolicy: IfNotPresent
     timeoutSeconds: 30
+  enableTelemetry: 'true'
 
 frontend:
   # Set this to `false` to switch off the frontend (deployment,

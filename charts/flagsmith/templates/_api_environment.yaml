@@ -59,3 +59,5 @@
 - name: E2E_TEST_AUTH_TOKEN
   value: {{ .Values._destructiveTests.testToken | quote }}
 {{- end }}
+- name: ENABLE_TELEMTRY
+  value: 'false'
