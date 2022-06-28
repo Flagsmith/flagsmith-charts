@@ -36,12 +36,14 @@ api:
     # runAsUser: 1000
     # runAsGroup: 1000
   livenessProbe:
+    path: /health
     failureThreshold: 5
     initialDelaySeconds: 5
     periodSeconds: 10
     successThreshold: 1
     timeoutSeconds: 2
   readinessProbe:
+    path: /health
     failureThreshold: 10
     initialDelaySeconds: 1
     periodSeconds: 10
@@ -149,14 +151,12 @@ pgbouncer:
         - all
 
   livenessProbe:
-    path: /health
     failureThreshold: 5
     initialDelaySeconds: 5
     periodSeconds: 10
     successThreshold: 1
     timeoutSeconds: 2
   readinessProbe:
-    path: /health
     failureThreshold: 10
     initialDelaySeconds: 1
     periodSeconds: 10
