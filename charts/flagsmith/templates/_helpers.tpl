@@ -222,6 +222,13 @@ Frontend environment
 - name: {{ $envName }}
   value: {{ $envValue | quote }}
 {{- end }}
+{{- range $envName, $secretKeyRef := .Values.frontend.extraEnvFromSecret }}
+- name: {{ $envName }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ $secretKeyRef.secretName }}
+      key: {{ $secretKeyRef.secretKey }}
+{{- end }}
 {{- end }}
 
 {{/*

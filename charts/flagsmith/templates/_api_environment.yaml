@@ -51,6 +51,13 @@
 - name: {{ $envName }}
   value: {{ $envValue | quote }}
 {{- end }}
+{{- range $envName, $secretKeyRef := .Values.api.extraEnvFromSecret }}
+- name: {{ $envName }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ $secretKeyRef.secretName }}
+      key: {{ $secretKeyRef.secretKey }}
+{{- end }}
 {{- if .Values.frontend.apiProxy.enabled }}
 - name: USE_X_FORWARDED_HOST
   value: 'true'
