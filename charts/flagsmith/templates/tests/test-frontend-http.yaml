@@ -11,14 +11,12 @@ metadata:
     "helm.sh/hook": test
 spec:
   containers:
-    - name: index
-      image: curlimages/curl
-      command: ['curl']
-      args:
-        - --fail
-        - --max-time
-        - {{ .Values.tests.frontend.maxTime | squote }}
-        - '{{ include "flagsmith.fullname" . }}-frontend:{{ .Values.service.frontend.port }}'
+    {{- $args := dict }}
+    {{- $_ := set $args "name" "frontend" }}
+    {{- $_ := set $args "maxTime" .Values.tests.frontend.maxTime }}
+    {{- $_ := set $args "printResponseBody" .Values.tests.frontend.printResponseBody }}
+    {{- $_ := set $args "url" (printf "%s-frontend:%d" (include "flagsmith.fullname" . ) (.Values.service.frontend.port | int64)) }}
+    - {{ include "flagsmith.tests.curlContainer" $args | nindent 6 }}
   restartPolicy: Never
 {{- end }}
 {{- end }}

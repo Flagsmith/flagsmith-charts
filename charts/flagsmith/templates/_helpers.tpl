@@ -270,3 +270,24 @@ Database URL for application
 {{ include "flagsmith.api.realDatabaseUrl" . }}
 {{- end }}
 {{- end }}
+
+{{/*
+Curl Test container
+*/}}
+{{- define "flagsmith.tests.curlContainer" -}}
+name: {{ .name }}
+image: curlimages/curl
+command: ['curl']
+args:
+  - --fail
+  - --max-time
+  - {{ .maxTime | squote }}
+  - --silent
+{{- if not .printResponseBody }}
+  - --output
+  - /dev/null
+{{- end }}
+  - --write-out
+  - 'URL: %{url_effective}\nHTTP status code: %{http_code}\nBytes downloaded: %{size_download}\nTime taken: %{time_total}s\n'
+  - {{ .url | squote }}
+{{- end }}

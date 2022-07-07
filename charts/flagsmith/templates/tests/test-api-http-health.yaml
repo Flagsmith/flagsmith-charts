@@ -10,13 +10,11 @@ metadata:
     "helm.sh/hook": test
 spec:
   containers:
-    - name: health
-      image: curlimages/curl
-      command: ['curl']
-      args:
-        - --fail
-        - --max-time
-        - {{ .Values.tests.api.maxTime | squote }}
-        - '{{ include "flagsmith.fullname" . }}-api:{{ .Values.service.api.port }}/health'
+    {{- $args := dict }}
+    {{- $_ := set $args "name" "api-health" }}
+    {{- $_ := set $args "maxTime" .Values.tests.api.maxTime }}
+    {{- $_ := set $args "printResponseBody" .Values.tests.api.printResponseBody }}
+    {{- $_ := set $args "url" (printf "%s-api:%d/health" (include "flagsmith.fullname" . ) (.Values.service.api.port | int64)) }}
+    - {{ include "flagsmith.tests.curlContainer" $args | nindent 6 }}
   restartPolicy: Never
 {{- end }}

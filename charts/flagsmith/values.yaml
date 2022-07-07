@@ -247,9 +247,11 @@ tests:
   api:
     enabled: true
     maxTime: 10
+    printResponseBody: false
   frontend:
     enabled: true
     maxTime: 10
+    printResponseBody: false
 
 # These are used for integration testing the chart and the
 # application. Enabling this will mean that data in a release is
