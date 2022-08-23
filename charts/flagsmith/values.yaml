@@ -60,6 +60,7 @@ api:
       tag: latest
       imagePullPolicy: IfNotPresent
     timeoutSeconds: 30
+  influxdbEnsureSetup: false
 
 frontend:
   # Set this to `false` to switch off the frontend (deployment,
