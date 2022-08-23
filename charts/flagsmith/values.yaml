@@ -67,6 +67,8 @@ api:
     hostFromNodeIp: false
     port: 8125
     prefix: flagsmith.api
+  influxdbSetup:
+    enabled: false
 
 frontend:
   # Set this to `false` to switch off the frontend (deployment,
