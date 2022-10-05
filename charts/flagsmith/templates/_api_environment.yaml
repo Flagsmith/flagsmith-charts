@@ -1,3 +1,4 @@
+{{- if .Values.databaseExternal.url }}
 - name: DATABASE_URL
   valueFrom:
     secretKeyRef:
@@ -8,6 +9,7 @@
       name: {{ template "flagsmith.fullname" . }}
       key: DATABASE_URL
       {{- end }}
+{{- end }}
 {{- if .Values.api.secretKey }}
 - name: DJANGO_SECRET_KEY
   valueFrom:
