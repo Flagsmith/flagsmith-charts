@@ -268,8 +268,8 @@ _destructiveTests:
   e2eMonster:
     enabled: true
     image:
-      repository: ubuntu
-      tag: jammy
+      repository: mattelwell/flagsmith-e2e-tests
+      tag: alpha4
       imagePullPolicy: IfNotPresent
     useFirefox: false
     resources:
