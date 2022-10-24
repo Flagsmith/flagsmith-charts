@@ -268,8 +268,8 @@ _destructiveTests:
   e2eMonster:
     enabled: true
     image:
-      repository: mattelwell/flagsmith-e2e-tests
-      tag: alpha4
+      repository: flagsmith/flagsmith-e2e-tests
+      tag: latest
       imagePullPolicy: IfNotPresent
     useFirefox: false
     resources:
