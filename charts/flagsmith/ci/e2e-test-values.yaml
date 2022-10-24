@@ -1,6 +1,6 @@
 _destructiveTests:
   enabled: true
-  e2eMonster:
+  e2e:
     useFirefox: true
 api:
   extraEnv:

@@ -1,5 +1,5 @@
 {{- if .Values.frontend.enabled }}
-{{- if and .Values._destructiveTests.enabled .Values._destructiveTests.e2eMonster.enabled }}
+{{- if and .Values._destructiveTests.enabled .Values._destructiveTests.e2e.enabled }}
 apiVersion: v1
 kind: Pod
 metadata:
@@ -27,10 +27,10 @@ spec:
           mountPath: /git_commit_sha/
   containers:
     - name: e2e
-      image: {{ .Values._destructiveTests.e2eMonster.image.repository }}:{{ .Values._destructiveTests.e2eMonster.image.tag }}
+      image: {{ .Values._destructiveTests.e2e.image.repository }}:{{ .Values._destructiveTests.e2e.image.tag }}
       imagePullPolicy: {{ .Values.frontend.image.imagePullPolicy }}
       env: {{ include "flagsmith.frontend.environment" . | nindent 8 }}
-      resources: {{ .Values._destructiveTests.e2eMonster.resources | toYaml | nindent 8 }}
+      resources: {{ .Values._destructiveTests.e2e.resources | toYaml | nindent 8 }}
       volumeMounts:
         - name: git-commit-sha
           mountPath: /git_commit_sha/

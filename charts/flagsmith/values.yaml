@@ -260,18 +260,12 @@ _destructiveTests:
   # A test is enabled if both this and the specific test is enabled
   enabled: false
   testToken: test-e2e-token
-  # This "monster" is in lieu of a specially constructed Docker image
-  # that contains the code and dependencies for running the e2e
-  # tests. It works by starting from a plain Ubuntu container,
-  # retrieving the commit SHA from the API container, then cloning the
-  # code from Github, installing dependencies, then running the tests.
-  e2eMonster:
+  e2e:
     enabled: true
     image:
       repository: flagsmith/flagsmith-e2e-tests
       tag: latest
       imagePullPolicy: IfNotPresent
-    useFirefox: false
     resources:
       requests:
         memory: 1Gi
