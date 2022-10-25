@@ -51,6 +51,28 @@
 - name: {{ $envName }}
   value: {{ $envValue | quote }}
 {{- end }}
+{{- with .Values.api.statsd }}
+{{- if .enabled }}
+- name: STATSD_HOST
+{{- if .host }}
+  value: {{ .host }}
+{{- else if .hostFromNodeIp }}
+  valueFrom:
+    fieldRef:
+      fieldPath: status.hostIP
+{{- else if (and $.Values.graphite.enabled $.Values.graphite.autoSetStatsdHostEnvVar) }}
+  value: {{ template "flagsmith.graphite.fullname" $ }}
+{{- else }}
+{{ fail "Must set api.statsd.host or api.statsd.hostFromNodeIp or enable graphite and set graphite.autoSetStatsdHostEnvVar" }}
+{{- end }}
+- name: STATSD_PORT
+  value: {{ .port | quote }}
+{{- if .prefix }}
+- name: STATSD_PREFIX
+  value: {{ .prefix }}
+{{- end }}
+{{- end }}
+{{- end }}
 {{- range $envName, $secretKeyRef := .Values.api.extraEnvFromSecret }}
 - name: {{ $envName }}
   valueFrom:
