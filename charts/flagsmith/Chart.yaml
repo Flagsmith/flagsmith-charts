@@ -2,8 +2,8 @@ apiVersion: v2
 name: flagsmith
 description: Flagsmith
 type: application
-version: 0.10.2
-appVersion: 2.26.0
+version: 0.11.0
+appVersion: 2.34.0
 dependencies:
   - name: postgresql
     repository: https://charts.helm.sh/stable
@@ -14,6 +14,10 @@ dependencies:
     # pinned due to issue https://github.com/influxdata/helm-charts/issues/350
     version: 2.0.0
     condition: influxdb2.enabled
+  - name: graphite
+    repository: https://kiwigrid.github.io
+    version: 0.7.3
+    condition: graphite.enabled
 icon: https://docs.flagsmith.com/img/square-icon.png
 # maintainers:
 #   - name: Ben Rometsch, Matt Elwell
