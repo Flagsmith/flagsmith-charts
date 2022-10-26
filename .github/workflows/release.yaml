@@ -25,9 +25,12 @@ jobs:
           version: v3.5.4
 
       - name: Add chart repo dependencies
+        # Note: this repos should match whith the repos set in ct.yaml
+        # See https://github.com/Flagsmith/flagsmith-charts/issues/105
         run: |
           helm repo add stable https://charts.helm.sh/stable
           helm repo add influxdb2 https://helm.influxdata.com/
+          helm repo add kiwigrid https://kiwigrid.github.io
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.2.0
