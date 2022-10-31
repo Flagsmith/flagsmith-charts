@@ -1,0 +1,103 @@
+{{- if .Values.taskProcessor.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "flagsmith.fullname" . }}-task-processor
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: task-processor
+spec:
+  selector:
+    matchLabels:
+      {{- include "flagsmith.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: task-processor
+  replicas: {{ .Values.taskProcessor.replicacount }}
+  template:
+    metadata:
+      annotations:
+        checksum/secrets-api: {{ include (print $.Template.BasePath "/secrets-api.yaml") . | sha256sum }}
+        {{- if and .Values.influxdbExternal.enabled (not .Values.influxdbExternal.tokenFromExistingSecret.enabled) }}
+        checksum/secrets-influxdb-external: {{ include (print $.Template.BasePath "/secrets-influxdb-external.yaml") . | sha256sum }}
+        {{- end }}
+{{- if .Values.taskProcessor.podAnnotations }}
+{{ toYaml .Values.taskProcessor.podAnnotations | nindent 8 }}
+{{- end }}
+      labels:
+        {{- include "flagsmith.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: task-processor
+        {{- if .Values.taskProcessor.podLabels }}
+{{ toYaml .Values.taskProcessor.podLabels | indent 8 }}
+        {{- end }}
+    spec:
+      {{- if .Values.taskProcessor.affinity }}
+      affinity:
+{{ toYaml .Values.taskProcessor.affinity | indent 8 }}
+      {{- end }}
+      {{- if .Values.taskProcessor.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.taskProcessor.nodeSelector | indent 8 }}
+      {{- end }}
+      {{- if .Values.taskProcessor.tolerations }}
+      tolerations:
+{{ toYaml .Values.taskProcessor.tolerations | indent 8 }}
+      {{- end }}
+      {{- if .Values.taskProcessor.schedulerName }}
+      schedulerName: "{{ .Values.taskProcessor.schedulerName }}"
+      {{- end }}
+      {{- if .Values.api.image.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.api.image.imagePullSecrets | indent 8 }}
+      {{- end }}
+      securityContext:
+        {{- $securityContext := .Values.taskProcessor.podSecurityContext | default (dict) | deepCopy }}
+        {{- if .Values.taskProcessor.defaultPodSecurityContext.enabled }}
+        {{- $securityContext = $securityContext | merge (omit .Values.taskProcessor.defaultPodSecurityContext "enabled") }}
+        {{- end }}
+        {{- toYaml $securityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}-task-processor
+        image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
+        imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
+        command:
+          - python
+          - manage.py
+        args:
+          - runprocessor
+{{- with .Values.taskProcessor.sleepIntervalMs }}
+          - --sleepintervalms
+          - {{ . | quote }}
+{{- end }}
+{{- with .Values.taskProcessor.numThreads }}
+          - --numthreads
+          - {{ . | quote }}
+{{- end }}
+{{- with .Values.taskProcessor.gracePeriodMs }}
+          - --graceperiodms
+          - {{ . | quote }}
+{{- end }}
+        env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
+        livenessProbe:
+          failureThreshold: {{ .Values.taskProcessor.livenessProbe.failureThreshold }}
+          exec:
+            command:
+              - python
+              - manage.py
+              - checktaskprocessorthreadhealth
+          initialDelaySeconds: {{ .Values.taskProcessor.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.taskProcessor.livenessProbe.periodSeconds }}
+          successThreshold: {{ .Values.taskProcessor.livenessProbe.successThreshold }}
+          timeoutSeconds: {{ .Values.taskProcessor.livenessProbe.timeoutSeconds }}
+        readinessProbe:
+          failureThreshold: {{ .Values.taskProcessor.readinessProbe.failureThreshold }}
+          exec:
+            command:
+              - python
+              - manage.py
+              - checktaskprocessorthreadhealth
+          initialDelaySeconds: {{ .Values.taskProcessor.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.taskProcessor.readinessProbe.periodSeconds }}
+          successThreshold: {{ .Values.taskProcessor.readinessProbe.successThreshold }}
+          timeoutSeconds: {{ .Values.taskProcessor.readinessProbe.timeoutSeconds }}
+        resources:
+{{ toYaml .Values.taskProcessor.resources | indent 10 }}
+{{- end }}

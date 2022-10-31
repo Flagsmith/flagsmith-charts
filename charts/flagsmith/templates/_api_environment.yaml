@@ -71,6 +71,10 @@
 {{- end }}
 {{- end }}
 {{- end }}
+{{- if .Values.taskProcessor.enabled }}
+- name: TASK_RUN_METHOD
+  value: TASK_PROCESSOR
+{{- end }}
 {{- range $envName, $secretKeyRef := .Values.api.extraEnvFromSecret }}
 - name: {{ $envName }}
   valueFrom:

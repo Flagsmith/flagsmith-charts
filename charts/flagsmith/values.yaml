@@ -116,6 +116,46 @@ frontend:
     successThreshold: 1
     timeoutSeconds: 10
 
+# See https://docs.flagsmith.com/deployment/task-processor
+taskProcessor:
+  enabled: false
+  replicacount: 1
+  sleepIntervalMs: null
+  numThreads: null
+  gracePeriodMs: null
+
+  livenessProbe:
+    failureThreshold: 5
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 2
+  readinessProbe:
+    failureThreshold: 10
+    initialDelaySeconds: 1
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 2
+
+  podAnnotations: {}
+  resources: {}
+  # limits:
+  #   cpu: 500m
+  #   memory: 500Mi
+  # requests:
+  #   cpu: 300m
+  #   memory: 300Mi
+  podLabels: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podSecurityContext: {}
+  defaultPodSecurityContext:
+    enabled: true
+    # runAsNonRoot: true  # TODO: enable this, conditional on tag semver
+    # runAsUser: 1000
+    # runAsGroup: 1000
+
 postgresql:
   enabled: true
   serviceAccount:
