@@ -60,6 +60,12 @@ api:
       tag: latest
       imagePullPolicy: IfNotPresent
     timeoutSeconds: 30
+  statsd:
+    enabled: false
+    host: null
+    hostFromNodeIp: false
+    port: 8125
+    prefix: flagsmith.api
 
 frontend:
   # Set this to `false` to switch off the frontend (deployment,
@@ -200,6 +206,12 @@ influxdbExternal:
     enabled: false
     name: null
     key: null
+
+# This is included primarily for easy testing of statsd integration from the application.
+graphite:
+  enabled: false
+  nameOverride: flagsmith-graphite
+  autoSetStatsdHostEnvVar: true
 
 service:
   api:

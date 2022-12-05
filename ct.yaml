@@ -1,6 +1,9 @@
+# Note: any repos listed here must also be added in the release github action
+# See https://github.com/Flagsmith/flagsmith-charts/issues/105
 chart-repos:
   - stable=https://charts.helm.sh/stable
   - influxdata=https://helm.influxdata.com/
+  - kiwigrid=https://kiwigrid.github.io
 target-branch: main
 validate-maintainers: false
 helm-extra-args: '--timeout 30m'

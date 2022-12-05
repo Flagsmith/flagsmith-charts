@@ -43,7 +43,7 @@ spec:
       {{- end }}
       {{- if .Values.pgbouncer.image.imagePullSecrets }}
       imagePullSecrets:
-{{ toYaml .Values.pgbouncer.image.imagePullSecrets | indent 4 }}
+{{ toYaml .Values.pgbouncer.image.imagePullSecrets | indent 8 }}
       {{- end }}
       securityContext:
         {{- $securityContext := .Values.pgbouncer.podSecurityContext | default (dict) | deepCopy }}
