@@ -12,6 +12,9 @@ spec:
       {{- include "flagsmith.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: pgbouncer
   replicas: {{ .Values.pgbouncer.replicacount }}
+  {{- with .Values.pgbouncer.deploymentStrategy }}
+  strategy: {{- . | toYaml | nindent 4 }}
+  {{- end }}
   template:
     metadata:
       annotations:

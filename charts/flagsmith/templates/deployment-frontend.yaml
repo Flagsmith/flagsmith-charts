@@ -12,6 +12,9 @@ spec:
       {{- include "flagsmith.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: frontend
   replicas: {{ .Values.frontend.replicacount }}
+  {{- with .Values.frontend.deploymentStrategy }}
+  strategy: {{- . | toYaml | nindent 4 }}
+  {{- end }}
   template:
     metadata:
       {{- if .Values.frontend.podAnnotations }}
