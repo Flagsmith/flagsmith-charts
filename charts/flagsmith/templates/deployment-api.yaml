@@ -10,7 +10,7 @@ spec:
     matchLabels:
       {{- include "flagsmith.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: api
-  replicas: {{ .Values.api.replicacount }}
+  {{- include "flagsmith.replicaCount" .Values.api.replicacount | nindent 2 }}
   template:
     metadata:
       annotations:
