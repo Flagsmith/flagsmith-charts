@@ -308,3 +308,12 @@ args:
   - 'URL: %{url_effective}\nHTTP status code: %{http_code}\nBytes downloaded: %{size_download}\nTime taken: %{time_total}s\n'
   - {{ .url | squote }}
 {{- end }}
+
+{{/*
+Replicas
+*/}}
+{{- define "flagsmith.replicaCount" -}}
+{{- if not (kindIs "invalid" .) -}}
+replicas: {{ . }}
+{{- end }}
+{{- end }}

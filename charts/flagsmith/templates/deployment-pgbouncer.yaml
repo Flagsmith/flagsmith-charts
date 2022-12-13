@@ -11,7 +11,7 @@ spec:
     matchLabels:
       {{- include "flagsmith.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: pgbouncer
-  replicas: {{ .Values.pgbouncer.replicacount }}
+  {{- include "flagsmith.replicaCount" .Values.pgbouncer.replicacount | nindent 2 }}
   template:
     metadata:
       annotations:
