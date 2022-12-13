@@ -14,6 +14,7 @@ api:
   # deployment's pods.
   separateApiAndFrontend: true
   replicacount: 1
+  deploymentStrategy: null
   podAnnotations: {}
   resources: {}
   # limits:
@@ -79,6 +80,7 @@ frontend:
     imagePullPolicy: IfNotPresent
     imagePullSecrets: []
   replicacount: 1
+  deploymentStrategy: null
   resources: {}
   # limits:
   #   cpu: 500m
@@ -143,6 +145,7 @@ pgbouncer:
     imagePullPolicy: IfNotPresent
     imagePullSecrets: []
   replicaCount: 1
+  deploymentStrategy: null
   podAnnotations: {}
   resources: {}
   podLabels: {}

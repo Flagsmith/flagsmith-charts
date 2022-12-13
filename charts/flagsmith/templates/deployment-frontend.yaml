@@ -11,6 +11,9 @@ spec:
     matchLabels:
       {{- include "flagsmith.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: frontend
+  {{- with .Values.frontend.deploymentStrategy }}
+  strategy: {{- . | toYaml | nindent 4 }}
+  {{- end }}
   {{- include "flagsmith.replicaCount" .Values.frontend.replicacount | nindent 2 }}
   template:
     metadata:
