@@ -11,10 +11,10 @@ spec:
     matchLabels:
       {{- include "flagsmith.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: frontend
-  replicas: {{ .Values.frontend.replicacount }}
   {{- with .Values.frontend.deploymentStrategy }}
   strategy: {{- . | toYaml | nindent 4 }}
   {{- end }}
+  {{- include "flagsmith.replicaCount" .Values.frontend.replicacount | nindent 2 }}
   template:
     metadata:
       {{- if .Values.frontend.podAnnotations }}
