@@ -30,9 +30,10 @@ for information about how to gain web access to the application.
 ##### Warning: no secret key set #####
 ######################################
 
-No secret key is set. For production systems, it is strongly
-recommended to generate a large random value and set it at
-`api.secretKey`. It must be kept secret.
+No secret key is set, a new one will be randomly generated at each
+deployment. For production systems, it is strongly recommended to
+generate a large random value and set it at `api.secretKey`. It must
+be kept secret.
 
 See https://docs.flagsmith.com/deployment/locally-api#creating-a-secret-key
 {{- end }}

@@ -8,13 +8,11 @@
       name: {{ template "flagsmith.fullname" . }}
       key: DATABASE_URL
       {{- end }}
-{{- if .Values.api.secretKey }}
 - name: DJANGO_SECRET_KEY
   valueFrom:
     secretKeyRef:
       name: {{ template "flagsmith.fullname" . }}
       key: DJANGO_SECRET_KEY
-{{- end }}
 {{- if .Values.influxdb2.enabled }}
 - name: INFLUXDB_URL
   value: http://{{- template "flagsmith.influxdb.hostname" . -}}:80
