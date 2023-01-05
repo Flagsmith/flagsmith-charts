@@ -4,9 +4,9 @@ dependencies:
   version: 8.6.4
 - name: influxdb2
   repository: https://helm.influxdata.com/
-  version: 2.0.0
+  version: 2.1.1
 - name: graphite
   repository: https://kiwigrid.github.io
   version: 0.7.3
-digest: sha256:08185ea3318322a875104ec4b2daca39b264587868ea3ebc5053c1bf6dd7576f
-generated: "2022-10-25T21:11:00.806235474+01:00"
+digest: sha256:1da2ab7c98cb0226469fd785d5d98431148486c6cecde9e419c73c2c0dc325b8
+generated: "2023-01-05T15:28:01.898891176Z"
