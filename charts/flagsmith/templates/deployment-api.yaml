@@ -21,6 +21,9 @@ spec:
         {{- if and .Values.influxdbExternal.enabled (not .Values.influxdbExternal.tokenFromExistingSecret.enabled) }}
         checksum/secrets-influxdb-external: {{ include (print $.Template.BasePath "/secrets-influxdb-external.yaml") . | sha256sum }}
         {{- end }}
+        {{- if and .Values.api.influxdbSetup.enabled }}
+        checksum/configmap-influxdb-setup: {{ include (print $.Template.BasePath "/configmap-influxdb-setup.yaml") . | sha256sum }}
+        {{- end }}
 {{- if .Values.api.podAnnotations }}
 {{ toYaml .Values.api.podAnnotations | nindent 8 }}
 {{- end }}
@@ -76,6 +79,18 @@ spec:
         imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
         args: ["migrate"]
         env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
+{{- if .Values.api.influxdbSetup.enabled }}
+      - name: influxdb-setup
+        image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
+        imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
+        command:
+          - python
+          - /influxdb_setup/influxdb_setup.py
+        env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
+        volumeMounts:
+          - name: influxdb-setup
+            mountPath: /influxdb_setup/
+{{- end }}
       containers:
       - name: {{ .Chart.Name }}-api
         image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
@@ -107,3 +122,9 @@ spec:
           timeoutSeconds: {{ .Values.api.readinessProbe.timeoutSeconds }}
         resources:
 {{ toYaml .Values.api.resources | indent 10 }}
+{{- if .Values.api.influxdbSetup.enabled }}
+      volumes:
+        - name: influxdb-setup
+          configMap:
+            name: {{ template "flagsmith.fullname" . }}-influxdb-setup
+{{- end }}

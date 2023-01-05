@@ -1,0 +1,12 @@
+{{- if .Values.api.influxdbSetup.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "flagsmith.fullname" . }}-influxdb-setup
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: influxdb-setup
+data:
+  influxdb_setup.py: |
+{{ include (print $.Template.BasePath "/_influxdb_setup.txt") . | indent 4 }}
+{{- end }}

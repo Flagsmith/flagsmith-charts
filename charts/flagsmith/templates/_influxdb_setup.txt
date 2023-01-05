@@ -1,0 +1,132 @@
+# File extension is .txt not .py just because helm's linting complains
+# about non txt/tpl/yaml/yml extensions.
+
+import os
+import sys
+
+from influxdb_client import InfluxDBClient
+
+influxdb_url = os.environ["INFLUXDB_URL"]
+influxdb_token = os.environ["INFLUXDB_TOKEN"]
+influxdb_organization_name = os.environ["INFLUXDB_ORG"]
+influxdb_setup_ping_retries = int(os.environ.get("INFLUXDB_SETUP_PING_RETRIES", 30))
+influxdb_setup_ping_delay_seconds = int(os.environ.get("INFLUXDB_SETUP_PING_DELAY_SECONDS", 2))
+
+print("Configuring InfluxDB at {}".format(influxdb_url))
+
+client = InfluxDBClient(url=influxdb_url, token=influxdb_token)
+print("Checking for ping...")
+for attempt in range(1, influxdb_setup_ping_retries+1):
+    if client.ping():
+        break
+else:
+    print(f"Failed to ping after {influxdb_setup_ping_retries} retries (with {influxdb_setup_ping_delay_seconds}s delay between each retry)")
+    sys.exit(1)
+
+print("Successfully pinged influxdb")
+
+matching_organizations = client.organizations_api().find_organizations(org=influxdb_organization_name)
+
+if not matching_organizations:
+    print("No organizations found, not creating")
+    sys.exit(1)
+
+if len(matching_organizations) > 1:
+    print(f"Found multiple organizations with name {influxdb_organization_name}. This should not happen.")
+    sys.exit(1)
+
+organization = matching_organizations[0]
+
+buckets_to_ensure_exist = ["default", "default_downsampled_15m", "default_downsampled_1h"]
+buckets_api = client.buckets_api()
+print("Creating buckets if needed...")
+for bucket_name in buckets_to_ensure_exist:
+    existing_bucket = buckets_api.find_bucket_by_name(bucket_name)
+    if not existing_bucket:
+        print(f"Bucket {bucket_name} does not exist. Creating...")
+        buckets_api.create_bucket(bucket_name=bucket_name, org_id=organization.id)
+        print(f"Created bucket {bucket_name}.")
+    else:
+        print(f"Bucket {bucket_name} already exists. Nothing to do.")
+print("Finished creating buckets if needed.")
+
+
+tasks_to_ensure_exist = [{
+    "name": "Downsample (API Requests)",
+    "flux": """
+data = from(bucket: "default")
+    |> range(start: -duration(v: int(v: task.every) * 2))
+    |> filter(fn: (r) =>
+        (r._measurement == "api_call"))
+
+data
+    |> aggregateWindow(fn: sum, every: 15m)
+    |> filter(fn: (r) =>
+        (exists r._value))
+    |> to(bucket: "default_downsampled_15m")
+""",
+    "every": "15m",
+}, {
+    "name": "Downsample (Flag Evaluations)",
+    "flux": """
+data = from(bucket: "default")
+    |> range(start: -duration(v: int(v: task.every) * 2))
+    |> filter(fn: (r) =>
+        (r._measurement == "feature_evaluation"))
+
+data
+    |> aggregateWindow(fn: sum, every: 15m)
+    |> filter(fn: (r) =>
+        (exists r._value))
+    |> to(bucket: "default_downsampled_15m")
+""",
+    "every": "15m",
+}, {
+    "name": "Downsample API 1h",
+    "flux": """
+data = from(bucket: "default")
+    |> range(start: -duration(v: int(v: task.every) * 2))
+    |> filter(fn: (r) =>
+        (r._measurement == "api_call"))
+
+data
+    |> aggregateWindow(fn: sum, every: 1h)
+    |> filter(fn: (r) =>
+      (exists r._value))
+    |> to(bucket: "default_downsampled_1h")
+""",
+    "every": "1h",
+}, {
+    "name": "Downsample API 1h - Flag Analytics",
+    "flux": """
+data = from(bucket: "default")
+    |> range(start: -duration(v: int(v: task.every) * 2))
+    |> filter(fn: (r) =>
+        (r._measurement == "feature_evaluation"))
+    |> filter(fn: (r) =>
+        (r._field == "request_count"))
+    |> group(columns: ["feature_id", "environment_id"])
+
+data
+    |> aggregateWindow(fn: sum, every: 1h)
+    |> filter(fn: (r) =>
+      (exists r._value))
+    |> set(key: "_measurement", value: "feature_evaluation")
+    |> set(key: "_field", value: "request_count")
+    |> to(bucket: "default_downsampled_1h")
+""",
+    "every": "1h",
+}]
+
+print("Creating tasks if needed...")
+tasks = client.tasks_api()
+for task_definition in tasks_to_ensure_exist:
+    if not tasks.find_tasks(name=task_definition["name"], org_id=organization.id):
+        print("Task {} does not exist. Creating...".format(task_definition["name"]))
+        tasks.create_task_every(task_definition["name"], task_definition["flux"], task_definition["every"], organization)
+        print("Created task {}.".format(task_definition["name"]))
+    else:
+        print("Task {} already exists. Nothing to do.".format(task_definition["name"]))
+print("Finished creating tasks if needed.")
+
+print("Finished configuring InfluxDB at {}".format(influxdb_url))

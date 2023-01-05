@@ -1,0 +1,11 @@
+tests:
+  enabled: true
+
+api:
+  extraEnv:
+    ENABLE_INFLUXDB_FEATURES: 'true'
+  influxdbSetup:
+    enabled: true
+
+influxdb2:
+  enabled: true
