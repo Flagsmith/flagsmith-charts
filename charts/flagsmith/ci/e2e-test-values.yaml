@@ -1,6 +1,10 @@
 _destructiveTests:
   enabled: true
 
+frontend:
+  extraEnv:
+    SLACK_TOKEN: "${SLACK_TOKEN}"
+
 api:
   extraEnv:
     EMAIL_BACKEND: 'django.core.mail.backends.console.EmailBackend'
