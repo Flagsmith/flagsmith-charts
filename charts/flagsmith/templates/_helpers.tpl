@@ -225,15 +225,21 @@ Frontend environment
 {{- define "flagsmith.frontend.environment" -}}
 - name: ASSET_URL
   value: '/'
-{{- if .Values.frontend.apiProxy.enabled }}
+{{- if and .Values.frontend.apiProxy.enabled false }}
 - name: PROXY_API_URL
   value: http://{{ include "flagsmith.fullname" . }}-api.{{ .Release.Namespace }}:{{ .Values.service.api.port }}
 - name: FLAGSMITH_PROXY_API_URL
   value: http://{{ include "flagsmith.fullname" . }}-api.{{ .Release.Namespace }}:{{ .Values.service.api.port }}
 {{- end }}
 {{- if and .Values._destructiveTests.enabled .Values._destructiveTests.testToken }}
-- name: E2E_TEST_TOKEN_PROD
+- name: E2E_TEST_TOKEN_E2E
   value: {{ .Values._destructiveTests.testToken | quote }}
+- name: E2E_TEST_TOKEN
+  value: {{ .Values._destructiveTests.testToken | quote }}
+- name: FLAGSMITH_API
+  value: {{ include "flagsmith.fullname" . }}-api.{{ .Release.Namespace }}:{{ .Values.service.api.port }}/api/v1/
+- name: ENABLE_INFLUXDB_FEATURES
+  value: {{ .Values.influxdb2.enabled | ternary "true" "false" | squote }}
 {{- end }}
 {{- range $envName, $envValue := .Values.frontend.extraEnv }}
 - name: {{ $envName }}
