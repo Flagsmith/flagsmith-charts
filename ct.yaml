@@ -7,3 +7,7 @@ chart-repos:
 target-branch: main
 validate-maintainers: false
 helm-extra-args: '--timeout 30m'
+
+rules:
+  comments:
+    min-spaces-from-content: 1
