@@ -225,7 +225,7 @@ Frontend environment
 {{- define "flagsmith.frontend.environment" -}}
 - name: ASSET_URL
   value: '/'
-{{- if and .Values.frontend.apiProxy.enabled false }}
+{{- if .Values.frontend.apiProxy.enabled }}
 - name: PROXY_API_URL
   value: http://{{ include "flagsmith.fullname" . }}-api.{{ .Release.Namespace }}:{{ .Values.service.api.port }}
 - name: FLAGSMITH_PROXY_API_URL
