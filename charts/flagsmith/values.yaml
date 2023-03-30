@@ -123,6 +123,7 @@ taskProcessor:
   sleepIntervalMs: null
   numThreads: null
   gracePeriodMs: null
+  queuePopSize: null
 
   livenessProbe:
     failureThreshold: 5

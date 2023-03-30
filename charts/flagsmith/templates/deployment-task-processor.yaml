@@ -75,6 +75,10 @@ spec:
           - --graceperiodms
           - {{ . | quote }}
 {{- end }}
+{{- with .Values.taskProcessor.queuePopSize }}
+          - --queuepopsize
+          - {{ . | quote }}
+{{- end }}
         env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
         livenessProbe:
           failureThreshold: {{ .Values.taskProcessor.livenessProbe.failureThreshold }}
