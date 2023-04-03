@@ -56,7 +56,7 @@ spec:
         {{- toYaml $securityContext | nindent 8 }}
       containers:
       - name: {{ .Chart.Name }}-task-processor
-        image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
+        image: {{ .Values.taskProcessor.image.repository }}:{{ .Values.taskProcessor.image.tag | default (printf "%s" .Chart.AppVersion) }}
         imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
         command:
           - python

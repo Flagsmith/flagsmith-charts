@@ -118,6 +118,12 @@ frontend:
 
 # See https://docs.flagsmith.com/deployment/task-processor
 taskProcessor:
+  image:
+    repository: flagsmith/flagsmith-api
+    tag: null # defaults to .Chart.AppVersion
+    imagePullPolicy: IfNotPresent
+    imagePullSecrets: []
+
   enabled: false
   replicacount: 1
   sleepIntervalMs: null
