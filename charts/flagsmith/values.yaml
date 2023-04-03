@@ -120,7 +120,7 @@ frontend:
 taskProcessor:
   image:
     repository: flagsmith/flagsmith-api
-    tag: null # defaults to .Chart.AppVersion
+    tag: null # defaults to .api.image.tag for backwards compatibility
     imagePullPolicy: IfNotPresent
     imagePullSecrets: []
 
