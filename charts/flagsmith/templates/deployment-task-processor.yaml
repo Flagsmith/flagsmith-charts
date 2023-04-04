@@ -44,7 +44,10 @@ spec:
       {{- if .Values.taskProcessor.schedulerName }}
       schedulerName: "{{ .Values.taskProcessor.schedulerName }}"
       {{- end }}
-      {{- if .Values.api.image.imagePullSecrets }}
+      {{- if .Values.taskProcessor.image.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.taskProcessor.image.imagePullSecrets | indent 8 }}
+      {{- else if .Values.api.image.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.api.image.imagePullSecrets | indent 8 }}
       {{- end }}
@@ -56,8 +59,8 @@ spec:
         {{- toYaml $securityContext | nindent 8 }}
       containers:
       - name: {{ .Chart.Name }}-task-processor
-        image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
-        imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
+        image: {{ .Values.taskProcessor.image.repository | default .Values.api.image.repository }}:{{ .Values.taskProcessor.image.tag | default .Values.api.image.tag | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.taskProcessor.image.imagePullPolicy | default .Values.api.image.imagePullPolicy }}
         command:
           - python
           - manage.py

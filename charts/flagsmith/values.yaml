@@ -118,6 +118,15 @@ frontend:
 
 # See https://docs.flagsmith.com/deployment/task-processor
 taskProcessor:
+  image:
+    # all values here default to those in .Values.api.image if not configured
+    # this is to simplify the logic for those using flagsmith-api image
+    # and to maintain backwards compatibility.
+    repository: null
+    tag: null
+    imagePullPolicy: null
+    imagePullSecrets: null
+
   enabled: false
   replicacount: 1
   sleepIntervalMs: null
