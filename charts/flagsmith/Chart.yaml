@@ -2,7 +2,7 @@ apiVersion: v2
 name: flagsmith
 description: Flagsmith
 type: application
-version: 0.17.0
+version: 0.18.0
 appVersion: 2.42.1
 dependencies:
   - name: postgresql
@@ -11,8 +11,7 @@ dependencies:
     condition: postgresql.enabled
   - name: influxdb2
     repository: https://helm.influxdata.com/
-    # pinned due to issue https://github.com/influxdata/helm-charts/issues/350
-    version: 2.0.0
+    version: 2.1.1
     condition: influxdb2.enabled
   - name: graphite
     repository: https://kiwigrid.github.io
