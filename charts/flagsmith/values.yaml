@@ -4,7 +4,8 @@ api:
     tag: null # defaults to .Chart.AppVersion
     imagePullPolicy: IfNotPresent
     imagePullSecrets: []
-  # Note that if setting this to false, need to set
+  #
+  # Note that if `separateApiAndFrontend` is `false`, you'll need to set
   # api.image.repository to flagsmith/flagsmith (or some other
   # repository hosting the image with combined frontend and backend)
   # and that the image tag exists (for flagsmith/flagsmith, >=2.10.0)
@@ -13,6 +14,17 @@ api:
   # (unless explicitly switched off), but both are handled by the api
   # deployment's pods.
   separateApiAndFrontend: true
+  #
+  # If `analytics.enabled` flag is `true`, the following database backend
+  # will be used for analytics, in the order of preference:
+  #   1. External InfluxDB if `influxdbExternal.enabled` set to `true`
+  #   2. External PostgreSQL if `databaseExternal.enabled` set to `true`
+  #   3. Chart-provisioned PostgreSQL
+  # Note that you can use a dedicated PostgreSQL instance by providing the
+  # value for `ANALYTICS_URL` environment variable under the
+  # `extraEnvFromSecret` key.
+  analytics:
+    enabled: false
   replicacount: 1
   deploymentStrategy: null
   podAnnotations: {}
@@ -233,14 +245,14 @@ pgbouncer:
 influxdb2:
   enabled: true
   adminUser:
-    organization: 'influxdata'
-    bucket: 'default'
-    user: 'admin'
-    retention_policy: '0s'
+    organization: "influxdata"
+    bucket: "default"
+    user: "admin"
+    retention_policy: "0s"
     ## Leave empty to generate a random password and token.
     ## Or fill any of these values to use fixed values.
-    password: ''
-    token: ''
+    password: ""
+    token: ""
   persistence:
     enabled: false
     # storageClass: "-"
