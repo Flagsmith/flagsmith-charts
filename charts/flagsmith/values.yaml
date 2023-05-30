@@ -60,6 +60,7 @@ api:
     successThreshold: 1
     timeoutSeconds: 2
   dbWaiter:
+    useExternalImage: true
     image:
       repository: willwill/wait-for-it
       tag: latest
