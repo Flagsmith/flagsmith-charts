@@ -36,11 +36,10 @@ spec:
   {{- end }}
   rules:
     {{- range .Values.ingress.api.hosts }}
-    - host: {{ .host | quote }}
+    - host: {{ . | quote }}
       http:
         paths:
-          {{- range .paths }}
-          - path: {{ . }}
+          - path: /
             {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
             pathType: Prefix
             backend:
@@ -53,6 +52,5 @@ spec:
               serviceName: {{ $fullName }}-api
               servicePort: {{ $svcPort }}
             {{- end }}
-          {{- end }}
     {{- end }}
   {{- end }}
