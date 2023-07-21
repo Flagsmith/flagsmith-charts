@@ -5,3 +5,4 @@ venv/
 .vscode
 charts/*/charts
 .direnv
+.idea/
