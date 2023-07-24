@@ -49,10 +49,10 @@ spec:
                 port: 
                   number: {{ $svcPort }}
             {{- else }}
-          {{- end }}
             backend:
               serviceName: {{ $fullName }}-api
               servicePort: {{ $svcPort }}
             {{- end }}
+          {{- end }}
     {{- end }}
   {{- end }}
