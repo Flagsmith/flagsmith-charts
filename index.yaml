@@ -3,6 +3,30 @@ entries:
   flagsmith:
   - apiVersion: v2
     appVersion: 2.57.0
+    created: "2023-07-24T13:39:18.164232687Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.helm.sh/stable
+      version: 8.6.4
+    - condition: influxdb2.enabled
+      name: influxdb2
+      repository: https://helm.influxdata.com/
+      version: 2.1.1
+    - condition: graphite.enabled
+      name: graphite
+      repository: https://kiwigrid.github.io
+      version: 0.7.3
+    description: Flagsmith
+    digest: 6629d3af24495974426b85abf5b57bd610127888310de8292af97b6fc8b7f321
+    icon: https://docs.flagsmith.com/img/square-icon.png
+    name: flagsmith
+    type: application
+    urls:
+    - https://github.com/Flagsmith/flagsmith-charts/releases/download/flagsmith-0.21.0/flagsmith-0.21.0.tgz
+    version: 0.21.0
+  - apiVersion: v2
+    appVersion: 2.57.0
     created: "2023-07-04T09:14:20.430372154Z"
     dependencies:
     - condition: postgresql.enabled
@@ -1237,4 +1261,4 @@ entries:
     urls:
     - https://github.com/Flagsmith/flagsmith-charts/releases/download/flagsmith-0.1.0/flagsmith-0.1.0.tgz
     version: 0.1.0
-generated: "2023-07-04T09:14:20.430915652Z"
+generated: "2023-07-24T13:39:18.164870793Z"
