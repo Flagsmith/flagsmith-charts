@@ -62,6 +62,7 @@ spec:
       initContainers:
 {{- if eq .Values.databaseExternal.enabled false }}
       - name: wait-for-db
+{{- if .Values.api.dbWaiter.useExternalImage }}
         image: {{ .Values.api.dbWaiter.image.repository }}:{{ .Values.api.dbWaiter.image.tag }}
         imagePullPolicy: {{ .Values.api.dbWaiter.image.imagePullPolicy }}
         command:
@@ -73,6 +74,17 @@ spec:
           {{- end }}
           - --port=5432
           - --timeout={{ .Values.api.dbWaiter.timeoutSeconds }}
+{{- else }}
+        image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
+        imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
+        command:
+          - python
+          - manage.py
+          - waitfordb
+          - --waitfor
+          - {{ .Values.api.dbWaiter.timeoutSeconds | quote }}
+        env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
+{{- end }}
 {{- end }}
       - name: migrate-db
         image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
