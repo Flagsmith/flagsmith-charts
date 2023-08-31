@@ -246,6 +246,10 @@ influxdb2:
     ## Or fill any of these values to use fixed values.
     password: ''
     token: ''
+    ## The password and token are obtained from an existing secret. The expected
+    ## keys are `admin-password` and `admin-token`.
+    ## If set, the password and token values above are ignored.
+    existingSecret: null
   persistence:
     enabled: false
     # storageClass: "-"

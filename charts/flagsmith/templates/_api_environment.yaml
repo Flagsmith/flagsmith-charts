@@ -28,8 +28,13 @@
 - name: INFLUXDB_TOKEN
   valueFrom:
     secretKeyRef:
+      {{- if .Values.influxdb2.adminUser.existingSecret }}
+      name: {{ .Values.influxdb2.adminUser.existingSecret }}
+      key: admin-token
+      {{- else }}
       name: {{ template "flagsmith.influxdb.fullname" . }}-auth
       key: admin-token
+      {{- end }}
 {{- else if .Values.influxdbExternal.enabled }}
 - name: INFLUXDB_URL
   value: {{ .Values.influxdbExternal.url | required "Must specify a URL for an external InfluxDB" }}
