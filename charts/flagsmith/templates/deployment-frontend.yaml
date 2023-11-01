@@ -53,6 +53,10 @@ spec:
         {{- $securityContext = $securityContext | merge (omit .Values.frontend.defaultPodSecurityContext "enabled") }}
         {{- end }}
         {{- toYaml $securityContext | nindent 8 }}
+{{- with .Values.frontend.extraInitContainers }}
+      initContainers:
+{{- toYaml . | nindent 6 }}
+{{- end }}
       containers:
       - name: {{ .Chart.Name }}-frontend
         image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag | default (printf "%s" .Chart.AppVersion) }}
@@ -82,4 +86,7 @@ spec:
           timeoutSeconds: {{ .Values.frontend.readinessProbe.timeoutSeconds }}
         resources:
 {{ toYaml .Values.frontend.resources | indent 10 }}
+{{- with .Values.frontend.extraContainers }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
 {{- end }}

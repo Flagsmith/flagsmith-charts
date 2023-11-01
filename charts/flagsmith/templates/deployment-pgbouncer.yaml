@@ -54,6 +54,10 @@ spec:
         {{- $securityContext = $securityContext | merge (omit .Values.pgbouncer.defaultPodSecurityContext "enabled") }}
         {{- end }}
         {{- toYaml $securityContext | nindent 8 }}
+{{- with .Values.pgbouncer.extraInitContainers }}
+      initContainers:
+{{- toYaml . | nindent 6 }}
+{{- end }}
       containers:
       - name: {{ .Chart.Name }}-pgbouncer
         image: {{ .Values.pgbouncer.image.repository }}:{{ .Values.pgbouncer.image.tag }}
@@ -122,4 +126,7 @@ spec:
           {{- toYaml $securityContext | nindent 10 }}
         resources:
 {{ toYaml .Values.pgbouncer.resources | indent 10 }}
+{{- with .Values.pgbouncer.extraContainers }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
 {{- end }}
