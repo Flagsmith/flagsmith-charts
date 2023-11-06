@@ -103,6 +103,9 @@ spec:
           - name: influxdb-setup
             mountPath: /influxdb_setup/
 {{- end }}
+{{- with .Values.api.extraInitContainers }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
       containers:
       - name: {{ .Chart.Name }}-api
         image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
@@ -134,6 +137,9 @@ spec:
           timeoutSeconds: {{ .Values.api.readinessProbe.timeoutSeconds }}
         resources:
 {{ toYaml .Values.api.resources | indent 10 }}
+{{- with .Values.api.extraContainers }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
 {{- if .Values.api.influxdbSetup.enabled }}
       volumes:
         - name: influxdb-setup
