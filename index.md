@@ -5,17 +5,24 @@
 ## Usage
 
 Add this repository using:
+
 ```
 $ helm repo add flagsmith https://flagsmith.github.io/flagsmith-charts/
 ```
 
 Or by adding the following into `helmfile.yaml`:
+
 ```yaml
 repositories:
   # ...
   - name: flagsmith
     url: https://flagsmith.github.io/flagsmith-charts/
 ```
+
+## Further Information
+
+For a detailed walkthrough of how to set up and configure Flagsmith on Kubernetes, please check out
+[our docs](https://docs.flagsmith.com/deployment/hosting/kubernetes).
 
 ## Source
 
