@@ -22,6 +22,11 @@ repositories:
    url: https://flagsmith.github.io/flagsmith-charts/
 ```
 
+## Further Information
+
+For a detailed walkthrough of how to set up and configure Flagsmith on Kubernetes, please check out
+[our docs](https://docs.flagsmith.com/deployment/hosting/kubernetes).
+
 ## Development
 
 We use [pre-commit](https://pre-commit.com/index.html#install) for linting. You can install and run with:
