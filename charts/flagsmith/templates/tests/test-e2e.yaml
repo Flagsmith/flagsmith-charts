@@ -8,6 +8,10 @@ metadata:
     {{- include "flagsmith.labels" . | nindent 4 }}
     app.kubernetes.io/component: test-e2e
   annotations:
+    {{- $annotations := include "flagsmith.annotations" . }}
+    {{- if $annotations }}
+    {{- $annotations | nindent 4 }}
+    {{- end }}
     "helm.sh/hook": test
 spec:
 {{- if .Values.api.image.imagePullSecrets }}

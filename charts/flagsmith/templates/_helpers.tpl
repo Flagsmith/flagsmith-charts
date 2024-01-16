@@ -36,6 +36,9 @@ Common labels
 */}}
 {{- define "flagsmith.labels" -}}
 helm.sh/chart: {{ include "flagsmith.chart" . }}
+{{- with .Values.commonLabels }}
+{{ . | toYaml }}
+{{- end }}
 {{ include "flagsmith.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
@@ -49,6 +52,25 @@ Selector labels
 {{- define "flagsmith.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "flagsmith.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
+{{/*
+Common annotations
+*/}}
+{{- define "flagsmith.annotations" -}}
+{{- if and (hasKey . "customAnnotations") (hasKey . "context") -}}
+{{- with .context.Values.commonAnnotations }}
+{{ . | toYaml }}
+{{- end }}
+{{- with .context.customAnnotations }}
+{{ . | toYaml }}
+{{- end }}
+{{- else -}}
+{{- with .Values.commonAnnotations }}
+{{ . | toYaml }}
+{{- end }}
+{{- end }}
 {{- end }}
 
 {{/*

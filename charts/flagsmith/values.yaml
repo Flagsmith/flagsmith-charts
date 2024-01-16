@@ -1,3 +1,9 @@
+# Annotations to add to all the resources deployed by this chart
+commonLabels: {}
+
+# Labels to add to all the resources deployed by this chart
+commonAnnotations: {}
+
 api:
   image:
     repository: flagsmith/flagsmith-api
