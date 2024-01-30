@@ -86,7 +86,7 @@ spec:
           - --queuepopsize
           - {{ . | quote }}
 {{- end }}
-        env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
+        env: {{ include (print $.Template.BasePath "/_task_processor_environment.yaml") . | nindent 8 }}
         livenessProbe:
           failureThreshold: {{ .Values.taskProcessor.livenessProbe.failureThreshold }}
           exec:
