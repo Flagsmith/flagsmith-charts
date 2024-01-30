@@ -1,0 +1,3 @@
+{{ include (print $.Template.BasePath "/_api_environment.yaml") . }}
+- name: "RUN_BY_PROCESSOR"
+  value: "1"
