@@ -66,6 +66,7 @@ spec:
         image: {{ .Values.taskProcessor.image.repository | default .Values.api.image.repository }}:{{ .Values.taskProcessor.image.tag | default .Values.api.image.tag | default .Chart.AppVersion }}
         imagePullPolicy: {{ .Values.taskProcessor.image.imagePullPolicy | default .Values.api.image.imagePullPolicy }}
         command:
+          - RUN_BY_PROCESSOR=1
           - python
           - manage.py
         args:
