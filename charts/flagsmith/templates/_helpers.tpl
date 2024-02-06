@@ -231,6 +231,10 @@ Frontend environment
 - name: FLAGSMITH_PROXY_API_URL
   value: http://{{ include "flagsmith.fullname" . }}-api.{{ .Release.Namespace }}:{{ .Values.service.api.port }}
 {{- end }}
+{{- if .Values.frontend.logging.format }}
+- name: LOG_FORMAT
+  value: {{ .Values.frontend.logging.format }}
+{{- end }}
 {{- if and .Values._destructiveTests.enabled .Values._destructiveTests.testToken }}
 - name: E2E_TEST_TOKEN_E2E
   value: {{ .Values._destructiveTests.testToken | quote }}
