@@ -77,7 +77,7 @@ api:
   extraInitContainers: []
   extraContainers: []
   logging: {}
-    # format: json # Can be json or generic (plaintext), when omitted the application will default to generic.
+    # format: json # Can be json or generic (plaintext).
 
 frontend:
   # Set this to `false` to switch off the frontend (deployment,
@@ -127,7 +127,7 @@ frontend:
   extraInitContainers: []
   extraContainers: []
   logging: {}
-    # format: json # Can be json or generic (plaintext), when omitted the application will default to generic.
+    # format: json # Can be json or generic (plaintext).
 
 # See https://docs.flagsmith.com/deployment/task-processor
 taskProcessor:
