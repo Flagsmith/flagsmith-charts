@@ -2,8 +2,8 @@ apiVersion: v2
 name: flagsmith
 description: Flagsmith
 type: application
-version: 0.23.0
-appVersion: 2.57.0
+version: 0.24.0
+appVersion: 2.96.0
 dependencies:
   - name: postgresql
     repository: https://charts.helm.sh/stable
@@ -18,6 +18,3 @@ dependencies:
     version: 0.7.3
     condition: graphite.enabled
 icon: https://docs.flagsmith.com/img/square-icon.png
-# maintainers:
-#   - name: Ben Rometsch, Matt Elwell
-#     email: support@flagsmith.com
