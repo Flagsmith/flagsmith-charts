@@ -76,8 +76,8 @@ api:
     enabled: false
   extraInitContainers: []
   extraContainers: []
-  logging: {}
-    # format: json # Can be json or generic (plaintext).
+  logging:
+    format: generic # options are generic or json.
 
 frontend:
   # Set this to `false` to switch off the frontend (deployment,
@@ -126,8 +126,6 @@ frontend:
     timeoutSeconds: 10
   extraInitContainers: []
   extraContainers: []
-  logging: {}
-    # format: json # Can be json or generic (plaintext).
 
 # See https://docs.flagsmith.com/deployment/task-processor
 taskProcessor:
