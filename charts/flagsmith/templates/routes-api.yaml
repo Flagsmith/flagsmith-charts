@@ -4,7 +4,7 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: flagsmith-api
-  {{- $annotations := include "flagsmith.annotations" . }}
+  {{- $annotations := include "flagsmith.annotations" .Values.common }}
   {{- with $annotations }}
   annotations:
     {{- . | nindent 4 }}

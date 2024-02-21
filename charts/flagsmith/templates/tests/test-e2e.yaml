@@ -8,7 +8,7 @@ metadata:
     {{- include "flagsmith.labels" . | nindent 4 }}
     app.kubernetes.io/component: test-e2e
   annotations:
-    {{- $annotations := include "flagsmith.annotations" . }}
+    {{- $annotations := include "flagsmith.annotations" .Values.common }}
     {{- if $annotations }}
     {{- $annotations | nindent 4 }}
     {{- end }}

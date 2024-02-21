@@ -1,8 +1,8 @@
-# Annotations to add to all the resources deployed by this chart
-commonLabels: {}
-
-# Labels to add to all the resources deployed by this chart
-commonAnnotations: {}
+common:
+  # Labels to add to all the resources deployed by this chart
+  labels: {}
+  # Annotations to add to all the resources deployed by this chart
+  annotations: {}
 
 api:
   image:

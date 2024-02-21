@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "flagsmith.fullname" . }}
-  {{- $annotations := include "flagsmith.annotations" . }}
+  {{- $annotations := include "flagsmith.annotations" .Values.common }}
   {{- with $annotations }}
   annotations:
     {{- . | nindent 4 }}
@@ -27,8 +27,8 @@ spec:
 {{ toYaml .Values.frontend.podAnnotations | indent 8 }}
       {{- end }}
       labels:
-        {{- if .Values.commonLabels }}
-        {{- .Values.commonLabels  | toYaml | nindent 8 }}
+        {{- if .Values.common.labels }}
+        {{- .Values.common.labels  | toYaml | nindent 8 }}
         {{- end }}
         {{- include "flagsmith.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: frontend

@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "flagsmith.fullname" . }}-pgbouncer
-  {{- $annotations := include "flagsmith.annotations" . }}
+  {{- $annotations := include "flagsmith.annotations" .Values.common }}
   {{- with $annotations }}
   annotations:
     {{- . | nindent 4 }}
@@ -28,8 +28,8 @@ spec:
 {{ toYaml .Values.pgbouncer.podAnnotations | nindent 8 }}
 {{- end }}
       labels:
-        {{- if .Values.commonLabels }}
-        {{- .Values.commonLabels  | toYaml | nindent 8 }}
+        {{- if .Values.common.labels }}
+        {{- .Values.common.labels  | toYaml | nindent 8 }}
         {{- end }}
         {{- include "flagsmith.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: pgbouncer

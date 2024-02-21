@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "flagsmith.fullname" . }}-api
-  {{- $annotations := include "flagsmith.annotations" ( dict "customAnnotations" .Values.service.api.annotations "context" . ) }}
+  {{- $annotations := include "flagsmith.annotations" ( dict "customAnnotations" .Values.service.api.annotations "commonValues" .Values.common ) }}
   {{- with $annotations }}
   annotations:
     {{- . | nindent 4 }}
