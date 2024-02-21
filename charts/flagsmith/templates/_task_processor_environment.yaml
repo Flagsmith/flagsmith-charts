@@ -1,3 +1,17 @@
 {{ include (print $.Template.BasePath "/_api_environment.yaml") . }}
-- name: "RUN_BY_PROCESSOR"
-  value: "1"
+{{- if .Values.taskProcessor.sleepIntervalMs }}
+- name: TASK_PROCESSOR_SLEEP_INTERVAL
+  value: {{ .Values.taskProcessor.sleepIntervalMs | quote }}
+{{- end }}
+{{- if .Values.taskProcessor.numThreads }}
+- name: TASK_PROCESSOR_NUM_THREADS
+  value: {{ .Values.taskProcessor.numThreads | quote }}
+{{- end }}
+{{- if .Values.taskProcessor.gracePeriodMs }}
+- name: TASK_PROCESSOR_GRACE_PERIOD_MS
+  value: {{ .Values.taskProcessor.gracePeriodMs | quote }}
+{{- end }}
+{{- if .Values.taskProcessor.queuePopSize }}
+- name: TASK_PROCESSOR_QUEUE_POP_SIZE
+  value: {{ .Values.taskProcessor.queuePopSize | quote }}
+{{- end }}
