@@ -82,6 +82,8 @@ api:
     enabled: false
   extraInitContainers: []
   extraContainers: []
+  logging:
+    format: generic # options are generic or json.
 
 frontend:
   # Set this to `false` to switch off the frontend (deployment,
