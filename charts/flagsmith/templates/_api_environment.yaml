@@ -100,3 +100,7 @@
 - name: E2E_TEST_AUTH_TOKEN
   value: {{ .Values._destructiveTests.testToken | quote }}
 {{- end }}
+{{- if .Values.api.logging.format }}
+- name: LOG_FORMAT
+  value: {{ .Values.api.logging.format }}
+{{- end }}
