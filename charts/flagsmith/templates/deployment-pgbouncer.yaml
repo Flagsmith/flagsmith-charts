@@ -137,4 +137,8 @@ spec:
 {{- with .Values.pgbouncer.extraContainers }}
 {{- toYaml . | nindent 6 }}
 {{- end }}
+      volumes:
+{{- with .Values.pgbouncer.extraVolumes }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
 {{- end }}
