@@ -3,6 +3,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "flagsmith.fullname" . }}-task-processor
+  {{- $annotations := include "flagsmith.annotations" .Values.common }}
+  {{- with $annotations }}
+  annotations:
+    {{- . | nindent 4 }}
+  {{- end }}
   labels:
     {{- include "flagsmith.labels" . | nindent 4 }}
     app.kubernetes.io/component: task-processor
@@ -23,6 +28,9 @@ spec:
 {{ toYaml .Values.taskProcessor.podAnnotations | nindent 8 }}
 {{- end }}
       labels:
+        {{- if .Values.common.labels }}
+        {{- .Values.common.labels  | toYaml | nindent 8 }}
+        {{- end }}
         {{- include "flagsmith.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: task-processor
         {{- if .Values.taskProcessor.podLabels }}

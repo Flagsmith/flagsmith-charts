@@ -16,9 +16,10 @@ metadata:
   labels:
     {{- include "flagsmith.labels" . | nindent 4 }}
     app.kubernetes.io/component: frontend
-  {{- with .Values.ingress.frontend.annotations }}
+  {{- $annotations := include "flagsmith.annotations" ( dict "customAnnotations" .Values.ingress.frontend.annotations "commonValues" .Values.common ) }}
+  {{- with $annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- . | nindent 4 }}
   {{- end }}
 spec:
 {{- with .Values.ingress.frontend.ingressClassName }}

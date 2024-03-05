@@ -2,6 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "flagsmith.fullname" . }}-api
+  {{- $annotations := include "flagsmith.annotations" .Values.common }}
+  {{- with $annotations }}
+  annotations:
+    {{- . | nindent 4 }}
+  {{- end }}
   labels:
     {{- include "flagsmith.labels" . | nindent 4 }}
     app.kubernetes.io/component: api
@@ -28,6 +33,9 @@ spec:
 {{ toYaml .Values.api.podAnnotations | nindent 8 }}
 {{- end }}
       labels:
+        {{- if .Values.common.labels }}
+        {{- .Values.common.labels  | toYaml | nindent 8 }}
+        {{- end }}
         {{- include "flagsmith.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: api
         {{- if .Values.api.podLabels }}
