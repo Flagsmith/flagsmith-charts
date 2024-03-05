@@ -178,6 +178,7 @@ taskProcessor:
     # runAsGroup: 1000
   extraInitContainers: []
   extraContainers: []
+  extraEnv: {}
 
 postgresql:
   enabled: true
