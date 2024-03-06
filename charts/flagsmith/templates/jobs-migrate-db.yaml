@@ -1,0 +1,78 @@
+{{- if .Values.jobs.migrateDb.enabled -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "flagsmith.fullname" . }}-migrate-db
+  {{- $annotations := include "flagsmith.annotations" .Values.common }}
+  {{- with $annotations }}
+  annotations:
+    {{- . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: job-migrate-db
+spec:
+  ttlSecondsAfterFinished: {{ .Values.jobs.migrateDb.ttlSecondsAfterFinished }}
+  template:
+    metadata:
+      {{- if .Values.jobs.migrateDb.jobAnnotations }}
+      annotations:
+{{ toYaml .Values.jobs.migrateDb.jobAnnotations | indent 8 }}
+      {{- end }}
+      labels:
+        {{- if .Values.common.labels }}
+        {{- .Values.common.labels  | toYaml | nindent 8 }}
+        {{- end }}
+        {{- include "flagsmith.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: job-migrate-db
+        {{- if .Values.jobs.migrateDb.podLabels }}
+{{ toYaml .Values.jobs.migrateDb.podLabels | indent 8 }}
+        {{- end }}
+    spec:
+      restartPolicy: {{ .Values.jobs.migrateDb.restartPolicy }}
+      {{- if .Values.jobs.migrateDb.affinity }}
+      affinity:
+{{ toYaml .Values.jobs.migrateDb.affinity | indent 8 }}
+      {{- end }}
+      {{- if .Values.jobs.migrateDb.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.jobs.migrateDb.nodeSelector | indent 8 }}
+      {{- end }}
+      {{- if .Values.jobs.migrateDb.tolerations }}
+      tolerations:
+{{ toYaml .Values.jobs.migrateDb.tolerations | indent 8 }}
+      {{- end }}
+      {{- if .Values.api.image.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.api.image.imagePullSecrets | indent 8 }}
+      {{- end }}
+      securityContext:
+        {{- $securityContext := .Values.jobs.migrateDb.podSecurityContext | default (dict) | deepCopy }}
+        {{- if .Values.jobs.migrateDb.defaultPodSecurityContext.enabled }}
+        {{- $securityContext = $securityContext | merge (omit .Values.jobs.migrateDb.defaultPodSecurityContext "enabled") }}
+        {{- end }}
+        {{- toYaml $securityContext | nindent 8 }}
+      {{- if .Values.jobs.migrateDb.shareProcessNamespace }}
+      shareProcessNamespace: true
+      {{- end }}
+      containers:
+      - name: migrate-db
+        image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
+        imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
+        {{- if .Values.jobs.migrateDb.command }}
+        command: {{ toYaml .Values.jobs.migrateDb.command | nindent 8 }}
+        {{- end }}
+        {{- if .Values.jobs.migrateDb.args }}
+        args: {{ toYaml .Values.jobs.migrateDb.args | nindent 8 }}
+        {{- else }}
+        args: ["migrate"]
+        {{- end }}
+        env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
+{{- with .Values.jobs.migrateDb.extraContainers }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
+      volumes:
+{{- with .Values.jobs.migrateDb.extraVolumes }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
+{{- end }}

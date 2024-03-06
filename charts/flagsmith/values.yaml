@@ -65,13 +65,6 @@ api:
     periodSeconds: 10
     successThreshold: 1
     timeoutSeconds: 2
-  dbWaiter:
-    useExternalImage: true
-    image:
-      repository: willwill/wait-for-it
-      tag: latest
-      imagePullPolicy: IfNotPresent
-    timeoutSeconds: 30
   statsd:
     enabled: false
     host: null
@@ -85,6 +78,7 @@ api:
   extraVolumes: []
   logging:
     format: generic # options are generic or json.
+  enableMigrateDbInitContainer: true
 
 frontend:
   # Set this to `false` to switch off the frontend (deployment,
@@ -333,6 +327,19 @@ ingress:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
+
+jobs:
+  migrateDb:
+    enabled: false
+    ttlSecondsAfterFinished: 3600
+    restartPolicy: OnFailure
+    defaultPodSecurityContext:
+      enabled: true
+      # runAsNonRoot: true
+    extraContainers: []
+    extraVolumes: []
+    command: []
+    args: []
 
 # These tests just make non-destructive requests to the services in
 # the cluster. Enabling this and running helm test is safe.
