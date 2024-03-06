@@ -98,7 +98,7 @@ spec:
 {{- toYaml . | nindent 6 }}
 {{- end }}
       volumes:
-{{- with .Values.api.extraVolumes }}
+{{- with .Values.frontend.extraVolumes }}
 {{- toYaml . | nindent 6 }}
 {{- end }}
 {{- end }}
