@@ -68,37 +68,13 @@ spec:
         {{- end }}
         {{- toYaml $securityContext | nindent 8 }}
       initContainers:
-{{- if eq .Values.databaseExternal.enabled false }}
-      - name: wait-for-db
-{{- if .Values.api.dbWaiter.useExternalImage }}
-        image: {{ .Values.api.dbWaiter.image.repository }}:{{ .Values.api.dbWaiter.image.tag }}
-        imagePullPolicy: {{ .Values.api.dbWaiter.image.imagePullPolicy }}
-        command:
-          - /wait-for-it.sh
-          {{- if .Values.pgbouncer.enabled }}
-          - --host={{ template "flagsmith.pgbouncer.hostname" . }}
-          {{- else }}
-          - --host={{ template "flagsmith.postgres.hostname" . }}
-          {{- end }}
-          - --port=5432
-          - --timeout={{ .Values.api.dbWaiter.timeoutSeconds }}
-{{- else }}
-        image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
-        imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
-        command:
-          - python
-          - manage.py
-          - waitfordb
-          - --waitfor
-          - {{ .Values.api.dbWaiter.timeoutSeconds | quote }}
-        env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
-{{- end }}
-{{- end }}
+{{- if .Values.api.enableMigrateDbInitContainer }}
       - name: migrate-db
         image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
         imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
         args: ["migrate"]
         env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
+{{- end }}
 {{- if .Values.api.influxdbSetup.enabled }}
       - name: influxdb-setup
         image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
