@@ -75,6 +75,7 @@ api:
     enabled: false
   extraInitContainers: []
   extraContainers: []
+  extraVolumes: []
   logging:
     format: generic # options are generic or json.
   enableMigrateDbInitContainer: true
@@ -126,6 +127,7 @@ frontend:
     timeoutSeconds: 10
   extraInitContainers: []
   extraContainers: []
+  extraVolumes: []
 
 # See https://docs.flagsmith.com/deployment/task-processor
 taskProcessor:
@@ -178,6 +180,7 @@ taskProcessor:
     # runAsGroup: 1000
   extraInitContainers: []
   extraContainers: []
+  extraVolumes: []
 
 postgresql:
   enabled: true
@@ -244,6 +247,7 @@ pgbouncer:
     timeoutSeconds: 2
   extraInitContainers: []
   extraContainers: []
+  extraVolumes: []
 
 influxdb2:
   enabled: true
@@ -318,7 +322,7 @@ ingress:
     # kubernetes.io/tls-acme: "true"
     hosts:
       - host: chart-example.local
-        paths: [ ]
+        paths: []
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:

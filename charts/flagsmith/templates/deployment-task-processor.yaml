@@ -105,4 +105,8 @@ spec:
 {{- with .Values.taskProcessor.extraContainers }}
 {{- toYaml . | nindent 6 }}
 {{- end }}
+      volumes:
+{{- with .Values.taskProcessor.extraVolumes }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
 {{- end }}

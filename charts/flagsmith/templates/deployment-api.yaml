@@ -124,9 +124,12 @@ spec:
 {{- with .Values.api.extraContainers }}
 {{- toYaml . | nindent 6 }}
 {{- end }}
-{{- if .Values.api.influxdbSetup.enabled }}
       volumes:
+{{- if .Values.api.influxdbSetup.enabled }}
         - name: influxdb-setup
           configMap:
             name: {{ template "flagsmith.fullname" . }}-influxdb-setup
+{{- end }}
+{{- with .Values.api.extraVolumes }}
+{{- toYaml . | nindent 6 }}
 {{- end }}
