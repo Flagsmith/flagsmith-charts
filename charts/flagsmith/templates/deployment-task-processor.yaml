@@ -65,6 +65,9 @@ spec:
         {{- $securityContext = $securityContext | merge (omit .Values.taskProcessor.defaultPodSecurityContext "enabled") }}
         {{- end }}
         {{- toYaml $securityContext | nindent 8 }}
+      env:
+        {{- $mergedEnv := merge .Values.api.extraEnv .Values.taskProcessor.extraEnv }}
+        {{- toYaml $mergedEnv | nindent 8 }}
 {{- with .Values.taskProcessor.extraInitContainers }}
       initContainers:
 {{- toYaml . | nindent 6 }}
@@ -77,7 +80,6 @@ spec:
           - ./scripts/run-docker.sh
         args:
           - run-task-processor
-        env: {{ include (print $.Template.BasePath "/_task_processor_environment.yaml") . | nindent 8 }}
         livenessProbe:
           failureThreshold: {{ .Values.taskProcessor.livenessProbe.failureThreshold }}
           exec:
