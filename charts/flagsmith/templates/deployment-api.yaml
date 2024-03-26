@@ -42,6 +42,9 @@ spec:
 {{ toYaml .Values.api.podLabels | indent 8 }}
         {{- end }}
     spec:
+      {{- if .Values.api.shareProcessNamespace }}
+      shareProcessNamespace: true
+      {{- end }}
       {{- if .Values.api.affinity }}
       affinity:
 {{ toYaml .Values.api.affinity | indent 8 }}
