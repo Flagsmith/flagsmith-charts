@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ template "flagsmith.fullname" . }}-migrate-db
+  name: {{ template "flagsmith.fullname" . }}-migrate-db-{{ .Release.Revision }}-{{ randAlphaNum 5 }}
   {{- $annotations := include "flagsmith.annotations" .Values.common }}
   {{- with $annotations }}
   annotations:
