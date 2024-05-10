@@ -2,8 +2,8 @@ apiVersion: v2
 name: flagsmith
 description: Flagsmith
 type: application
-version: 0.36.0
-appVersion: 2.113.0
+version: 0.37.0
+appVersion: 2.114.0
 dependencies:
   - name: postgresql
     repository: https://charts.helm.sh/stable
