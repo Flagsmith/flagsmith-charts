@@ -28,8 +28,13 @@
 - name: INFLUXDB_TOKEN
   valueFrom:
     secretKeyRef:
+      {{- if .Values.influxdb2.adminUser.existingSecret }}
+      name: {{ .Values.influxdb2.adminUser.existingSecret }}
+      key: admin-token
+      {{- else }}
       name: {{ template "flagsmith.influxdb.fullname" . }}-auth
       key: admin-token
+      {{- end }}
 {{- else if .Values.influxdbExternal.enabled }}
 - name: INFLUXDB_URL
   value: {{ .Values.influxdbExternal.url | required "Must specify a URL for an external InfluxDB" }}
@@ -94,4 +99,8 @@
 {{- if and .Values._destructiveTests.enabled .Values._destructiveTests.testToken }}
 - name: E2E_TEST_AUTH_TOKEN
   value: {{ .Values._destructiveTests.testToken | quote }}
+{{- end }}
+{{- if .Values.api.logging.format }}
+- name: LOG_FORMAT
+  value: {{ .Values.api.logging.format }}
 {{- end }}

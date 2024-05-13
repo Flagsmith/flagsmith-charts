@@ -3,6 +3,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "flagsmith.fullname" . }}-task-processor
+  {{- $annotations := include "flagsmith.annotations" .Values.common }}
+  {{- with $annotations }}
+  annotations:
+    {{- . | nindent 4 }}
+  {{- end }}
   labels:
     {{- include "flagsmith.labels" . | nindent 4 }}
     app.kubernetes.io/component: task-processor
@@ -23,12 +28,18 @@ spec:
 {{ toYaml .Values.taskProcessor.podAnnotations | nindent 8 }}
 {{- end }}
       labels:
+        {{- if .Values.common.labels }}
+        {{- .Values.common.labels  | toYaml | nindent 8 }}
+        {{- end }}
         {{- include "flagsmith.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: task-processor
         {{- if .Values.taskProcessor.podLabels }}
 {{ toYaml .Values.taskProcessor.podLabels | indent 8 }}
         {{- end }}
     spec:
+      {{- if .Values.taskProcessor.shareProcessNamespace }}
+      shareProcessNamespace: true
+      {{- end }}
       {{- if .Values.taskProcessor.affinity }}
       affinity:
 {{ toYaml .Values.taskProcessor.affinity | indent 8 }}
@@ -57,32 +68,19 @@ spec:
         {{- $securityContext = $securityContext | merge (omit .Values.taskProcessor.defaultPodSecurityContext "enabled") }}
         {{- end }}
         {{- toYaml $securityContext | nindent 8 }}
+{{- with .Values.taskProcessor.extraInitContainers }}
+      initContainers:
+{{- toYaml . | nindent 6 }}
+{{- end }}
       containers:
       - name: {{ .Chart.Name }}-task-processor
         image: {{ .Values.taskProcessor.image.repository | default .Values.api.image.repository }}:{{ .Values.taskProcessor.image.tag | default .Values.api.image.tag | default .Chart.AppVersion }}
         imagePullPolicy: {{ .Values.taskProcessor.image.imagePullPolicy | default .Values.api.image.imagePullPolicy }}
         command:
-          - python
-          - manage.py
+          - ./scripts/run-docker.sh
         args:
-          - runprocessor
-{{- with .Values.taskProcessor.sleepIntervalMs }}
-          - --sleepintervalms
-          - {{ . | quote }}
-{{- end }}
-{{- with .Values.taskProcessor.numThreads }}
-          - --numthreads
-          - {{ . | quote }}
-{{- end }}
-{{- with .Values.taskProcessor.gracePeriodMs }}
-          - --graceperiodms
-          - {{ . | quote }}
-{{- end }}
-{{- with .Values.taskProcessor.queuePopSize }}
-          - --queuepopsize
-          - {{ . | quote }}
-{{- end }}
-        env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
+          - run-task-processor
+        env: {{ include (print $.Template.BasePath "/_task_processor_environment.yaml") . | nindent 8 }}
         livenessProbe:
           failureThreshold: {{ .Values.taskProcessor.livenessProbe.failureThreshold }}
           exec:
@@ -107,4 +105,11 @@ spec:
           timeoutSeconds: {{ .Values.taskProcessor.readinessProbe.timeoutSeconds }}
         resources:
 {{ toYaml .Values.taskProcessor.resources | indent 10 }}
+{{- with .Values.taskProcessor.extraContainers }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
+      volumes:
+{{- with .Values.taskProcessor.extraVolumes }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
 {{- end }}

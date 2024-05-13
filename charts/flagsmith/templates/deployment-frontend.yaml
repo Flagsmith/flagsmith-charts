@@ -3,6 +3,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "flagsmith.fullname" . }}
+  {{- $annotations := include "flagsmith.annotations" .Values.common }}
+  {{- with $annotations }}
+  annotations:
+    {{- . | nindent 4 }}
+  {{- end }}
   labels:
     {{- include "flagsmith.labels" . | nindent 4 }}
     app.kubernetes.io/component: frontend
@@ -22,12 +27,18 @@ spec:
 {{ toYaml .Values.frontend.podAnnotations | indent 8 }}
       {{- end }}
       labels:
+        {{- if .Values.common.labels }}
+        {{- .Values.common.labels  | toYaml | nindent 8 }}
+        {{- end }}
         {{- include "flagsmith.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: frontend
         {{- if .Values.frontend.podLabels }}
 {{ toYaml .Values.frontend.podLabels | indent 8 }}
         {{- end }}
     spec:
+      {{- if .Values.frontend.shareProcessNamespace }}
+      shareProcessNamespace: true
+      {{- end }}
       {{- if .Values.frontend.affinity }}
       affinity:
 {{ toYaml .Values.frontend.affinity | indent 8 }}
@@ -53,6 +64,10 @@ spec:
         {{- $securityContext = $securityContext | merge (omit .Values.frontend.defaultPodSecurityContext "enabled") }}
         {{- end }}
         {{- toYaml $securityContext | nindent 8 }}
+{{- with .Values.frontend.extraInitContainers }}
+      initContainers:
+{{- toYaml . | nindent 6 }}
+{{- end }}
       containers:
       - name: {{ .Chart.Name }}-frontend
         image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag | default (printf "%s" .Chart.AppVersion) }}
@@ -82,4 +97,11 @@ spec:
           timeoutSeconds: {{ .Values.frontend.readinessProbe.timeoutSeconds }}
         resources:
 {{ toYaml .Values.frontend.resources | indent 10 }}
+{{- with .Values.frontend.extraContainers }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
+      volumes:
+{{- with .Values.frontend.extraVolumes }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
 {{- end }}
