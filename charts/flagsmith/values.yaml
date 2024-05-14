@@ -180,6 +180,7 @@ taskProcessor:
     # runAsGroup: 1000
   extraInitContainers: []
   extraContainers: []
+  extraEnv: {}
   extraVolumes: []
 
 devPostgresql:
