@@ -2,14 +2,12 @@ apiVersion: v2
 name: flagsmith
 description: Flagsmith
 type: application
-version: 0.38.1
-appVersion: 2.113.0
+version: 0.39.0
+appVersion: 2.114.1
 dependencies:
   - name: postgresql
     repository: https://charts.bitnami.com/bitnami
     version: 12.5.8
-    # Handle the previous flag too, see
-    # https://v2.helm.sh/docs/developing_charts/#tags-and-condition-fields-in-requirements-yaml
     condition: postgresql.enabled,devPostgresql.enabled
     alias: devPostgresql
   - name: influxdb2
