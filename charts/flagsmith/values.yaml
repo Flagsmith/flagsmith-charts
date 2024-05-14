@@ -180,16 +180,17 @@ taskProcessor:
     # runAsGroup: 1000
   extraInitContainers: []
   extraContainers: []
+  extraEnv: {}
   extraVolumes: []
 
-postgresql:
+devPostgresql:
   enabled: true
   serviceAccount:
-    enabled: true
-  nameOverride: flagsmith-postgresql
-  postgresqlDatabase: flagsmith
-  postgresqlUsername: postgres
-  postgresqlPassword: flagsmith
+    create: true
+  nameOverride: dev-postgresql
+  auth:
+    postgresPassword: flagsmith
+    database: flagsmith
 
 databaseExternal:
   enabled: false

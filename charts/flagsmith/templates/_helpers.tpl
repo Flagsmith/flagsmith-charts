@@ -78,10 +78,10 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "flagsmith.postgresql.fullname" -}}
-{{- if .Values.postgresql.fullnameOverride -}}
-{{- .Values.postgresql.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- if .Values.devPostgresql.fullnameOverride -}}
+{{- .Values.devPostgresql.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- $name := default .Chart.Name .Values.postgresql.nameOverride -}}
+{{- $name := default .Chart.Name .Values.devPostgresql.nameOverride -}}
 {{- if contains $name .Release.Name -}}
 {{- .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -94,10 +94,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 Set postgres host
 */}}
 {{- define "flagsmith.postgresql.host" -}}
-{{- if .Values.postgresql.enabled -}}
+{{- if .Values.devPostgresql.enabled -}}
 {{- template "flagsmith.postgresql.fullname" . -}}
 {{- else -}}
-{{- .Values.postgresql.postgresqlHost | quote -}}
+{{- .Values.devPostgresql.postgresqlHost | quote -}}
 {{- end -}}
 {{- end -}}
 
@@ -105,7 +105,7 @@ Set postgres host
 Set postgres secret
 */}}
 {{- define "flagsmith.postgresql.secret" -}}
-{{- if .Values.postgresql.enabled -}}
+{{- if .Values.devPostgresql.enabled -}}
 {{- template "flagsmith.postgresql.fullname" . -}}
 {{- else -}}
 {{- template "flagsmith.fullname" . -}}
@@ -116,10 +116,10 @@ Set postgres secret
 Set postgres secretKey
 */}}
 {{- define "flagsmith.postgresql.secretKey" -}}
-{{- if .Values.postgresql.enabled -}}
+{{- if .Values.devPostgresql.enabled -}}
 "postgresql-password"
 {{- else -}}
-{{- default "postgresql-password" .Values.postgresql.existingSecretKey | quote -}}
+{{- default "postgresql-password" .Values.devPostgresql.existingSecretKey | quote -}}
 {{- end -}}
 {{- end -}}
 
@@ -127,10 +127,10 @@ Set postgres secretKey
 Set postgres port
 */}}
 {{- define "flagsmith.postgresql.port" -}}
-{{- if .Values.postgresql.enabled -}}
+{{- if .Values.devPostgresql.enabled -}}
     "5432"
 {{- else -}}
-{{- default "5432" .Values.postgresql.postgresqlPort | quote -}}
+{{- default "5432" .Values.devPostgresql.postgresqlPort | quote -}}
 {{- end -}}
 {{- end -}}
 
@@ -182,7 +182,7 @@ Set redis port
 Postgres hostname
 */}}
 {{- define "flagsmith.postgres.hostname" -}}
-{{- printf "%s-%s" .Release.Name .Values.postgresql.nameOverride -}}.{{ .Release.Namespace }}.svc.cluster.local
+{{- printf "%s-%s" .Release.Name .Values.devPostgresql.nameOverride -}}.{{ .Release.Namespace }}.svc.cluster.local
 {{- end -}}
 
 {{/*
@@ -290,8 +290,8 @@ Database URL
 {{- end -}}
 {{- end -}}
 {{- end -}}
-{{- else if .Values.postgresql.enabled -}}
-{{- printf "%s://%s:%s@%s:%s/%s" "postgres" (required "Must specify a postgres username" .Values.postgresql.postgresqlUsername) (required "Must specify a postgres password" .Values.postgresql.postgresqlPassword) (include "flagsmith.postgres.hostname" . ) "5432" (required "Must specify a postgres database name" .Values.postgresql.postgresqlDatabase) -}}
+{{- else if .Values.devPostgresql.enabled -}}
+{{- printf "%s://%s:%s@%s:%s/%s" "postgres" (.Values.devPostgresql.auth.username | default "postgres") (.Values.devPostgresql.auth.password | default .Values.devPostgresql.auth.postgresPassword | required "Must specify a postgres password") (include "flagsmith.postgres.hostname" . ) "5432" (required "Must specify a postgres database name" .Values.devPostgresql.auth.database) -}}
 {{- end -}}
 {{- end -}}
 
