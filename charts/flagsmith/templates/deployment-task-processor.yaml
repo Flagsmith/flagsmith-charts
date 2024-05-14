@@ -37,6 +37,9 @@ spec:
 {{ toYaml .Values.taskProcessor.podLabels | indent 8 }}
         {{- end }}
     spec:
+      {{- if .Values.taskProcessor.shareProcessNamespace }}
+      shareProcessNamespace: true
+      {{- end }}
       {{- if .Values.taskProcessor.affinity }}
       affinity:
 {{ toYaml .Values.taskProcessor.affinity | indent 8 }}
@@ -106,6 +109,10 @@ spec:
         resources:
 {{ toYaml .Values.taskProcessor.resources | indent 10 }}
 {{- with .Values.taskProcessor.extraContainers }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
+      volumes:
+{{- with .Values.taskProcessor.extraVolumes }}
 {{- toYaml . | nindent 6 }}
 {{- end }}
 {{- end }}

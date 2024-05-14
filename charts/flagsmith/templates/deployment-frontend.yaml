@@ -36,6 +36,9 @@ spec:
 {{ toYaml .Values.frontend.podLabels | indent 8 }}
         {{- end }}
     spec:
+      {{- if .Values.frontend.shareProcessNamespace }}
+      shareProcessNamespace: true
+      {{- end }}
       {{- if .Values.frontend.affinity }}
       affinity:
 {{ toYaml .Values.frontend.affinity | indent 8 }}
@@ -95,6 +98,10 @@ spec:
         resources:
 {{ toYaml .Values.frontend.resources | indent 10 }}
 {{- with .Values.frontend.extraContainers }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
+      volumes:
+{{- with .Values.frontend.extraVolumes }}
 {{- toYaml . | nindent 6 }}
 {{- end }}
 {{- end }}

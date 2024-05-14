@@ -65,13 +65,6 @@ api:
     periodSeconds: 10
     successThreshold: 1
     timeoutSeconds: 2
-  dbWaiter:
-    useExternalImage: true
-    image:
-      repository: willwill/wait-for-it
-      tag: latest
-      imagePullPolicy: IfNotPresent
-    timeoutSeconds: 30
   statsd:
     enabled: false
     host: null
@@ -82,8 +75,10 @@ api:
     enabled: false
   extraInitContainers: []
   extraContainers: []
+  extraVolumes: []
   logging:
     format: generic # options are generic or json.
+  enableMigrateDbInitContainer: true
 
 frontend:
   # Set this to `false` to switch off the frontend (deployment,
@@ -132,6 +127,7 @@ frontend:
     timeoutSeconds: 10
   extraInitContainers: []
   extraContainers: []
+  extraVolumes: []
 
 # See https://docs.flagsmith.com/deployment/task-processor
 taskProcessor:
@@ -185,15 +181,16 @@ taskProcessor:
   extraInitContainers: []
   extraContainers: []
   extraEnv: {}
+  extraVolumes: []
 
-postgresql:
+devPostgresql:
   enabled: true
   serviceAccount:
-    enabled: true
-  nameOverride: flagsmith-postgresql
-  postgresqlDatabase: flagsmith
-  postgresqlUsername: postgres
-  postgresqlPassword: flagsmith
+    create: true
+  nameOverride: dev-postgresql
+  auth:
+    postgresPassword: flagsmith
+    database: flagsmith
 
 databaseExternal:
   enabled: false
@@ -251,6 +248,7 @@ pgbouncer:
     timeoutSeconds: 2
   extraInitContainers: []
   extraContainers: []
+  extraVolumes: []
 
 influxdb2:
   enabled: true
@@ -325,11 +323,24 @@ ingress:
     # kubernetes.io/tls-acme: "true"
     hosts:
       - host: chart-example.local
-        paths: [ ]
+        paths: []
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
+
+jobs:
+  migrateDb:
+    enabled: false
+    ttlSecondsAfterFinished: 3600
+    restartPolicy: OnFailure
+    defaultPodSecurityContext:
+      enabled: true
+      # runAsNonRoot: true
+    extraContainers: []
+    extraVolumes: []
+    command: []
+    args: []
 
 # These tests just make non-destructive requests to the services in
 # the cluster. Enabling this and running helm test is safe.

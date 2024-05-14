@@ -37,6 +37,9 @@ spec:
 {{ toYaml .Values.pgbouncer.podLabels | indent 8 }}
         {{- end }}
     spec:
+      {{- if .Values.pgbouncer.shareProcessNamespace }}
+      shareProcessNamespace: true
+      {{- end }}
       {{- if .Values.pgbouncer.affinity }}
       affinity:
 {{ toYaml .Values.pgbouncer.affinity | indent 8 }}
@@ -135,6 +138,10 @@ spec:
         resources:
 {{ toYaml .Values.pgbouncer.resources | indent 10 }}
 {{- with .Values.pgbouncer.extraContainers }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
+      volumes:
+{{- with .Values.pgbouncer.extraVolumes }}
 {{- toYaml . | nindent 6 }}
 {{- end }}
 {{- end }}
