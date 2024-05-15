@@ -24,6 +24,35 @@ for information about how to gain web access to the application.
 
 {{- end }}
 
+{{- if not .Values.api.analytics.enabled }}
+
+######################################################
+#####      Analytics capabilities are off!       #####
+#####  Chart-provisioned InfluxDB is deprecated. #####
+######################################################
+
+If you were provisioning an InfluxDB instance for Flagsmith's
+analytics with these charts, your data is safe, but no new data
+will be written to it.
+
+*In a subsequent release, chart-provisioned InfluxDB and all related
+values under the `influxdb2` key will be removed.*
+
+When you enable analytics by setting `api.analytics.enabled`
+to `true`, the following database backend will be used for analytics,
+in the order of preference:
+
+  1. External InfluxDB if `influxdbExternal.enabled` set to `true`
+  2. Dedicated PostgreSQL specified by the `ANALYTICS_DATABASE_URL`
+     environment variable
+  3. External PostgreSQL if `databaseExternal.enabled` set to `true`
+  4. Chart-provisioned PostgreSQL
+
+Note that you can use a dedicated PostgreSQL instance by providing the
+value for `ANALYTICS_DATABASE_URL` environment variable under the
+`extraEnvFromSecret` key.
+{{- end}}
+
 {{- if not .Values.api.secretKey }}
 
 ######################################

@@ -18,24 +18,8 @@
       name: {{ template "flagsmith.fullname" . }}
       key: DJANGO_SECRET_KEY
       {{- end }}
-{{- if .Values.influxdb2.enabled }}
-- name: INFLUXDB_URL
-  value: http://{{- template "flagsmith.influxdb.hostname" . -}}:80
-- name: INFLUXDB_BUCKET
-  value: {{ .Values.influxdb2.adminUser.bucket }}
-- name: INFLUXDB_ORG
-  value: {{ .Values.influxdb2.adminUser.organization }}
-- name: INFLUXDB_TOKEN
-  valueFrom:
-    secretKeyRef:
-      {{- if .Values.influxdb2.adminUser.existingSecret }}
-      name: {{ .Values.influxdb2.adminUser.existingSecret }}
-      key: admin-token
-      {{- else }}
-      name: {{ template "flagsmith.influxdb.fullname" . }}-auth
-      key: admin-token
-      {{- end }}
-{{- else if .Values.influxdbExternal.enabled }}
+{{- if .Values.api.analytics.enabled }}
+{{- if .Values.influxdbExternal.enabled }}
 - name: INFLUXDB_URL
   value: {{ .Values.influxdbExternal.url | required "Must specify a URL for an external InfluxDB" }}
 - name: INFLUXDB_BUCKET
@@ -52,6 +36,13 @@
       name: {{ template "flagsmith.influxdb.fullname" . }}-external-auth
       key: admin-token
       {{- end }}
+{{- else }}
+- name: USE_POSTGRES_FOR_ANALYTICS
+  value: 'true'
+{{- end }}
+{{- else }}
+- name: DISABLE_ANALYTICS_FEATURES
+  value: 'true'
 {{- end }}
 - name: DJANGO_ALLOWED_HOSTS
   value: '*'
