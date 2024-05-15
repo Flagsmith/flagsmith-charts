@@ -17,6 +17,7 @@
       {{- else }}
       name: {{ template "flagsmith.fullname" . }}
       key: DJANGO_SECRET_KEY
+      {{- end }}
 {{- if .Values.api.analytics.enabled }}
 {{- if .Values.influxdbExternal.enabled }}
 - name: INFLUXDB_URL
