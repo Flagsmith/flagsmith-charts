@@ -15,3 +15,7 @@
 - name: TASK_PROCESSOR_QUEUE_POP_SIZE
   value: {{ .Values.taskProcessor.queuePopSize | quote }}
 {{- end }}
+{{- range $envName, $envValue := .Values.taskProcessor.extraEnv }}
+- name: {{ $envName }}
+  value: {{ $envValue | quote }}
+{{- end }}
