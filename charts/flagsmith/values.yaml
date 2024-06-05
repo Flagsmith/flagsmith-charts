@@ -251,7 +251,7 @@ pgbouncer:
   extraVolumes: []
 
 influxdb2:
-  enabled: true
+  enabled: false
   adminUser:
     organization: 'influxdata'
     bucket: 'default'
