@@ -294,6 +294,9 @@ influxdbExternal:
     name: null
     key: null
 
+UsePostgresForAnalytics:
+  enabled: false
+
 # This is included primarily for easy testing of statsd integration from the application.
 graphite:
   enabled: false
@@ -350,7 +353,7 @@ jobs:
     command: []
     args: []
   migrateAnalyticsData:
-    enabled: true
+    enabled: false
     args: []
 
 # These tests just make non-destructive requests to the services in

@@ -6,10 +6,8 @@ frontend:
     SLACK_TOKEN: "${SLACK_TOKEN}"
 
 api:
+  analytics:
+    enabled: true
   extraEnv:
-    EMAIL_BACKEND: 'django.core.mail.backends.console.EmailBackend'
+    EMAIL_BACKEND: "django.core.mail.backends.console.EmailBackend"
     FE_E2E_TEST_USER_EMAIL: nightwatch@solidstategroup.com
-influxdb2:
-  # Needed to set this for the tests to not fail. Possibly related to
-  # https://github.com/Flagsmith/flagsmith/issues/340
-  enabled: false

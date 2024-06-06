@@ -19,6 +19,9 @@ spec:
       - name: migrate-analytics-data
         image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
         command: ["python","manage.py", "migrate_analytics"]
+        {{- if .Values.jobs.migrateAnalyticsData.args }}
+        args: {{ toYaml .Values.jobs.migrateAnalyticsData.args | nindent 8 }}
+        {{- end }}
         env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
 
 {{- end -}}
