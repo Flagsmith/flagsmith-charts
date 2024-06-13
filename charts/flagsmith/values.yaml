@@ -79,6 +79,14 @@ api:
   logging:
     format: generic # options are generic or json.
   enableMigrateDbInitContainer: true
+  bootstrap:
+    # Set to `true` to create initial superuser, organisation, and project.
+    # If `adminEmail`, `organisationName` or `projectName` not set, defaults are used.
+    # Bootstrapping does nothing if app database is not empty.
+    enabled: false
+    adminEmail: null
+    organisationName: null
+    projectName: null
 
 frontend:
   # Set this to `false` to switch off the frontend (deployment,
