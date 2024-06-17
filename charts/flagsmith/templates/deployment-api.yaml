@@ -85,6 +85,8 @@ spec:
         command: ["/bin/sh", "-c"]
         args: ["python manage.py waitfordb && python manage.py bootstrap"]
         env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
+          - name: ALLOW_ADMIN_INITIATION_VIA_CLI
+            value: 'true'
           {{- if .Values.api.bootstrap.adminEmail }}
           - name: ADMIN_EMAIL
             value: {{ .Values.api.bootstrap.adminEmail }}
