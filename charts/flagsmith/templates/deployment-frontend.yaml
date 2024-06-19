@@ -65,7 +65,7 @@ spec:
         {{- end }}
         {{- toYaml $securityContext | nindent 8 }}
       {{- if .Values.frontend.serviceAccountName }}
-      serviceAccountName: {{ .Values.api.serviceAccountName }}
+      serviceAccountName: {{ .Values.frontend.serviceAccountName }}
       {{- end }}
 {{- with .Values.frontend.extraInitContainers }}
       initContainers:

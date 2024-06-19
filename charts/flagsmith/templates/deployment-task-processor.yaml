@@ -69,7 +69,7 @@ spec:
         {{- end }}
         {{- toYaml $securityContext | nindent 8 }}
       {{- if .Values.taskProcessor.serviceAccountName }}
-      serviceAccountName: {{ .Values.api.serviceAccountName }}
+      serviceAccountName: {{ .Values.taskProcessor.serviceAccountName }}
       {{- end }}
 {{- with .Values.taskProcessor.extraInitContainers }}
       initContainers:
