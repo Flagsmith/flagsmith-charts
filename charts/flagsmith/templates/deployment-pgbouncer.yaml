@@ -65,6 +65,9 @@ spec:
         {{- $securityContext = $securityContext | merge (omit .Values.pgbouncer.defaultPodSecurityContext "enabled") }}
         {{- end }}
         {{- toYaml $securityContext | nindent 8 }}
+      {{- if .Values.pgbouncer.serviceAccountName }}
+      serviceAccountName: {{ .Values.api.serviceAccountName }}
+      {{- end }}
 {{- with .Values.pgbouncer.extraInitContainers }}
       initContainers:
 {{- toYaml . | nindent 6 }}
