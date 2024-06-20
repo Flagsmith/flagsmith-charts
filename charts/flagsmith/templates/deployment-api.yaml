@@ -120,8 +120,11 @@ spec:
       - name: {{ .Chart.Name }}-api
         image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
         imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
-        # command: ["sleep", "3600"]
+        {{- if .Values.api.enableMigrateAndServe }}
+        args: ["migrate-and-serve"]
+        {{- else }}
         args: ["serve"]
+        {{- end }}
         ports:
         - containerPort: {{ .Values.service.api.port }}
         env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
