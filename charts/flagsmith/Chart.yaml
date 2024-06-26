@@ -2,8 +2,8 @@ apiVersion: v2
 name: flagsmith
 description: Flagsmith
 type: application
-version: 0.49.0
-appVersion: 2.124.2
+version: 0.50.0
+appVersion: 2.125.0
 dependencies:
   - name: postgresql
     repository: https://charts.bitnami.com/bitnami
