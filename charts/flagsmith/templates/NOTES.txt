@@ -47,4 +47,15 @@ generate a large random value, store it in a secret, and set the following value
 See https://docs.flagsmith.com/deployment/locally-api#creating-a-secret-key
 {{- end }}
 
+{{- if .Values.influxdb2.enabled }}
+
+######################################
+##### Warning: influxdb2 #####
+######################################
+
+InfluxDB2 is deprecated and will be removed in the next major version.
+Please set values under the `influxdbExternal` key
+or migrate your analytics data to PostgreSQL by enabling `jobs.migrateAnalytics`.
+{{- end }}
+
 --------------------------------------
