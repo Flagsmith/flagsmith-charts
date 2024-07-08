@@ -54,7 +54,7 @@
       {{- end }}
 {{- else if .Values.UsePostgresForAnalytics.enabled }}
 {{- if not .Values.taskProcessor.enabled }}
-{{ fail "To use Postgre for analytics, the task processor must be enabled" }}
+{{ fail "To use PostgreSQL for analytics, `taskProcessor.enabled` should be set to `true`" }}
 {{- end}}
 - name: USE_POSTGRES_FOR_ANALYTICS
   value: 'true'

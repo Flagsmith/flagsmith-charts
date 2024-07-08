@@ -15,6 +15,12 @@ spec:
   template:
     spec:
       restartPolicy: Never
+      {{- if .Values.jobs.migrateDb.serviceAccountName }}
+      serviceAccountName: {{ .Values.jobs.migrateDb.serviceAccountName }}
+      {{- end }}
+      {{- if .Values.jobs.migrateDb.shareProcessNamespace }}
+      {{- end }}
+      shareProcessNamespace: true
       containers:
       - name: migrate-analytics-data
         image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
@@ -23,5 +29,11 @@ spec:
         args: {{ toYaml .Values.jobs.migrateAnalyticsData.args | nindent 8 }}
         {{- end }}
         env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
-
+{{- with .Values.jobs.migrateDb.extraContainers }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
+      volumes:
+{{- with .Values.jobs.migrateDb.extraVolumes }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
 {{- end -}}
