@@ -68,6 +68,9 @@ spec:
         {{- $securityContext = $securityContext | merge (omit .Values.taskProcessor.defaultPodSecurityContext "enabled") }}
         {{- end }}
         {{- toYaml $securityContext | nindent 8 }}
+      {{- if .Values.taskProcessor.serviceAccountName }}
+      serviceAccountName: {{ .Values.taskProcessor.serviceAccountName }}
+      {{- end }}
 {{- with .Values.taskProcessor.extraInitContainers }}
       initContainers:
 {{- toYaml . | nindent 6 }}
