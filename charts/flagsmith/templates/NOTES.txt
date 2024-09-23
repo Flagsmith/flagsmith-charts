@@ -1,6 +1,6 @@
 # Flagsmith pods are now starting in the cluster #
 
-See documentation at https://artifacthub.io/packages/helm/flagsmith/flagsmith/{{ .Chart.Version }}
+See documentation at https://docs.flagsmith.com/deployment/hosting/kubernetes
 for more configuration options.
 
 To access Flagsmith using port-forwarding, run:
@@ -25,7 +25,7 @@ kubectl -n {{ .Release.Namespace }} logs pods/{{ include "flagsmith.fullname" . 
 {{- $stringParts := (compact (list (join ", " $commaParts) $andPart)) -}}
 ## Ingress not enabled for {{ join " and " $stringParts }} ##
 
-See documentation at https://artifacthub.io/packages/helm/flagsmith/flagsmith/{{ .Chart.Version }}#ingress-configuration
+See documentation at https://docs.flagsmith.com/deployment/hosting/kubernetes#ingress-configuration
 for information about how to gain web access to the application.
 
 {{- end }}
