@@ -1,0 +1,10 @@
+{
+  "environment_key_pairs": [
+   {
+    "server_side_key": "your_server_side_environment_key",
+    "client_side_key": "your_client_side_environment_key"
+   }
+  ],
+  "api_poll_frequency": 10
+ }
+ 
