@@ -30,7 +30,7 @@ for information about how to gain web access to the application.
 
 {{- end }}
 
-{{- if or (not .Values.api.secretKeyFromExistingSecret.enabled) (not .Values.api.secretKey) }}
+{{- if and (not .Values.api.secretKeyFromExistingSecret.enabled) (not .Values.api.secretKey) }}
 
 ######################################
 ##### Warning: no secret key set #####
