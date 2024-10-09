@@ -1,0 +1,16 @@
+{{- $values := .Values.edgeProxy -}}
+{{- if $values.configMap.create }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "edge-proxy.fullname" . }}
+  labels:
+    {{- include "edge-proxy.labels" . | nindent 4 }}
+    app.kubernetes.io/component: config
+data:
+  {{- if $values.configMap.content }}
+  config.json: |- {{- (tpl  $values.configMap.content .) | nindent 4 }}
+  {{- else }}
+  config.json: |- {{- .Files.Get "config/config.json" | trim | nindent 4 }}
+  {{- end }}
+{{- end }}
