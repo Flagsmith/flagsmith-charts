@@ -382,3 +382,18 @@ _destructiveTests:
     resources:
       requests:
         memory: 1Gi
+
+# -- Array of extra K8s manifests to deploy
+## Note: Supports use of custom Helm templates
+## Example: Deploying a CloudnativePG Postgres cluster for use with Flagmsith:
+extraObjects: []
+# - |
+#   apiVersion: postgresql.cnpg.io/v1
+#   kind: Cluster
+#   metadata:
+#     name: flagsmith
+#     namespace: {{ .Release.Namespace }}
+#   spec:
+#     instances: 3
+#     storage:
+#       size: 10Gi
