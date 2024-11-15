@@ -87,6 +87,7 @@ api:
     adminEmail: null
     organisationName: null
     projectName: null
+    extraSpec: {} # Will be added to `spec` for `flagsmith-api` deployment. 
 
 frontend:
   # Set this to `false` to switch off the frontend (deployment,
@@ -136,6 +137,7 @@ frontend:
   extraInitContainers: []
   extraContainers: []
   extraVolumes: []
+  extraSpec: {} # Will be added to `spec` for `flagsmith-frontend` deployment. 
 
 # See https://docs.flagsmith.com/deployment/task-processor
 taskProcessor:
@@ -190,6 +192,7 @@ taskProcessor:
   extraContainers: []
   extraEnv: {}
   extraVolumes: []
+  extraSpec: {} # Will be added to `spec` for `flagsmith-task-processor` deployment. 
 
 devPostgresql:
   enabled: true
