@@ -20,7 +20,7 @@
       {{- end }}
 {{- if .Values.influxdb2.enabled }}
 - name: INFLUXDB_URL
-  value: http://{{- template "flagsmith.influxdb.hostname" . -}}:80
+  value: http://{{- template "flagsmith.influxdb.hostname.kubemain" . -}}:80
 - name: INFLUXDB_BUCKET
   value: {{ .Values.influxdb2.adminUser.bucket }}
 - name: INFLUXDB_ORG

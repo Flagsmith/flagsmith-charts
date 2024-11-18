@@ -225,6 +225,15 @@ Influxdb hostname
 {{- end -}}
 
 {{/*
+Influxdb hostname kube-main
+*/}}
+{{- define "flagsmith.influxdb.hostname.kubemain" -}}
+{{ template "flagsmith.influxdb.fullname" . }}.{{ .Release.Namespace }}.svc.kube-main.local
+{{- end -}}
+
+
+
+{{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
