@@ -2,19 +2,20 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "flagsmith.fullname" . }}-api
-  {{- $annotations := include "flagsmith.annotations" ( dict "customAnnotations" .Values.service.api.annotations "commonValues" .Values.common ) }}
+  {{- $annotations := include "flagsmith.annotations" ( dict "customAnnotations" ((.Values.service).api).annotations "commonValues" .Values.common ) }}
   {{- with $annotations }}
   annotations:
-    {{- . | nindent 4 }}
+    {{- $annotations | nindent 4 }}
   {{- end }}
   labels:
     {{- include "flagsmith.labels" . | nindent 4 }}
     app.kubernetes.io/component: api
 spec:
-  type: {{ .Values.service.api.type }}
+  type: {{ ((.Values.service).api).type | default "ClusterIP" }}
   ports:
-    - port: {{ .Values.service.api.port }}
-      targetPort: {{ .Values.service.api.port }}
+    {{ $port := ((.Values.service).api).port | default 8000 }}
+    - port: {{ $port }}
+      targetPort: {{ $port }}
       protocol: TCP
       name: http
   selector: {{- include "flagsmith.selectorLabels" . | nindent 4 }}

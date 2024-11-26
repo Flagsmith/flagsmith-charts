@@ -1,4 +1,4 @@
-{{- if and .Values.frontend.enabled .Values.ingress.frontend.enabled -}}
+{{- if and (.Values.frontend).enabled ((.Values.ingress).frontend).enabled -}}
 {{- $fullName := include "flagsmith.fullname" . -}}
 {{- $svcPort := .Values.service.frontend.port -}}
 {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}

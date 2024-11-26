@@ -1,7 +1,7 @@
 - name: DATABASE_URL
   valueFrom:
     secretKeyRef:
-      {{- if and .Values.databaseExternal.enabled .Values.databaseExternal.urlFromExistingSecret.enabled }}
+      {{- if and (.Values.databaseExternal).enabled ((.Values.databaseExternal).urlFromExistingSecret).enabled }}
       name: {{ .Values.databaseExternal.urlFromExistingSecret.name }}
       key: {{ .Values.databaseExternal.urlFromExistingSecret.key }}
       {{- else }}
@@ -11,14 +11,14 @@
 - name: DJANGO_SECRET_KEY
   valueFrom:
     secretKeyRef:
-      {{- if .Values.api.secretKeyFromExistingSecret.enabled }}
+      {{- if ((.Values.api).secretKeyFromExistingSecret).enabled }}
       name: {{ .Values.api.secretKeyFromExistingSecret.name }}
       key: {{ .Values.api.secretKeyFromExistingSecret.key }}
       {{- else }}
       name: {{ template "flagsmith.fullname" . }}
       key: DJANGO_SECRET_KEY
       {{- end }}
-{{- if .Values.influxdb2.enabled }}
+{{- if (.Values.influxdb2).enabled }}
 - name: INFLUXDB_URL
   value: http://{{- template "flagsmith.influxdb.hostname" . -}}:80
 - name: INFLUXDB_BUCKET
@@ -35,7 +35,7 @@
       name: {{ template "flagsmith.influxdb.fullname" . }}-auth
       key: admin-token
       {{- end }}
-{{- else if .Values.influxdbExternal.enabled }}
+{{- else if (.Values.influxdbExternal).enabled }}
 - name: INFLUXDB_URL
   value: {{ .Values.influxdbExternal.url | required "Must specify a URL for an external InfluxDB" }}
 - name: INFLUXDB_BUCKET
@@ -51,7 +51,10 @@
       {{- else }}
       name: {{ template "flagsmith.influxdb.fullname" . }}-external-auth
       key: admin-token
-      {{- end }}
+{{- end }}
+{{- else }}
+- name: USE_POSTGRES_FOR_ANALYTICS
+  value: 'true'
 {{- end }}
 - name: DJANGO_ALLOWED_HOSTS
   value: '*'
@@ -81,9 +84,9 @@
 {{- end }}
 {{- end }}
 {{- end }}
-{{- if .Values.taskProcessor.enabled }}
+{{- if (.Values.taskProcessor).enabled }}
 - name: TASK_RUN_METHOD
-  value: TASK_PROCESSOR
+  value: 'TASK_PROCESSOR'
 {{- end }}
 {{- range $envName, $secretKeyRef := .Values.api.extraEnvFromSecret }}
 - name: {{ $envName }}
@@ -92,15 +95,14 @@
       name: {{ $secretKeyRef.secretName }}
       key: {{ $secretKeyRef.secretKey }}
 {{- end }}
-{{- if .Values.frontend.apiProxy.enabled }}
+{{- if ((.Values.frontend).apiProxy).enabled }}
 - name: USE_X_FORWARDED_HOST
   value: 'true'
 {{- end }}
-{{- if and .Values._destructiveTests.enabled .Values._destructiveTests.testToken }}
+{{- if and (.Values._destructiveTests).enabled (.Values._destructiveTests).testToken }}
 - name: E2E_TEST_AUTH_TOKEN
   value: {{ .Values._destructiveTests.testToken | quote }}
 {{- end }}
-{{- if .Values.api.logging.format }}
+{{ $logFormat := (((.Values.api).logging).format) | default "generic" }}
 - name: LOG_FORMAT
-  value: {{ .Values.api.logging.format }}
-{{- end }}
+  value: {{ $logFormat }}

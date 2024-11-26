@@ -1,4 +1,4 @@
-{{- if .Values.taskProcessor.enabled }}
+{{- if (.Values.taskProcessor).enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

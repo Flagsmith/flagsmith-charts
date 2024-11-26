@@ -1,4 +1,4 @@
-{{- if .Values.api.influxdbSetup.enabled }}
+{{- if ((.Values.api).influxdbSetup).enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

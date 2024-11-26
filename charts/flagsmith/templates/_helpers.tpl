@@ -36,7 +36,7 @@ Common labels
 */}}
 {{- define "flagsmith.labels" -}}
 helm.sh/chart: {{ include "flagsmith.chart" . }}
-{{- with .Values.common.labels }}
+{{- with (.Values.common).labels }}
 {{ . | toYaml }}
 {{- end }}
 {{ include "flagsmith.selectorLabels" . }}
@@ -59,14 +59,16 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Common annotations
 */}}
 {{- define "flagsmith.annotations" -}}
-{{- if and (hasKey . "customAnnotations") (hasKey . "commonValues") -}}
+{{- $customAnnotations := .customAnnotations | default dict -}}
+{{- $commonAnnotations := (.commonValues).annotations | default dict -}}
+{{- if and $customAnnotations $commonAnnotations -}}
 {{- with .commonValues.annotations }}
 {{ . | toYaml }}
 {{- end }}
 {{- with .customAnnotations }}
 {{ . | toYaml }}
 {{- end }}
-{{- else -}}
+{{- else if (hasKey . "annotations" ) -}}
 {{- with .annotations }}
 {{ . | toYaml }}
 {{- end }}
@@ -280,9 +282,9 @@ Frontend environment
 Database URL
 */}}
 {{- define "flagsmith.api.realDatabaseUrl" -}}
-{{- if .Values.databaseExternal.enabled -}}
+{{- if (.Values.databaseExternal).enabled -}}
 {{- with .Values.databaseExternal -}}
-{{- if not .urlFromExistingSecret.enabled -}}
+{{- if not (.urlFromExistingSecret).enabled -}}
 {{- if .url -}}
 {{- .url -}}
 {{- else -}}
@@ -290,8 +292,8 @@ Database URL
 {{- end -}}
 {{- end -}}
 {{- end -}}
-{{- else if .Values.devPostgresql.enabled -}}
-{{- printf "%s://%s:%s@%s:%s/%s" "postgres" (.Values.devPostgresql.auth.username | default "postgres") (.Values.devPostgresql.auth.password | default .Values.devPostgresql.auth.postgresPassword | required "Must specify a postgres password") (include "flagsmith.postgres.hostname" . ) "5432" (required "Must specify a postgres database name" .Values.devPostgresql.auth.database) -}}
+{{- else if (.Values.devPostgresql).enabled -}}
+{{- printf "%s://%s:%s@%s:%s/%s" "postgres" (.Values.devPostgresql.auth.username | default "postgres") (.Values.devPostgresql.auth.password | default .Values.devPostgresql.auth.postgresPassword | default "password") (include "flagsmith.postgres.hostname" . ) "5432" (default "flagsmith-dev" .Values.devPostgresql.auth.database) -}}
 {{- end -}}
 {{- end -}}
 
@@ -309,7 +311,7 @@ PgBouncer URL
 Database URL for application
 */}}
 {{- define "flagsmith.api.databaseUrl" -}}
-{{- if .Values.pgbouncer.enabled }}
+{{- if (.Values.pgbouncer).enabled }}
 {{ include "flagsmith.api.pgBouncerDatabaseUrl" . }}
 {{- else }}
 {{ include "flagsmith.api.realDatabaseUrl" . }}

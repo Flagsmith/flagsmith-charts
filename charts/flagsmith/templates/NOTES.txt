@@ -1,25 +1,24 @@
 # Flagsmith pods are now starting in the cluster #
 
-See documentation at https://artifacthub.io/packages/helm/flagsmith/flagsmith/{{ .Chart.Version }}
-for more configuration options.
-
+{{- if ((.Values.service).frontend).port }}
 To access Flagsmith using port-forwarding, run:
 
 kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "flagsmith.fullname" . }}-frontend 8080:{{ .Values.service.frontend.port }}
 
 Then access http://localhost:8080 in a browser.
+{{- end }}
 
-{{- if .Values.api.bootstrap.enabled }}
+{{- if ((.Values.api).bootstrap).enabled }}
 To see the password reset link for pre-created admin user, run:
 
 kubectl -n {{ .Release.Namespace }} logs pods/{{ include "flagsmith.fullname" . }}-api -c bootstrap
 {{- end }}
 
-{{ if not (and .Values.ingress.frontend.enabled .Values.ingress.api.enabled) }}
+{{ if not (and ((.Values.ingress).frontend).enabled ((.Values.ingress).api).enabled) }}
 
 {{- $noIngressFor := (list) -}}
-{{- if not .Values.ingress.api.enabled -}}{{- $noIngressFor = append $noIngressFor "api" -}}{{- end -}}
-{{- if not .Values.ingress.frontend.enabled -}}{{- $noIngressFor = append $noIngressFor "frontend" -}}{{- end -}}
+{{- if not ((.Values.ingress).api.enabled) -}}{{- $noIngressFor = append $noIngressFor "api" -}}{{- end -}}
+{{- if not ((.Values.ingress).frontend).enabled -}}{{- $noIngressFor = append $noIngressFor "frontend" -}}{{- end -}}
 {{- $commaParts := (slice $noIngressFor 0 (sub (len $noIngressFor) 1)) -}}
 {{- $andPart := (last $noIngressFor) -}}
 {{- $stringParts := (compact (list (join ", " $commaParts) $andPart)) -}}
@@ -30,7 +29,7 @@ for information about how to gain web access to the application.
 
 {{- end }}
 
-{{- if and (not .Values.api.secretKeyFromExistingSecret.enabled) (not .Values.api.secretKey) }}
+{{- if and (not ((.Values.api).secretKeyFromExistingSecret).enabled) (not .Values.api.secretKey) }}
 
 ######################################
 ##### Warning: no secret key set #####
@@ -48,3 +47,6 @@ See https://docs.flagsmith.com/deployment/locally-api#creating-a-secret-key
 {{- end }}
 
 --------------------------------------
+
+See documentation at https://artifacthub.io/packages/helm/flagsmith/flagsmith/{{ .Chart.Version }}
+for more configuration options.

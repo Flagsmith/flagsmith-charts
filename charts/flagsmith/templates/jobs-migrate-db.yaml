@@ -1,4 +1,4 @@
-{{- if .Values.jobs.migrateDb.enabled -}}
+{{- if ((.Values.jobs).migrateDb).enabled -}}
 apiVersion: batch/v1
 kind: Job
 metadata:

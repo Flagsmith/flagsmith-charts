@@ -1,5 +1,5 @@
-{{- if .Values.frontend.enabled }}
-{{- if and .Values.tests.enabled .Values.tests.frontend.enabled }}
+{{- if ((.Values.frontend).enabled) }}
+{{- if and (.Values.tests).enabled .Values.tests.frontend.enabled }}
 apiVersion: v1
 kind: Pod
 metadata:
