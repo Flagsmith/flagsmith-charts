@@ -104,3 +104,12 @@
 - name: LOG_FORMAT
   value: {{ .Values.api.logging.format }}
 {{- end }}
+{{- if .Values.sse.enabled }}
+- name: SSE_AUTHENTICATION_TOKEN
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "flagsmith.fullname" . }}-sse
+      key: SSE_AUTHENTICATION_TOKEN
+- name: SSE_SERVER_BASE_URL
+  value: http://{{ include "flagsmith.fullname" . }}-sse.{{ .Release.Namespace }}:{{ .Values.service.sse.port }}
+{{- end }}

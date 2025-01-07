@@ -345,3 +345,11 @@ Replicas
 replicas: {{ . }}
 {{- end }}
 {{- end }}
+
+
+{{/*
+Real-time flag updates (SSE)
+*/}}
+{{- define "flagsmith.sse.authenticationToken" -}}
+{{- randAlphaNum 50 -}}
+{{- end }}
