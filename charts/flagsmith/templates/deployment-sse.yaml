@@ -1,3 +1,4 @@
+{{- if .Values.sse.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -107,4 +108,5 @@ spec:
 {{- end }}
 {{- with .Values.sse.extraSpec }}
 {{- toYaml . | nindent 2 }}
+{{- end }}
 {{- end }}
