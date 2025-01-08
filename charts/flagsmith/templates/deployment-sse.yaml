@@ -1,0 +1,112 @@
+{{- if .Values.sse.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "flagsmith.fullname" . }}-sse
+  {{- $annotations := include "flagsmith.annotations" .Values.common }}
+  {{- with $annotations }}
+  annotations:
+    {{- . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: sse
+spec:
+  selector:
+    matchLabels:
+      {{- include "flagsmith.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: sse
+  {{- with .Values.sse.deploymentStrategy }}
+  strategy: {{- . | toYaml | nindent 4 }}
+  {{- end }}
+  {{- include "flagsmith.replicaCount" .Values.sse.replicaCount | nindent 2 }}
+  template:
+    metadata:
+      annotations:
+        checksum/secrets-sse: {{ include (print $.Template.BasePath "/secrets-sse.yaml") . | sha256sum }}
+{{- if .Values.sse.podAnnotations }}
+{{ toYaml .Values.sse.podAnnotations | nindent 8 }}
+{{- end }}
+      labels:
+        {{- if .Values.common.labels }}
+        {{- .Values.common.labels  | toYaml | nindent 8 }}
+        {{- end }}
+        {{- include "flagsmith.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: sse
+        {{- if .Values.sse.podLabels }}
+{{ toYaml .Values.sse.podLabels | indent 8 }}
+        {{- end }}
+    spec:
+      {{- if .Values.sse.shareProcessNamespace }}
+      shareProcessNamespace: true
+      {{- end }}
+      {{- if .Values.sse.affinity }}
+      affinity:
+{{ toYaml .Values.sse.affinity | indent 8 }}
+      {{- end }}
+      {{- if .Values.sse.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.sse.nodeSelector | indent 8 }}
+      {{- end }}
+      {{- if .Values.sse.tolerations }}
+      tolerations:
+{{ toYaml .Values.sse.tolerations | indent 8 }}
+      {{- end }}
+      {{- if .Values.sse.image.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.sse.image.imagePullSecrets | indent 8 }}
+      {{- end }}
+      securityContext:
+        {{- $securityContext := .Values.sse.podSecurityContext | default (dict) | deepCopy }}
+        {{- if .Values.sse.defaultPodSecurityContext.enabled }}
+        {{- $securityContext = $securityContext | merge (omit .Values.sse.defaultPodSecurityContext "enabled") }}
+        {{- end }}
+        {{- toYaml $securityContext | nindent 8 }}
+      {{- if .Values.sse.serviceAccountName }}
+      serviceAccountName: {{ .Values.sse.serviceAccountName }}
+      {{- end }}
+      initContainers:
+{{- with .Values.sse.extraInitContainers }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
+      containers:
+      - name: {{ .Chart.Name }}-sse
+        image: {{ .Values.sse.image.repository }}:{{ .Values.sse.image.tag | default "3.4.0" }}
+        imagePullPolicy: {{ .Values.sse.image.imagePullPolicy }}
+        args: ["serve"]
+        ports:
+        - containerPort: {{ .Values.service.sse.port }}
+        env: {{ include (print $.Template.BasePath "/_sse_environment.yaml") . | nindent 8 }}
+        livenessProbe:
+          failureThreshold: {{ .Values.sse.livenessProbe.failureThreshold }}
+          httpGet:
+            path: {{ .Values.sse.livenessProbe.path }}
+            port: 8000
+            scheme: HTTP
+          initialDelaySeconds: {{ .Values.sse.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.sse.livenessProbe.periodSeconds }}
+          successThreshold: {{ .Values.sse.livenessProbe.successThreshold }}
+          timeoutSeconds: {{ .Values.sse.livenessProbe.timeoutSeconds }}
+        readinessProbe:
+          failureThreshold: {{ .Values.sse.readinessProbe.failureThreshold }}
+          httpGet:
+            path: {{ .Values.sse.readinessProbe.path }}
+            port: {{ .Values.service.sse.port }}
+            scheme: HTTP
+          initialDelaySeconds: {{ .Values.sse.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.sse.readinessProbe.periodSeconds }}
+          successThreshold: {{ .Values.sse.readinessProbe.successThreshold }}
+          timeoutSeconds: {{ .Values.sse.readinessProbe.timeoutSeconds }}
+        resources:
+{{ toYaml .Values.sse.resources | indent 10 }}
+{{- with .Values.sse.extraContainers }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
+      volumes:
+{{- with .Values.sse.extraVolumes }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
+{{- with .Values.sse.extraSpec }}
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}

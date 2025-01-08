@@ -303,6 +303,62 @@ graphite:
   nameOverride: flagsmith-graphite
   autoSetStatsdHostEnvVar: true
 
+sse:
+  enabled: false
+  image:
+    repository: flagsmith/sse
+    tag: 3.4.0
+    imagePullPolicy: IfNotPresent
+    imagePullSecrets: []
+  # See all supported environment variables here:
+  # https://docs.flagsmith.com/deployment/hosting/real-time/deployment#sse-service
+  # extraEnv:
+  #   REDIS_HOST: redis.example.com
+  #   REDIS_PORT: 6379
+  # extraEnvFromSecret:
+  #   REDIS_PASSWORD:
+  #    secretName: my_redis_secrets
+  #    secretKey: my_redis_password
+  replicaCount: 1
+  deploymentStrategy: null
+  podAnnotations: {}
+  resources: {}
+  # limits:
+  #   cpu: 500m
+  #   memory: 500Mi
+  # requests:
+  #   cpu: 300m
+  #   memory: 300Mi
+  podLabels: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podSecurityContext: {}
+  defaultPodSecurityContext:
+    enabled: true
+    # runAsNonRoot: true  # TODO: enable this, conditional on tag semver
+    # runAsUser: 1000
+    # runAsGroup: 1000
+  livenessProbe:
+    path: /health
+    failureThreshold: 5
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 2
+  readinessProbe:
+    path: /health
+    failureThreshold: 10
+    initialDelaySeconds: 1
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 2
+  shareProcessNamespace: false
+  serviceAccountName: null
+  extraInitContainers: []
+  extraContainers: []
+  extraVolumes: []
+
 service:
   api:
     type: ClusterIP
@@ -311,6 +367,10 @@ service:
   frontend:
     type: ClusterIP
     port: 8080
+    annotations: {}
+  sse:
+    type: ClusterIP
+    port: 8000
     annotations: {}
 
 ingress:
@@ -327,6 +387,19 @@ ingress:
     #    hosts:
     #      - chart-example.local
   api:
+    enabled: false
+    annotations: {}
+    ingressClassName: null
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+    hosts:
+      - host: chart-example.local
+        paths: []
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+  sse:
     enabled: false
     annotations: {}
     ingressClassName: null
