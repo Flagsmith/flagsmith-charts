@@ -1,0 +1,16 @@
+{{- range $envName, $envValue := .Values.sse.extraEnv }}
+- name: {{ $envName }}
+  value: {{ $envValue | quote }}
+{{- end }}
+{{- range $envName, $secretKeyRef := .Values.sse.extraEnvFromSecret }}
+- name: {{ $envName }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ $secretKeyRef.secretName }}
+      key: {{ $secretKeyRef.secretKey }}
+{{- end }}
+- name: SSE_AUTHENTICATION_TOKEN
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "flagsmith.fullname" . }}-sse
+      key: SSE_AUTHENTICATION_TOKEN

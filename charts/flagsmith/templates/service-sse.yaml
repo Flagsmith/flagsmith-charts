@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "flagsmith.fullname" . }}-sse
+  {{- $annotations := include "flagsmith.annotations" ( dict "customAnnotations" .Values.service.sse.annotations "commonValues" .Values.common ) }}
+  {{- with $annotations }}
+  annotations:
+    {{- . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: sse
+spec:
+  type: {{ .Values.service.sse.type }}
+  ports:
+    - port: {{ .Values.service.sse.port }}
+      targetPort: {{ .Values.service.sse.port }}
+      protocol: TCP
+      name: http
+  selector: {{- include "flagsmith.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: sse

@@ -88,18 +88,20 @@ spec:
         command: ["/bin/sh", "-c"]
         args: ["python manage.py waitfordb && python manage.py bootstrap"]
         env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
+        - name: ALLOW_ADMIN_INITIATION_VIA_CLI
+          value: 'true'
           {{- if .Values.api.bootstrap.adminEmail }}
-          - name: ADMIN_EMAIL
-            value: {{ .Values.api.bootstrap.adminEmail }}
-          {{- end }}
-          {{- if .Values.api.bootstrap.organisationName }}
-          - name: ORGANISATION_NAME
-            value: {{ .Values.api.bootstrap.organisationName }}
-          {{- end }}
-          {{- if .Values.api.bootstrap.projectName }}
-          - name: PROJECT_NAME
-            value: {{ .Values.api.bootstrap.projectName }}
-          {{- end }}
+        - name: ADMIN_EMAIL
+          value: {{ .Values.api.bootstrap.adminEmail }}
+        {{- end }}
+        {{- if .Values.api.bootstrap.organisationName }}
+        - name: ORGANISATION_NAME
+          value: {{ .Values.api.bootstrap.organisationName }}
+        {{- end }}
+        {{- if .Values.api.bootstrap.projectName }}
+        - name: PROJECT_NAME
+          value: {{ .Values.api.bootstrap.projectName }}
+        {{- end }}
 {{- end }}
 {{- if .Values.api.influxdbSetup.enabled }}
       - name: influxdb-setup
@@ -161,4 +163,7 @@ spec:
 {{- end }}
 {{- with .Values.api.extraVolumes }}
 {{- toYaml . | nindent 6 }}
+{{- end }}
+{{- with .Values.api.extraSpec }}
+{{- toYaml . | nindent 2 }}
 {{- end }}
