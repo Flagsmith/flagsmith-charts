@@ -11,13 +11,8 @@
 - name: DJANGO_SECRET_KEY
   valueFrom:
     secretKeyRef:
-      {{- if .Values.api.secretKeyFromExistingSecret.enabled }}
-      name: {{ .Values.api.secretKeyFromExistingSecret.name }}
-      key: {{ .Values.api.secretKeyFromExistingSecret.key }}
-      {{- else }}
-      name: {{ template "flagsmith.fullname" . }}
-      key: DJANGO_SECRET_KEY
-      {{- end }}
+      name: django-secret-key
+      key: django-secret-key
 {{- if .Values.influxdb2.enabled }}
 - name: INFLUXDB_URL
   value: http://{{- template "flagsmith.influxdb.hostname" . -}}:80
