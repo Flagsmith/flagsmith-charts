@@ -15,8 +15,8 @@
       name: {{ .Values.api.secretKeyFromExistingSecret.name }}
       key: {{ .Values.api.secretKeyFromExistingSecret.key }}
       {{- else }}
-      name: {{ template "flagsmith.fullname" . }}
-      key: DJANGO_SECRET_KEY
+      name: django-secret-key
+      key: django-secret-key
       {{- end }}
 {{- if .Values.influxdb2.enabled }}
 - name: INFLUXDB_URL
