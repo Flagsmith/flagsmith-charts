@@ -319,6 +319,7 @@ sse:
   # extraEnv:
   #   REDIS_HOST: redis.example.com
   #   REDIS_PORT: 6379
+  #   USE_CLUSTER_MODE: true # - set this if connecting to a Redis cluster, not a single node
   # extraEnvFromSecret:
   #   REDIS_PASSWORD:
   #    secretName: my_redis_secrets
