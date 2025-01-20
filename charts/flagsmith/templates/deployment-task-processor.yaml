@@ -108,6 +108,8 @@ spec:
           timeoutSeconds: {{ .Values.taskProcessor.readinessProbe.timeoutSeconds }}
         resources:
 {{ toYaml .Values.taskProcessor.resources | indent 10 }}
+        volumeMounts:
+{{ toYaml .Values.taskProcessor.volumeMounts | indent 10 }}
 {{- with .Values.taskProcessor.extraContainers }}
 {{- toYaml . | nindent 6 }}
 {{- end }}
