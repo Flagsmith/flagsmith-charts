@@ -64,6 +64,9 @@ spec:
         {{- $securityContext = $securityContext | merge (omit .Values.frontend.defaultPodSecurityContext "enabled") }}
         {{- end }}
         {{- toYaml $securityContext | nindent 8 }}
+      {{- if .Values.frontend.serviceAccountName }}
+      serviceAccountName: {{ .Values.frontend.serviceAccountName }}
+      {{- end }}
 {{- with .Values.frontend.extraInitContainers }}
       initContainers:
 {{- toYaml . | nindent 6 }}
@@ -103,5 +106,8 @@ spec:
       volumes:
 {{- with .Values.frontend.extraVolumes }}
 {{- toYaml . | nindent 6 }}
+{{- end }}
+{{- with .Values.frontend.extraSpec }}
+{{- toYaml . | nindent 2 }}
 {{- end }}
 {{- end }}

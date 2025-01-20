@@ -9,6 +9,12 @@ kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "flagsmith.fulln
 
 Then access http://localhost:8080 in a browser.
 
+{{- if .Values.api.bootstrap.enabled }}
+To see the password reset link for pre-created admin user, run:
+
+kubectl -n {{ .Release.Namespace }} logs pods/{{ include "flagsmith.fullname" . }}-api -c bootstrap
+{{- end }}
+
 {{ if not (and .Values.ingress.frontend.enabled .Values.ingress.api.enabled) }}
 
 {{- $noIngressFor := (list) -}}
@@ -24,7 +30,7 @@ for information about how to gain web access to the application.
 
 {{- end }}
 
-{{- if not .Values.api.secretKey }}
+{{- if and (not .Values.api.secretKeyFromExistingSecret.enabled) (not .Values.api.secretKey) }}
 
 ######################################
 ##### Warning: no secret key set #####
@@ -32,10 +38,24 @@ for information about how to gain web access to the application.
 
 No secret key is set, a new one will be randomly generated at each
 deployment. For production systems, it is strongly recommended to
-generate a large random value and set it at `api.secretKey`. It must
-be kept secret.
+generate a large random value, store it in a secret, and set the following values:
+
+`api.secretKeyFromExistingSecret.enabled` to `true`
+`api.secretKeyFromExistingSecret.name` to secret name
+`api.secretKeyFromExistingSecret.key` to secret key
 
 See https://docs.flagsmith.com/deployment/locally-api#creating-a-secret-key
+{{- end }}
+
+{{- if .Values.influxdb2.enabled }}
+
+######################################
+##### Warning: influxdb2 #####
+######################################
+
+InfluxDB2 is deprecated and will be removed in the next major version.
+Please set values under the `influxdbExternal` key
+or migrate your analytics data to PostgreSQL by enabling `jobs.migrateAnalytics`.
 {{- end }}
 
 --------------------------------------

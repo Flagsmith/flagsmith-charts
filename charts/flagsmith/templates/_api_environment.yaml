@@ -52,6 +52,15 @@
       name: {{ template "flagsmith.influxdb.fullname" . }}-external-auth
       key: admin-token
       {{- end }}
+{{- else if .Values.UsePostgresForAnalytics.enabled }}
+{{- if not .Values.taskProcessor.enabled }}
+{{ fail "To use PostgreSQL for analytics, `taskProcessor.enabled` should be set to `true`" }}
+{{- end}}
+- name: USE_POSTGRES_FOR_ANALYTICS
+  value: 'true'
+{{- else }}
+- name: DISABLE_ANALYTICS_FEATURES
+  value: 'true'
 {{- end }}
 - name: DJANGO_ALLOWED_HOSTS
   value: '*'
@@ -103,4 +112,13 @@
 {{- if .Values.api.logging.format }}
 - name: LOG_FORMAT
   value: {{ .Values.api.logging.format }}
+{{- end }}
+{{- if .Values.sse.enabled }}
+- name: SSE_AUTHENTICATION_TOKEN
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "flagsmith.fullname" . }}-sse
+      key: SSE_AUTHENTICATION_TOKEN
+- name: SSE_SERVER_BASE_URL
+  value: http://{{ include "flagsmith.fullname" . }}-sse.{{ .Release.Namespace }}:{{ .Values.service.sse.port }}
 {{- end }}

@@ -6,3 +6,4 @@ venv/
 charts/*/charts
 .direnv
 .idea/
+.venv/
