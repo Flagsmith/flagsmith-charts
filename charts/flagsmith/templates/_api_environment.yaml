@@ -47,6 +47,15 @@
       name: {{ template "flagsmith.influxdb.fullname" . }}-external-auth
       key: admin-token
       {{- end }}
+{{- else if .Values.UsePostgresForAnalytics.enabled }}
+{{- if not .Values.taskProcessor.enabled }}
+{{ fail "To use PostgreSQL for analytics, `taskProcessor.enabled` should be set to `true`" }}
+{{- end}}
+- name: USE_POSTGRES_FOR_ANALYTICS
+  value: 'true'
+{{- else }}
+- name: DISABLE_ANALYTICS_FEATURES
+  value: 'true'
 {{- end }}
 - name: DJANGO_ALLOWED_HOSTS
   value: '*'
