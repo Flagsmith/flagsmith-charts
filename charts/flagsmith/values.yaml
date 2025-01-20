@@ -297,6 +297,9 @@ influxdbExternal:
     name: null
     key: null
 
+UsePostgresForAnalytics:
+  enabled: false
+
 # This is included primarily for easy testing of statsd integration from the application.
 graphite:
   enabled: false
@@ -426,6 +429,11 @@ jobs:
     extraVolumes: []
     command: []
     args: []
+  migrateAnalyticsData:
+    enabled: false
+    args: []
+    extraContainers: []
+    extraVolumes: []
 
 # These tests just make non-destructive requests to the services in
 # the cluster. Enabling this and running helm test is safe.
