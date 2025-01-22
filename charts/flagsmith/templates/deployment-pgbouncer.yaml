@@ -141,7 +141,11 @@ spec:
         resources:
 {{ toYaml .Values.pgbouncer.resources | indent 10 }}
 {{- with .Values.pgbouncer.extraContainers }}
-{{- toYaml . | nindent 6 }}
+{{ if typeIs "string" . }}
+    {{- tpl . $ | nindent 6 }}
+{{- else }}
+    {{- tpl (toYaml .) $ | nindent 6 }}
+{{- end }}
 {{- end }}
       volumes:
 {{- with .Values.pgbouncer.extraVolumes }}
