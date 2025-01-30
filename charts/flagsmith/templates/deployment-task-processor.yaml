@@ -111,7 +111,11 @@ spec:
         volumeMounts:
 {{ toYaml .Values.taskProcessor.volumeMounts | indent 10 }}
 {{- with .Values.taskProcessor.extraContainers }}
-{{- toYaml . | nindent 6 }}
+{{ if typeIs "string" . }}
+    {{- tpl . $ | nindent 6 }}
+{{- else }}
+    {{- tpl (toYaml .) $ | nindent 6 }}
+{{- end }}
 {{- end }}
       volumes:
 {{- with .Values.taskProcessor.extraVolumes }}

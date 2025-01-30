@@ -30,7 +30,11 @@ api:
   #   cpu: 300m
   #   memory: 300Mi
   podLabels: {}
-  extraEnv: {}
+  # https://docs.flagsmith.com/deployment/hosting/locally-api#environment-variables
+  extraEnv:
+    # Allows authenticating with a local password to Django Admin
+    # See https://docs.flagsmith.com/deployment/configuration/django-admin
+    ENABLE_ADMIN_ACCESS_USER_PASS: true
   # extraEnvFromSecret:
   #   NAME:
   #    secretName: mysecret
