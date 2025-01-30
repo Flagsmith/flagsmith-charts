@@ -80,6 +80,7 @@ api:
   extraInitContainers: []
   extraContainers: []
   extraVolumes: []
+  volumeMounts: []
   logging:
     format: generic # options are generic or json.
   enableMigrateDbInitContainer: true
@@ -141,7 +142,8 @@ frontend:
   extraInitContainers: []
   extraContainers: []
   extraVolumes: []
-  extraSpec: {} # Will be added to `spec` for `flagsmith-frontend` deployment. 
+  volumeMounts: []
+  extraSpec: {} # Will be added to `spec` for `flagsmith-frontend` deployment.
 
 # See https://docs.flagsmith.com/deployment/task-processor
 taskProcessor:
@@ -196,6 +198,7 @@ taskProcessor:
   extraContainers: []
   extraEnv: {}
   extraVolumes: []
+  volumeMounts: []
   extraSpec: {} # Will be added to `spec` for `flagsmith-task-processor` deployment. 
 
 devPostgresql:
@@ -264,6 +267,7 @@ pgbouncer:
   extraInitContainers: []
   extraContainers: []
   extraVolumes: []
+  volumeMounts: []
 
 influxdb2:
   enabled: true
@@ -366,6 +370,7 @@ sse:
   extraInitContainers: []
   extraContainers: []
   extraVolumes: []
+  volumeMounts: []
 
 service:
   api:

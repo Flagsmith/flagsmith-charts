@@ -152,6 +152,8 @@ spec:
           timeoutSeconds: {{ .Values.api.readinessProbe.timeoutSeconds }}
         resources:
 {{ toYaml .Values.api.resources | indent 10 }}
+        volumeMounts:
+{{ toYaml .Values.api.volumeMounts | indent 10 }}
 {{- with .Values.api.extraContainers }}
 {{ if typeIs "string" . }}
     {{- tpl . $ | nindent 6 }}

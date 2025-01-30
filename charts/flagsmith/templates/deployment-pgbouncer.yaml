@@ -140,6 +140,8 @@ spec:
           {{- toYaml $securityContext | nindent 10 }}
         resources:
 {{ toYaml .Values.pgbouncer.resources | indent 10 }}
+        volumeMounts:
+{{ toYaml .Values.pgbouncer.volumeMounts | indent 10 }}
 {{- with .Values.pgbouncer.extraContainers }}
 {{ if typeIs "string" . }}
     {{- tpl . $ | nindent 6 }}
