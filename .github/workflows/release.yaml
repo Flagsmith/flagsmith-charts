@@ -22,11 +22,6 @@ jobs:
         with:
           version: v3.5.4
 
-      - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.0.1
-        with:
-          version: v3.3.0
-
       - name: Add chart repo dependencies
         # Note: this repos should match whith the repos set in ct.yaml
         # See https://github.com/Flagsmith/flagsmith-charts/issues/105
@@ -35,6 +30,11 @@ jobs:
           helm repo add influxdb2 https://helm.influxdata.com/
           helm repo add kiwigrid https://kiwigrid.github.io
           helm repo add bitnami https://charts.bitnami.com/bitnami
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.0.1
+        with:
+          version: v3.3.0
 
       - name: Run chart-testing (lint)
         run: ct lint --config ct.yaml --lint-conf lintconf.yaml
