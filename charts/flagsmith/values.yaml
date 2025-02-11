@@ -233,6 +233,8 @@ pgbouncer:
     imagePullSecrets: []
   replicaCount: 1
   deploymentStrategy: null
+  # Optional: Use to override the password directly instead of extracting from the database URL
+  passwordOverride: ""
   podAnnotations: {}
   resources: {}
   podLabels: {}
