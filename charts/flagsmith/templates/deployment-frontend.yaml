@@ -100,8 +100,14 @@ spec:
           timeoutSeconds: {{ .Values.frontend.readinessProbe.timeoutSeconds }}
         resources:
 {{ toYaml .Values.frontend.resources | indent 10 }}
+        volumeMounts:
+{{ toYaml .Values.frontend.volumeMounts | indent 10 }}
 {{- with .Values.frontend.extraContainers }}
-{{- toYaml . | nindent 6 }}
+{{ if typeIs "string" . }}
+    {{- tpl . $ | nindent 6 }}
+{{- else }}
+    {{- tpl (toYaml .) $ | nindent 6 }}
+{{- end }}
 {{- end }}
       volumes:
 {{- with .Values.frontend.extraVolumes }}

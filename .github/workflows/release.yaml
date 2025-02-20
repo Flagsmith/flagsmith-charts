@@ -1,9 +1,7 @@
 name: Release Charts
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   release:
@@ -32,6 +30,14 @@ jobs:
           helm repo add influxdb2 https://helm.influxdata.com/
           helm repo add kiwigrid https://kiwigrid.github.io
           helm repo add bitnami https://charts.bitnami.com/bitnami
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.0.1
+        with:
+          version: v3.3.0
+
+      - name: Run chart-testing (lint)
+        run: ct lint --config ct.yaml --lint-conf lintconf.yaml
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.2.0
