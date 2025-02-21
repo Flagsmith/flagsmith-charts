@@ -92,7 +92,7 @@ api:
     adminEmail: null
     organisationName: null
     projectName: null
-    extraSpec: {} # Will be added to `spec` for `flagsmith-api` deployment. 
+    extraSpec: {} # Will be added to `spec` for `flagsmith-api` deployment.
 
 frontend:
   # Set this to `false` to switch off the frontend (deployment,
@@ -168,13 +168,13 @@ taskProcessor:
     initialDelaySeconds: 5
     periodSeconds: 10
     successThreshold: 1
-    timeoutSeconds: 2
+    timeoutSeconds: 30
   readinessProbe:
     failureThreshold: 10
     initialDelaySeconds: 1
     periodSeconds: 10
     successThreshold: 1
-    timeoutSeconds: 2
+    timeoutSeconds: 30
 
   podAnnotations: {}
   resources: {}
@@ -199,7 +199,7 @@ taskProcessor:
   extraEnv: {}
   extraVolumes: []
   volumeMounts: []
-  extraSpec: {} # Will be added to `spec` for `flagsmith-task-processor` deployment. 
+  extraSpec: {} # Will be added to `spec` for `flagsmith-task-processor` deployment.
 
 devPostgresql:
   enabled: true
@@ -274,14 +274,14 @@ pgbouncer:
 influxdb2:
   enabled: true
   adminUser:
-    organization: 'influxdata'
-    bucket: 'default'
-    user: 'admin'
-    retention_policy: '0s'
+    organization: "influxdata"
+    bucket: "default"
+    user: "admin"
+    retention_policy: "0s"
     ## Leave empty to generate a random password and token.
     ## Or fill any of these values to use fixed values.
-    password: ''
-    token: ''
+    password: ""
+    token: ""
     ## The password and token are obtained from an existing secret. The expected
     ## keys are `admin-password` and `admin-token`.
     ## If set, the password and token values above are ignored.
