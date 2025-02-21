@@ -354,14 +354,14 @@ sse:
     # runAsUser: 1000
     # runAsGroup: 1000
   livenessProbe:
-    path: /health
+    path: /health/liveness
     failureThreshold: 5
     initialDelaySeconds: 5
     periodSeconds: 10
     successThreshold: 1
     timeoutSeconds: 2
   readinessProbe:
-    path: /health
+    path: /health/readiness
     failureThreshold: 10
     initialDelaySeconds: 1
     periodSeconds: 10
