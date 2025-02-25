@@ -30,23 +30,6 @@ for information about how to gain web access to the application.
 
 {{- end }}
 
-{{- if and (not .Values.api.secretKeyFromExistingSecret.enabled) (not .Values.api.secretKey) }}
-
-######################################
-##### Warning: no secret key set #####
-######################################
-
-No secret key is set, a new one will be randomly generated at each
-deployment. For production systems, it is strongly recommended to
-generate a large random value, store it in a secret, and set the following values:
-
-`api.secretKeyFromExistingSecret.enabled` to `true`
-`api.secretKeyFromExistingSecret.name` to secret name
-`api.secretKeyFromExistingSecret.key` to secret key
-
-See https://docs.flagsmith.com/deployment/locally-api#creating-a-secret-key
-{{- end }}
-
 {{- if .Values.influxdb2.enabled }}
 
 ######################################
