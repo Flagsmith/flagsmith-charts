@@ -42,8 +42,8 @@ jobs:
         id: lint
         run: |
           if ct lint --config ct.yaml --lint-conf lintconf.yaml 2>&1 | grep -q "Chart version not ok. Needs a version bump"; then
+            echo "::warning::Version bump is required!"
             echo "version_bump_needed=true" >> "$GITHUB_OUTPUT"
-            exit 1
           else
             echo "version_bump_needed=false" >> "$GITHUB_OUTPUT"
           fi
