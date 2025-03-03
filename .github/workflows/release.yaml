@@ -38,10 +38,18 @@ jobs:
         with:
           version: v3.3.0
 
-      # - name: Run chart-testing (lint)
-      #   run: ct lint --config ct.yaml --lint-conf lintconf.yaml
+      - name: Run chart-testing (lint)
+        id: lint
+        run: |
+          if ct lint --config ct.yaml --lint-conf lintconf.yaml 2>&1 | grep -q "Chart version not ok. Needs a version bump"; then
+            echo "version_bump_needed=true" >> "$GITHUB_OUTPUT"
+            exit 1
+          else
+            echo "version_bump_needed=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Run chart-releaser
+        if: steps.lint.outputs.version_bump_needed == 'false'
         uses: helm/chart-releaser-action@v1.2.0
         env:
           CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
