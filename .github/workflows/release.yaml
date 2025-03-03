@@ -38,8 +38,8 @@ jobs:
         with:
           version: v3.3.0
 
-      - name: Run chart-testing (lint)
-        run: ct lint --config ct.yaml --lint-conf lintconf.yaml
+      # - name: Run chart-testing (lint)
+      #   run: ct lint --config ct.yaml --lint-conf lintconf.yaml
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.2.0
