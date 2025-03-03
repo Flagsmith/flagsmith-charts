@@ -1,7 +1,9 @@
 name: Release Charts
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - test-ci-release
 
 jobs:
   release:
@@ -37,9 +39,17 @@ jobs:
           version: v3.3.0
 
       - name: Run chart-testing (lint)
-        run: ct lint --config ct.yaml --lint-conf lintconf.yaml
+        id: lint
+        run: |
+          if ct lint --config ct.yaml --lint-conf lintconf.yaml 2>&1 | grep -q "Chart version not ok. Needs a version bump"; then
+            echo "::notice::Skipping release because no version bump was detected"
+            echo "version_bump_needed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "version_bump_needed=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Run chart-releaser
+        if: steps.lint.outputs.version_bump_needed == 'false'
         uses: helm/chart-releaser-action@v1.2.0
         env:
           CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
