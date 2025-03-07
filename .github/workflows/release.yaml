@@ -40,6 +40,13 @@ jobs:
         run: ct lint --config ct.yaml --lint-conf lintconf.yaml
 
       - name: Run chart-releaser
+        id: chart-releaser
         uses: helm/chart-releaser-action@v1.2.0
         env:
           CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+
+      - name: Check if release was published
+        if: steps.chart-releaser.outputs.changed_charts == ''
+        run: |
+          echo "No new releases were published. If a tag and/or release already exist for this version but they have not been published to the Helm repository, delete them and run this workflow again."
+          exit 1
