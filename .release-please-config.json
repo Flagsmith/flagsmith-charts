@@ -1,0 +1,22 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "helm",
+      "changelog-path": "charts/flagsmith/CHANGELOG.md",
+      "changelog-sections": [
+        {"type": "feat", "section": "Features"},
+        {"type": "fix", "section": "Bug Fixes"},
+        {"type": "chore", "section": "Miscellaneous"},
+        {"type": "docs", "section": "Documentation"}
+      ],
+      "versioning": "helm",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "charts/flagsmith/Chart.yaml",
+          "jsonpath": "$.version"
+        }
+      ]
+    }
+  }
+}
