@@ -1,45 +1,51 @@
 name: Release Charts
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-  release:
+  release-please:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
+      - name: Run Release Please
+        uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: helm
+          config-file: .release-please-config.json
+
+      # Only run chart release if release-please created a release
       - name: Configure Git
+        if: ${{ steps.release.outputs.release_created }}
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: Install Helm
+        if: ${{ steps.release.outputs.release_created }}
         uses: azure/setup-helm@v1
         with:
-          version: v3.5.4
+          version: v3.10.0
 
       - name: Add chart repo dependencies
-        # Note: this repos should match whith the repos set in ct.yaml
-        # See https://github.com/Flagsmith/flagsmith-charts/issues/105
+        if: ${{ steps.release.outputs.release_created }}
         run: |
           helm repo add stable https://charts.helm.sh/stable
           helm repo add influxdb2 https://helm.influxdata.com/
           helm repo add kiwigrid https://kiwigrid.github.io
           helm repo add bitnami https://charts.bitnami.com/bitnami
 
-      - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.0.1
-        with:
-          version: v3.3.0
-
-      - name: Run chart-testing (lint)
-        run: ct lint --config ct.yaml --lint-conf lintconf.yaml
-
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.2.0
+        if: ${{ steps.release.outputs.release_created }}
+        uses: helm/chart-releaser-action@v1.5.0
         env:
           CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+
