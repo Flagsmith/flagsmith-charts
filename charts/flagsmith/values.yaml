@@ -56,14 +56,14 @@ api:
     # runAsUser: 1000
     # runAsGroup: 1000
   livenessProbe:
-    path: /health
+    path: /health/liveness
     failureThreshold: 5
     initialDelaySeconds: 5
     periodSeconds: 10
     successThreshold: 1
     timeoutSeconds: 2
   readinessProbe:
-    path: /health
+    path: /health/readiness
     failureThreshold: 10
     initialDelaySeconds: 1
     periodSeconds: 10
@@ -320,7 +320,7 @@ sse:
   enabled: false
   image:
     repository: flagsmith/sse
-    tag: 3.4.0
+    tag: 3.6.0
     imagePullPolicy: IfNotPresent
     imagePullSecrets: []
   # See all supported environment variables here:
@@ -354,14 +354,14 @@ sse:
     # runAsUser: 1000
     # runAsGroup: 1000
   livenessProbe:
-    path: /health
+    path: /health/liveness
     failureThreshold: 5
     initialDelaySeconds: 5
     periodSeconds: 10
     successThreshold: 1
     timeoutSeconds: 2
   readinessProbe:
-    path: /health
+    path: /health/readiness
     failureThreshold: 10
     initialDelaySeconds: 1
     periodSeconds: 10
