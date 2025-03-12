@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "flagsmith.fullname" . }}-task-processor
+  {{- $annotations := include "flagsmith.annotations" ( dict "customAnnotations" .Values.service.taskProcessor.annotations "commonValues" .Values.common ) }}
+  {{- with $annotations }}
+  annotations:
+    {{- . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: task-processor
+spec:
+  type: {{ .Values.service.taskProcessor.type }}
+  ports:
+    - port: {{ .Values.service.taskProcessor.port }}
+      targetPort: {{ .Values.service.taskProcessor.port }}
+      protocol: TCP
+      name: http
+  selector: {{- include "flagsmith.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: task-processor
