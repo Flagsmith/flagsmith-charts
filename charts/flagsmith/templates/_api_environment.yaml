@@ -8,6 +8,34 @@
       name: {{ template "flagsmith.fullname" . }}
       key: DATABASE_URL
       {{- end }}
+{{/*
+Replica database URLs can be passed in different ways:
+- Plaintext URL
+- Plaintext dictionary config
+- Secret reference
+*/}}
+{{- range $index, $db := .Values.databaseExternal.replicas.databases }}
+- name: REPLICA_DATABASE_URL_{{ $index }}
+  {{- if $db.fromExistingSecret }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ $db.fromExistingSecret.name }}
+      key: {{ $db.fromExistingSecret.key }}
+  {{- else }}
+  value: {{ include "flagsmith.api.formatDatabaseUrl" $db | quote }}
+  {{- end }}
+{{- end }}
+{{- range $index, $db := .Values.databaseExternal.crossRegionReplicas.databases }}
+- name: CROSS_REGION_REPLICA_DATABASE_URL_{{ $index }}
+  {{- if $db.fromExistingSecret }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ $db.fromExistingSecret.name }}
+      key: {{ $db.fromExistingSecret.key }}
+  {{- else }}
+  value: {{ include "flagsmith.api.formatDatabaseUrl" $db | quote }}
+  {{- end }}
+{{- end }}
 - name: DJANGO_SECRET_KEY
   valueFrom:
     secretKeyRef:
@@ -104,10 +132,6 @@
 {{- if .Values.frontend.apiProxy.enabled }}
 - name: USE_X_FORWARDED_HOST
   value: 'true'
-{{- end }}
-{{- if and .Values._destructiveTests.enabled .Values._destructiveTests.testToken }}
-- name: E2E_TEST_AUTH_TOKEN
-  value: {{ .Values._destructiveTests.testToken | quote }}
 {{- end }}
 {{- if .Values.api.logging.format }}
 - name: LOG_FORMAT
