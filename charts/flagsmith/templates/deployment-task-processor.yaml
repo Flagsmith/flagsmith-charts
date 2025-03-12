@@ -86,22 +86,20 @@ spec:
         env: {{ include (print $.Template.BasePath "/_task_processor_environment.yaml") . | nindent 8 }}
         livenessProbe:
           failureThreshold: {{ .Values.taskProcessor.livenessProbe.failureThreshold }}
-          exec:
-            command:
-              - python
-              - manage.py
-              - checktaskprocessorthreadhealth
+          httpGet:
+            path: /health/liveness
+            port: {{ .Values.service.taskProcessor.port }}
+            scheme: HTTP
           initialDelaySeconds: {{ .Values.taskProcessor.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.taskProcessor.livenessProbe.periodSeconds }}
           successThreshold: {{ .Values.taskProcessor.livenessProbe.successThreshold }}
           timeoutSeconds: {{ .Values.taskProcessor.livenessProbe.timeoutSeconds }}
         readinessProbe:
           failureThreshold: {{ .Values.taskProcessor.readinessProbe.failureThreshold }}
-          exec:
-            command:
-              - python
-              - manage.py
-              - checktaskprocessorthreadhealth
+          httpGet:
+            path: /health/readiness
+            port: {{ .Values.service.taskProcessor.port }}
+            scheme: HTTP
           initialDelaySeconds: {{ .Values.taskProcessor.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.taskProcessor.readinessProbe.periodSeconds }}
           successThreshold: {{ .Values.taskProcessor.readinessProbe.successThreshold }}
