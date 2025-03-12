@@ -223,6 +223,24 @@ databaseExternal:
     enabled: false
     name: null
     key: null
+  # Configuration for replica databases used for read operations
+  replicas:
+    # List of replica database configurations
+    databases: []
+    # Example:
+    # databases:
+    #   - url: postgres://user:password@replica1.db.host/flagsmith
+    #   - type: postgres
+    #     host: replica2.db.host
+    #     port: 5432
+    #     database: flagsmith
+    #     username: user
+    #     password: password
+    #   - fromExistingSecret:
+    #       name: my-replica-secret
+    #       key: database-url
+  crossRegionReplicas:
+    databases: []
 
 pgbouncer:
   enabled: false
@@ -456,33 +474,7 @@ jobs:
 # These tests just make non-destructive requests to the services in
 # the cluster. Enabling this and running helm test is safe.
 tests:
-  # A test is enabled if both this and the specific test is enabled
   enabled: false
-  api:
-    enabled: true
-    maxTime: 10
-    printResponseBody: false
-  frontend:
-    enabled: true
-    maxTime: 10
-    printResponseBody: false
-
-# These are used for integration testing the chart and the
-# application. Enabling this will mean that data in a release is
-# destroyed or corrupted if the tests are run.
-_destructiveTests:
-  # A test is enabled if both this and the specific test is enabled
-  enabled: false
-  testToken: test-e2e-token
-  e2e:
-    enabled: true
-    image:
-      repository: flagsmith/flagsmith-e2e-tests
-      tag: null
-      imagePullPolicy: IfNotPresent
-    resources:
-      requests:
-        memory: 1Gi
 
 # -- Array of extra K8s manifests to deploy
 ## Note: Supports use of custom Helm templates

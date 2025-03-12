@@ -1,0 +1,54 @@
+{{- if .Values.tests.enabled }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Release.Name }}-test-serviceaccount
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: test-replica-database-urls
+  annotations:
+    {{- $annotations := include "flagsmith.annotations" .Values.common }}
+    {{- if $annotations }}
+    {{- $annotations | nindent 4 }}
+    {{- end }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Release.Name }}-test-role
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+rules:
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["pods/exec"]
+    verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Release.Name }}-test-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ .Release.Name }}-test-role
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Release.Name }}-test-serviceaccount
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: test-replica-secret
+  labels:
+    app.kubernetes.io/component: test-replica-secret
+type: Opaque
+stringData:
+  database-url: "postgres://user:password@127.0.0.1:5434/flagsmith"
+
+{{- end }}

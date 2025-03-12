@@ -1,2 +1,24 @@
 tests:
   enabled: true
+
+influxdb2:
+  enabled: false
+
+devPostgresql:
+  enabled: true
+
+databaseExternal:
+  replicas:
+    databases:
+      - url: postgres://user:password@127.0.0.1:5432/flagsmith
+
+      - type: postgres
+        host: 127.0.0.1
+        port: 5433
+        database: flagsmith
+        username: user
+        password: password
+
+      - fromExistingSecret:
+          name: test-replica-secret
+          key: database-url

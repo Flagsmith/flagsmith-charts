@@ -253,16 +253,6 @@ Frontend environment
 - name: FLAGSMITH_PROXY_API_URL
   value: http://{{ include "flagsmith.fullname" . }}-api.{{ .Release.Namespace }}:{{ .Values.service.api.port }}
 {{- end }}
-{{- if and .Values._destructiveTests.enabled .Values._destructiveTests.testToken }}
-- name: E2E_TEST_TOKEN_E2E
-  value: {{ .Values._destructiveTests.testToken | quote }}
-- name: E2E_TEST_TOKEN
-  value: {{ .Values._destructiveTests.testToken | quote }}
-- name: FLAGSMITH_API
-  value: {{ include "flagsmith.fullname" . }}-api.{{ .Release.Namespace }}:{{ .Values.service.api.port }}/api/v1/
-- name: ENABLE_INFLUXDB_FEATURES
-  value: {{ .Values.influxdb2.enabled | ternary "true" "false" | squote }}
-{{- end }}
 {{- range $envName, $envValue := .Values.frontend.extraEnv }}
 - name: {{ $envName }}
   value: {{ $envValue | quote }}
@@ -317,27 +307,6 @@ Database URL for application
 {{- end }}
 
 {{/*
-Curl Test container
-*/}}
-{{- define "flagsmith.tests.curlContainer" -}}
-name: {{ .name }}
-image: curlimages/curl
-command: ['curl']
-args:
-  - --fail
-  - --max-time
-  - {{ .maxTime | squote }}
-  - --silent
-{{- if not .printResponseBody }}
-  - --output
-  - /dev/null
-{{- end }}
-  - --write-out
-  - 'URL: %{url_effective}\nHTTP status code: %{http_code}\nBytes downloaded: %{size_download}\nTime taken: %{time_total}s\n'
-  - {{ .url | squote }}
-{{- end }}
-
-{{/*
 Replicas
 */}}
 {{- define "flagsmith.replicaCount" -}}
@@ -353,3 +322,25 @@ Real-time flag updates (SSE)
 {{- define "flagsmith.sse.authenticationToken" -}}
 {{- randAlphaNum 50 -}}
 {{- end }}
+
+{{/*
+Determine database URL for direct URL format or component parts
+*/}}
+{{- define "flagsmith.api.formatDatabaseUrl" -}}
+{{- if .url -}}
+  {{- .url -}}
+{{- else -}}
+  {{- $type := .type | default "postgres" -}}
+  {{- $port := .port | default "5432" -}}
+  {{- $password := .password | default "" -}}
+  {{- $username := required "Must specify a database username" .username -}}
+  {{- $host := required "Must specify a database host" .host -}}
+  {{- $database := required "Must specify a database name" .database -}}
+
+  {{- if $password -}}
+    {{- printf "%s://%s:%s@%s:%v/%s" $type $username $password $host $port $database -}}
+  {{- else -}}
+    {{- printf "%s://%s@%s:%v/%s" $type $username $host $port $database -}}
+  {{- end -}}
+{{- end -}}
+{{- end -}}
