@@ -6,7 +6,7 @@ common:
 
 api:
   image:
-    repository: flagsmith.docker.scarf.sh/flagsmith/flagsmith-api
+    repository: docker.flagsmith.com/flagsmith/flagsmith-api
     tag: null # defaults to .Chart.AppVersion
     imagePullPolicy: IfNotPresent
     imagePullSecrets: []
@@ -95,7 +95,7 @@ frontend:
   # pointing at the single Docker image that serves both.
   enabled: true
   image:
-    repository: flagsmith.docker.scarf.sh/flagsmith/flagsmith-frontend
+    repository: docker.flagsmith.com/flagsmith/flagsmith-frontend
     tag: null # defaults to .Chart.AppVersion
     imagePullPolicy: IfNotPresent
     imagePullSecrets: []
