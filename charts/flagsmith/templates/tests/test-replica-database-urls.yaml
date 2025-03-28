@@ -1,4 +1,4 @@
-{{- if and .Values.tests.enabled }}
+{{- if and .Values.tests.enabled .Values.databaseExternal.replicas.databases }}
 apiVersion: v1
 kind: Pod
 metadata:

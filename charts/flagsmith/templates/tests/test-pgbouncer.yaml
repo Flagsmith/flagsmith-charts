@@ -1,0 +1,44 @@
+{{- if and .Values.tests.enabled .Values.pgbouncer.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ template "flagsmith.fullname" . }}-test-pgbouncer
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: test-pgbouncer
+  annotations:
+    {{- $annotations := include "flagsmith.annotations" .Values.common }}
+    {{- if $annotations }}
+    {{- $annotations | nindent 4 }}
+    {{- end }}
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: test-pgbouncer
+      image: bitnami/kubectl
+      command:
+        - /bin/bash
+        - -c
+        - |
+          set -e
+          set -o pipefail
+
+          # Wait for API to be ready
+          echo "Waiting for API to be ready..."
+          kubectl wait --for=condition=ready pod -l app.kubernetes.io/component=api --timeout=60s
+
+          # Get the API pod name
+          API_POD=$(kubectl get pod -l app.kubernetes.io/component=api -o jsonpath='{.items[0].metadata.name}')
+
+          # Check DATABASE_URL environment variable
+          echo "Checking DATABASE_URL environment variable..."
+          DATABASE_URL=$(kubectl exec $API_POD -- sh -c 'echo $DATABASE_URL')
+          
+          if [[ ! "$DATABASE_URL" == *"pgbouncer"* ]]; then
+            echo "DATABASE_URL does not contain pgbouncer. Got: $DATABASE_URL"
+            exit 1
+          fi
+
+  serviceAccountName: {{ .Release.Name }}-test-serviceaccount
+  restartPolicy: Never
+{{- end }}
