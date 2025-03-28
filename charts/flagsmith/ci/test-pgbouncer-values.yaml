@@ -1,0 +1,30 @@
+tests:
+  enabled: true
+
+influxdb2:
+  enabled: false
+
+devPostgresql:
+  enabled: true
+  auth:
+    postgresPassword: hello123
+
+pgbouncer:
+  enabled: true
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 5
+  readinessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 5
+
+api:
+  enabled: true
+  livenessProbe:
+    enabled: true
+  readinessProbe:
+    enabled: true
