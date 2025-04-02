@@ -7,6 +7,9 @@ influxdb2:
 devPostgresql:
   enabled: true
 
+pgbouncer:
+  enabled: true
+
 databaseExternal:
   replicas:
     databases:
