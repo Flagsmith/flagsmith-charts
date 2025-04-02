@@ -392,6 +392,12 @@ hpa:
     minReplicas: 2
     maxReplicas: 10
     targetCPUUtilization: 50
+  taskProcessor:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilization: 50
+    
 
 ingress:
   frontend:
