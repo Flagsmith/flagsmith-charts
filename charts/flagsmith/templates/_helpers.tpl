@@ -347,9 +347,28 @@ replicas: {{ . }}
 {{- end }}
 
 
-{{/*
-Real-time flag updates (SSE)
-*/}}
-{{- define "flagsmith.sse.authenticationToken" -}}
-{{- randAlphaNum 50 -}}
+{{- define "flagsmith.api.secretKeySecretName" -}}
+{{- if .Values.api.secretKeyFromExistingSecret.enabled -}}
+{{- .Values.api.secretKeyFromExistingSecret.name -}}
+{{- else }}
+{{- printf "%s-django-secret-key" (include "flagsmith.fullname" .) -}}
+{{- end }}
+{{- end }}
+
+{{- define "flagsmith.api.secretKeySecretRef" -}}
+name: {{ include "flagsmith.api.secretKeySecretName" . }}
+key: {{ default "django-secret-key" .Values.api.secretKeyFromExistingSecret.key }}
+{{- end }}
+
+{{- define "flagsmith.sse.authenticationTokenSecretName" -}}
+{{- if .Values.sse.authenticationTokenFromExistingSecret.enabled -}}
+{{- .Values.sse.authenticationTokenFromExistingSecret.name -}}
+{{- else }}
+{{- printf "%s-sse-authentication-token" (include "flagsmith.fullname" .) -}}
+{{- end }}
+{{- end }}
+
+{{- define "flagsmith.sse.authenticationTokenSecretRef" -}}
+name: {{ include "flagsmith.sse.authenticationTokenSecretName" . }}
+key: {{ default "sse-authentication-token" .Values.sse.authenticationTokenFromExistingSecret.key }}
 {{- end }}

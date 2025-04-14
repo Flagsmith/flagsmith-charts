@@ -23,7 +23,6 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/secrets-sse: {{ include (print $.Template.BasePath "/secrets-sse.yaml") . | sha256sum }}
 {{- if .Values.sse.podAnnotations }}
 {{ toYaml .Values.sse.podAnnotations | nindent 8 }}
 {{- end }}
