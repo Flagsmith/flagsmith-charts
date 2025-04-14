@@ -1,0 +1,46 @@
+{{- if not .Values.api.secretKeyFromExistingSecret.enabled -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "flagsmith.api.secretKeySecretName" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: django-secret-init
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  template:
+    metadata:
+      name: {{ include "flagsmith.api.secretKeySecretName" . }}
+      labels:
+        {{- include "flagsmith.labels" . | nindent 8 }}
+        app.kubernetes.io/component: django-secret-init
+    spec:
+      restartPolicy: OnFailure
+      serviceAccountName: {{ include "flagsmith.api.secretKeySecretName" . }}
+      containers:
+        - name: secret-creator
+          image: bitnami/kubectl:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+            - |
+              SECRET_NAME={{ include "flagsmith.api.secretKeySecretName" . }}
+              NAMESPACE={{ .Release.Namespace }}
+              echo "Checking for secret $SECRET_NAME in namespace $NAMESPACE"
+              # Attempt to get the secret; if it fails (exit code != 0), create it.
+              if ! kubectl get secret "$SECRET_NAME" -n "$NAMESPACE" -o name; then
+                echo "Secret $SECRET_NAME not found. Creating..."
+                # Generate a 64-character hex key (32 bytes)
+                GENERATED_KEY=$(openssl rand -hex 32)
+                kubectl create secret generic "$SECRET_NAME" -n "$NAMESPACE" \
+                  --from-literal=django-secret-key="$GENERATED_KEY" \
+                  --dry-run=client -o yaml | kubectl apply -f -
+                echo "Secret $SECRET_NAME created."
+              else
+                echo "Secret $SECRET_NAME already exists. No action taken."
+              fi
+{{- end }}
