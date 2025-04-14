@@ -87,6 +87,10 @@ api:
     organisationName: null
     projectName: null
     extraSpec: {} # Will be added to `spec` for `flagsmith-api` deployment.
+  secretKeyFromExistingSecret:
+    enabled: false
+    name: ""
+    key: ""
 
 frontend:
   # Set this to `false` to switch off the frontend (deployment,

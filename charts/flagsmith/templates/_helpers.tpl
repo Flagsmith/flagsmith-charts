@@ -353,3 +353,10 @@ Real-time flag updates (SSE)
 {{- define "flagsmith.sse.authenticationToken" -}}
 {{- randAlphaNum 50 -}}
 {{- end }}
+
+{{- define "flagsmith.api.secretKeySecretRef" -}}
+{{- if .Values.api.secretKeyFromExistingSecret.enabled -}}
+name: {{ .Values.api.secretKeyFromExistingSecret.name }}
+key: {{ default "django-secret-key" .Values.api.secretKeyFromExistingSecret.key }}
+{{- end -}}
+{{- end -}}
