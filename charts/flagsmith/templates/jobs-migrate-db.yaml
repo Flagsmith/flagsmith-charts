@@ -42,9 +42,9 @@ spec:
       tolerations:
 {{ toYaml .Values.jobs.migrateDb.tolerations | indent 8 }}
       {{- end }}
-      {{- if .Values.api.image.imagePullSecrets }}
+      {{- with .Values.api.image.imagePullSecrets | default .Values.global.image.imagePullSecrets }}
       imagePullSecrets:
-{{ toYaml .Values.api.image.imagePullSecrets | indent 8 }}
+        {{- toYaml . | indent 8 }}
       {{- end }}
       securityContext:
         {{- $securityContext := .Values.jobs.migrateDb.podSecurityContext | default (dict) | deepCopy }}

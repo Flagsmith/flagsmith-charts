@@ -160,8 +160,8 @@ taskProcessor:
     # and to maintain backwards compatibility.
     repository: ""
     tag: "" # defaults to .Chart.AppVersion
-    imagePullPolicy: null
-    imagePullSecrets: null
+    imagePullPolicy: ""
+    imagePullSecrets: []
 
   enabled: false
   replicacount: 1

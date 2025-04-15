@@ -74,8 +74,8 @@ spec:
 {{- end }}
       containers:
       - name: {{ .Chart.Name }}-task-processor
-        image: {{ .Values.taskProcessor.image.repository | default .Values.api.image.repository }}:{{ .Values.taskProcessor.image.tag  }}
-        imagePullPolicy: {{ .Values.taskProcessor.image.imagePullPolicy | default .Values.api.image.imagePullPolicy }}
+        image: {{ .Values.taskProcessor.image.repository | default .Values.api.image.repository }}:{{ .Values.taskProcessor.image.tag | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.taskProcessor.image.imagePullPolicy | default .Values.api.image.imagePullPolicy | default .Values.global.image.imagePullPolicy }}
         command:
           - ./scripts/run-docker.sh
         args:
