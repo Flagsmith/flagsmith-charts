@@ -51,9 +51,9 @@ spec:
       tolerations:
 {{ toYaml .Values.sse.tolerations | indent 8 }}
       {{- end }}
-      {{- if .Values.sse.image.imagePullSecrets }}
+      {{- with .Values.sse.image.imagePullSecrets | default .Values.global.image.imagePullSecrets }}
       imagePullSecrets:
-{{ toYaml .Values.sse.image.imagePullSecrets | indent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
         {{- $securityContext := .Values.sse.podSecurityContext | default (dict) | deepCopy }}
@@ -70,8 +70,8 @@ spec:
 {{- end }}
       containers:
       - name: {{ .Chart.Name }}-sse
-        image: {{ .Values.sse.image.repository }}:{{ .Values.sse.image.tag | default "3.4.0" }}
-        imagePullPolicy: {{ .Values.sse.image.imagePullPolicy }}
+        image: {{ printf "%s:%s" ( .Values.sse.image.repository  ) ( .Values.sse.image.tag  ) }}
+        imagePullPolicy: {{ .Values.sse.image.imagePullPolicy | default .Values.global.image.imagePullPolicy }}
         args: ["serve"]
         ports:
         - containerPort: {{ .Values.service.sse.port }}

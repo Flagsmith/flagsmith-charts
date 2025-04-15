@@ -54,9 +54,9 @@ spec:
       {{- if .Values.frontend.schedulerName }}
       schedulerName: "{{ .Values.frontend.schedulerName }}"
       {{- end }}
-      {{- if .Values.frontend.image.imagePullSecrets }}
+      {{- with .Values.frontend.image.imagePullSecrets | default .Values.global.image.imagePullSecrets }}
       imagePullSecrets:
-{{ toYaml .Values.frontend.image.imagePullSecrets | indent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
         {{- $securityContext := .Values.frontend.podSecurityContext | default (dict) | deepCopy }}
@@ -73,8 +73,8 @@ spec:
 {{- end }}
       containers:
       - name: {{ .Chart.Name }}-frontend
-        image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag | default (printf "%s" .Chart.AppVersion) }}
-        imagePullPolicy: {{ .Values.frontend.image.imagePullPolicy }}
+        image: {{ printf "%s:%s" ( .Values.frontend.image.repository  ) ( .Values.frontend.image.tag  | default .Chart.AppVersion ) }}
+        imagePullPolicy: {{ .Values.frontend.image.imagePullPolicy | default .Values.global.image.imagePullPolicy }}
         ports:
         - containerPort: {{ .Values.service.frontend.port }}
         env: {{- include "flagsmith.frontend.environment" . | nindent 8 }}

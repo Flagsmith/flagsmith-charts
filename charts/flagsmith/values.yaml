@@ -4,11 +4,16 @@ common:
   # Annotations to add to all the resources deployed by this chart
   annotations: {}
 
+global:
+  image:
+    imagePullPolicy: IfNotPresent
+    imagePullSecrets: []
+
 api:
   image:
     repository: flagsmith.docker.scarf.sh/flagsmith/flagsmith-api
-    tag: null # defaults to .Chart.AppVersion
-    imagePullPolicy: IfNotPresent
+    tag: "" # defaults to .Chart.AppVersion
+    imagePullPolicy: ""
     imagePullSecrets: []
   # Note that if setting this to false, need to set
   # api.image.repository to flagsmith/flagsmith (or some other
@@ -104,8 +109,8 @@ frontend:
   enabled: true
   image:
     repository: flagsmith.docker.scarf.sh/flagsmith/flagsmith-frontend
-    tag: null # defaults to .Chart.AppVersion
-    imagePullPolicy: IfNotPresent
+    tag: "" # defaults to .Chart.AppVersion
+    imagePullPolicy: ""
     imagePullSecrets: []
   replicacount: 1
   deploymentStrategy: null
@@ -153,8 +158,8 @@ taskProcessor:
     # all values here default to those in .Values.api.image if not configured
     # this is to simplify the logic for those using flagsmith-api image
     # and to maintain backwards compatibility.
-    repository: null
-    tag: null
+    repository: ""
+    tag: "" # defaults to .Chart.AppVersion
     imagePullPolicy: null
     imagePullSecrets: null
 
@@ -231,7 +236,7 @@ pgbouncer:
   image:
     repository: bitnami/pgbouncer
     tag: 1.16.0
-    imagePullPolicy: IfNotPresent
+    imagePullPolicy: ""
     imagePullSecrets: []
   replicaCount: 1
   deploymentStrategy: null
@@ -323,7 +328,7 @@ sse:
   image:
     repository: flagsmith/sse
     tag: 3.6.0
-    imagePullPolicy: IfNotPresent
+    imagePullPolicy: ""
     imagePullSecrets: []
   # See all supported environment variables here:
   # https://docs.flagsmith.com/deployment/hosting/real-time/deployment#sse-service

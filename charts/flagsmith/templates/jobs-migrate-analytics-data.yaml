@@ -23,7 +23,7 @@ spec:
       shareProcessNamespace: true
       containers:
       - name: migrate-analytics-data
-        image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
+        image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag  }}
         command: ["python","manage.py", "migrate_analytics"]
         {{- if .Values.jobs.migrateAnalyticsData.args }}
         args: {{ toYaml .Values.jobs.migrateAnalyticsData.args | nindent 8 }}
