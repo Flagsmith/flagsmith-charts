@@ -1,4 +1,4 @@
-{{- if and .Values.sse.enabled (not .Values.api.secretKeyFromExistingSecret.enabled) -}}
+{{- if and .Values.sse.enabled (not .Values.sse.authenticationTokenFromExistingSecret.enabled) -}}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
