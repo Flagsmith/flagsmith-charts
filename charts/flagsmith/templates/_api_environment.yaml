@@ -11,8 +11,7 @@
 - name: DJANGO_SECRET_KEY
   valueFrom:
     secretKeyRef:
-      name: django-secret-key
-      key: django-secret-key
+      {{ include "flagsmith.api.secretKeySecretRef" . | nindent 6 }}
 {{- if .Values.influxdb2.enabled }}
 - name: INFLUXDB_URL
   value: http://{{- template "flagsmith.influxdb.hostname" . -}}:80
@@ -112,8 +111,7 @@
 - name: SSE_AUTHENTICATION_TOKEN
   valueFrom:
     secretKeyRef:
-      name: {{ include "flagsmith.fullname" . }}-sse
-      key: SSE_AUTHENTICATION_TOKEN
+      {{ include "flagsmith.sse.authenticationTokenSecretRef" . | nindent 6}}
 - name: SSE_SERVER_BASE_URL
   value: http://{{ include "flagsmith.fullname" . }}-sse.{{ .Release.Namespace }}:{{ .Values.service.sse.port }}
 {{- end }}
