@@ -11,6 +11,7 @@ metadata:
     "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 spec:
+  ttlSecondsAfterFinished: 60
   template:
     metadata:
       name: {{ include "flagsmith.api.secretKeySecretName" . }}

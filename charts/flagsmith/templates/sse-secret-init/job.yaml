@@ -11,6 +11,7 @@ metadata:
     "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 spec:
+  ttlSecondsAfterFinished: 60
   template:
     metadata:
       name: {{ include "flagsmith.sse.authenticationTokenSecretName" . }}
@@ -19,7 +20,7 @@ spec:
         app.kubernetes.io/component: sse-secret-init
     spec:
       restartPolicy: OnFailure
-      serviceAccountName: {{ include "flagsmith.fullname" . }}-sse-secret-init
+      serviceAccountName: {{ include "flagsmith.sse.authenticationTokenSecretName" . }}
       containers:
         - name: secret-creator
           image: bitnami/kubectl:latest
