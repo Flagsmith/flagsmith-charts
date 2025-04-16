@@ -12,5 +12,4 @@
 - name: SSE_AUTHENTICATION_TOKEN
   valueFrom:
     secretKeyRef:
-      name: {{ include "flagsmith.fullname" . }}-sse
-      key: SSE_AUTHENTICATION_TOKEN
+      {{ include "flagsmith.sse.authenticationTokenSecretRef" . | nindent 6 }}
