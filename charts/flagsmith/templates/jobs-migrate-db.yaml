@@ -60,7 +60,7 @@ spec:
       {{- end }}
       containers:
       - name: migrate-db
-        image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag  }}
+        image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default .Chart.AppVersion }}
         imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
         {{- if .Values.jobs.migrateDb.command }}
         command: {{ toYaml .Values.jobs.migrateDb.command | nindent 8 }}
