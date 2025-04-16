@@ -4,6 +4,24 @@ common:
   # Annotations to add to all the resources deployed by this chart
   annotations: {}
 
+# serviceMonitor allows creating a ServiceMonitor resource for use with the Prometheus Operator.
+# Requires the operator CRDs to be installed separately from this chart.
+# See https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api-reference/api.md#servicemonitor
+serviceMonitor:
+  enabled: false
+  annotations: {}
+  labels: []
+  targetLabels: []
+  jobLabel: ""
+  interval: 15s
+  scheme: ""
+  tlsConfig: {}
+  scrapeTimeout: 10s
+  path: "/metrics/"
+  honorLabels: true
+  metricRelabelings: []
+  relabelings: []
+
 api:
   image:
     repository: flagsmith.docker.scarf.sh/flagsmith/flagsmith-api
@@ -19,6 +37,7 @@ api:
   # (unless explicitly switched off), but both are handled by the api
   # deployment's pods.
   separateApiAndFrontend: true
+
   replicacount: 1
   deploymentStrategy: null
   podAnnotations: {}

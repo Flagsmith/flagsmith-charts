@@ -1,3 +1,5 @@
+- name: PROMETHEUS_ENABLED
+  value: 'true'
 - name: DATABASE_URL
   valueFrom:
     secretKeyRef:
