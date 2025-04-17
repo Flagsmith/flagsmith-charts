@@ -12,6 +12,7 @@ apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
+  namespace: {{ .Release.Namespace }}
   name: {{ $fullName }}-sse
   labels:
     {{- include "flagsmith.labels" . | nindent 4 }}

@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: {{ .Release.Namespace }}
   name: {{ include "flagsmith.fullname" . }}-task-processor
   {{- $annotations := include "flagsmith.annotations" ( dict "customAnnotations" .Values.service.taskProcessor.annotations "commonValues" .Values.common ) }}
   {{- with $annotations }}

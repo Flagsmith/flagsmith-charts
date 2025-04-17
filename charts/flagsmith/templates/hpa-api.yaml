@@ -2,6 +2,7 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
+  namespace: {{ .Release.Namespace }}
   name: {{ template "flagsmith.fullname" . }}-api-hpa
 spec:
   scaleTargetRef:
