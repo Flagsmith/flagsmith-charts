@@ -7,6 +7,8 @@ common:
 # serviceMonitor allows creating a ServiceMonitor resource for use with the Prometheus Operator.
 # Requires the operator CRDs to be installed separately from this chart.
 # See https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api-reference/api.md#servicemonitor
+#
+# Flagsmith supports Prometheus metrics starting from version 2.170.0.
 serviceMonitor:
   enabled: false
   annotations: {}
