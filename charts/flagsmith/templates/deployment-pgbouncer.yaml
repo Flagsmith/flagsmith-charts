@@ -104,7 +104,7 @@ spec:
         - name: POSTGRESQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              {{- if .Values.pgbouncer.passwordFromExistingSecret }}
+              {{- if .Values.pgbouncer.passwordFromExistingSecret.enabled }}
               name: {{ .Values.pgbouncer.passwordFromExistingSecret.name }}
               key: {{ .Values.pgbouncer.passwordFromExistingSecret.key }}
               {{- else if .Values.devPostgresql.enabled }}
