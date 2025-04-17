@@ -2,6 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: {{ .Release.Namespace }}
   name: {{ template "flagsmith.fullname" . }}-task-processor
   {{- $annotations := include "flagsmith.annotations" .Values.common }}
   {{- with $annotations }}
@@ -83,6 +84,8 @@ spec:
           - ./scripts/run-docker.sh
         args:
           - run-task-processor
+        ports:
+        - containerPort: {{ .Values.service.taskProcessor.port }}
         env: {{ include (print $.Template.BasePath "/_task_processor_environment.yaml") . | nindent 8 }}
         livenessProbe:
           failureThreshold: {{ .Values.taskProcessor.livenessProbe.failureThreshold }}

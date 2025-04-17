@@ -39,13 +39,7 @@ Replica database URLs can be passed in different ways:
 - name: DJANGO_SECRET_KEY
   valueFrom:
     secretKeyRef:
-      {{- if .Values.api.secretKeyFromExistingSecret.enabled }}
-      name: {{ .Values.api.secretKeyFromExistingSecret.name }}
-      key: {{ .Values.api.secretKeyFromExistingSecret.key }}
-      {{- else }}
-      name: {{ template "flagsmith.fullname" . }}
-      key: DJANGO_SECRET_KEY
-      {{- end }}
+      {{ include "flagsmith.api.secretKeySecretRef" . | nindent 6 }}
 {{- if .Values.influxdb2.enabled }}
 - name: INFLUXDB_URL
   value: http://{{- template "flagsmith.influxdb.hostname" . -}}:80
@@ -141,8 +135,7 @@ Replica database URLs can be passed in different ways:
 - name: SSE_AUTHENTICATION_TOKEN
   valueFrom:
     secretKeyRef:
-      name: {{ include "flagsmith.fullname" . }}-sse
-      key: SSE_AUTHENTICATION_TOKEN
+      {{ include "flagsmith.sse.authenticationTokenSecretRef" . | nindent 6}}
 - name: SSE_SERVER_BASE_URL
   value: http://{{ include "flagsmith.fullname" . }}-sse.{{ .Release.Namespace }}:{{ .Values.service.sse.port }}
 {{- end }}

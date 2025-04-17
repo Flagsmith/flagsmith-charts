@@ -2,6 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: {{ .Release.Namespace }}
   name: {{ template "flagsmith.fullname" . }}-sse
   {{- $annotations := include "flagsmith.annotations" .Values.common }}
   {{- with $annotations }}
@@ -23,7 +24,6 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/secrets-sse: {{ include (print $.Template.BasePath "/secrets-sse.yaml") . | sha256sum }}
 {{- if .Values.sse.podAnnotations }}
 {{ toYaml .Values.sse.podAnnotations | nindent 8 }}
 {{- end }}

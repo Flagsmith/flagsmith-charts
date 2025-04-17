@@ -40,12 +40,6 @@ api:
   #    secretName: mysecret
   #    secretKey: mykey
   extraEnvFromSecret: {}
-  # See https://docs.flagsmith.com/deployment/locally-api#creating-a-secret-key
-  secretKey: null
-  secretKeyFromExistingSecret:
-    enabled: false
-    name: null
-    key: null
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -93,6 +87,14 @@ api:
     organisationName: null
     projectName: null
     extraSpec: {} # Will be added to `spec` for `flagsmith-api` deployment.
+
+  # secretKeyFromExistingSecret points to the Secret that contains the Django secret key. If none is provided, a Job
+  # will be created to generate one.
+  # See https://docs.djangoproject.com/en/4.2/topics/signing/
+  secretKeyFromExistingSecret:
+    enabled: false
+    name: ""
+    key: ""
 
 frontend:
   # Set this to `false` to switch off the frontend (deployment,
@@ -351,6 +353,13 @@ sse:
   #   REDIS_PASSWORD:
   #    secretName: my_redis_secrets
   #    secretKey: my_redis_password
+
+  # authenticationTokenFromExistingSecret is a shared secret between the API and SSE service. If none is provided, a Job
+  # will be created to generate one.
+  authenticationTokenFromExistingSecret:
+    enabled: false
+    name: ""
+    key: ""
   replicaCount: 1
   deploymentStrategy: null
   podAnnotations: {}
