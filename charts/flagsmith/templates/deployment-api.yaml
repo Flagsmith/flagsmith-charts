@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: {{ .Release.Namespace }}
   name: {{ template "flagsmith.fullname" . }}-api
   {{- $annotations := include "flagsmith.annotations" .Values.common }}
   {{- with $annotations }}
