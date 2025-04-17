@@ -253,8 +253,20 @@ pgbouncer:
     imagePullSecrets: []
   replicaCount: 1
   deploymentStrategy: null
-  # Optional: Use to override the password directly instead of extracting from the database URL
+
+  # passwordFromExistingSecret references a Secret that contains the Postgres password for this user.
+  passwordFromExistingSecret:
+    enabled: false
+    name: ""
+    key: ""
+
+  # passwordOverride is a plain-text password that PgBouncer will use to authenticate with Postgres.
+  #
+  # If passwordFromExistingSecret and passwordOverride were not provided, this Helm chart will attempt to extract the
+  # password from the URL of the downstream Postgres database. This behaviour is deprecated, and the password should
+  # be provided explicitly to both PgBouncer and the database configuration in this chart.
   passwordOverride: ""
+
   podAnnotations: {}
   resources: {}
   podLabels: {}

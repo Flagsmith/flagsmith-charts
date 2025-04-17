@@ -41,4 +41,15 @@ spec:
 
   serviceAccountName: {{ .Release.Name }}-test-serviceaccount
   restartPolicy: Never
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: pgbouncer-password
+type: Opaque
+stringData:
+  POSTGRESQL_PASSWORD: 'hello*123'
+
 {{- end }}

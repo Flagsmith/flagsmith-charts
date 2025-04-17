@@ -104,8 +104,16 @@ spec:
         - name: POSTGRESQL_PASSWORD
           valueFrom:
             secretKeyRef:
+              {{- if .Values.pgbouncer.passwordFromExistingSecret }}
+              name: {{ .Values.pgbouncer.passwordFromExistingSecret.name }}
+              key: {{ .Values.pgbouncer.passwordFromExistingSecret.key }}
+              {{- else if .Values.devPostgresql.enabled }}
+              name: {{ template "flagsmith.fullname" . }}-dev-postgresql
+              key: postgres-password
+              {{- else }}
               name: {{ template "flagsmith.fullname" . }}-pgbouncer
               key: POSTGRESQL_PASSWORD
+              {{- end }}
         - name: PGBOUNCER_PORT
           value: '5432'
         {{- range $envName, $envValue := .Values.pgbouncer.extraEnv }}

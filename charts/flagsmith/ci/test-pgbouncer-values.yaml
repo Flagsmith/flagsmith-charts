@@ -7,7 +7,7 @@ influxdb2:
 devPostgresql:
   enabled: true
   auth:
-    postgresPassword: hello123
+    postgresPassword: hello*123
 
 pgbouncer:
   enabled: true
@@ -21,6 +21,10 @@ pgbouncer:
     periodSeconds: 10
     timeoutSeconds: 5
     failureThreshold: 5
+  passwordFromExistingSecret:
+    enabled: true
+    name: pgbouncer-password
+    key: POSTGRESQL_PASSWORD
 
 api:
   enabled: true
