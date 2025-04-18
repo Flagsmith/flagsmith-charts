@@ -23,8 +23,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/secrets-api: {{ include (print $.Template.BasePath "/secrets-api.yaml") . | sha256sum }}
-        {{- if and .Values.influxdbExternal.enabled (not .Values.influxdbExternal.tokenFromExistingSecret.enabled) }}
+        {{- if and .Values.influxdb.enabled (not .Values.influxdb.token.secret) }}
         checksum/secrets-influxdb-external: {{ include (print $.Template.BasePath "/secrets-influxdb-external.yaml") . | sha256sum }}
         {{- end }}
         {{- if and .Values.api.influxdbSetup.enabled }}
@@ -75,13 +74,6 @@ spec:
       serviceAccountName: {{ .Values.api.serviceAccountName }}
       {{- end }}
       initContainers:
-{{- if .Values.api.enableMigrateDbInitContainer }}
-      - name: migrate-db
-        image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
-        imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
-        args: ["migrate"]
-        env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
-{{- end }}
 {{- if .Values.api.bootstrap.enabled }}
       - name: bootstrap
         image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
@@ -123,11 +115,7 @@ spec:
       - name: {{ .Chart.Name }}-api
         image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
         imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
-        {{- if .Values.api.enableMigrateAndServe }}
-        args: ["migrate-and-serve"]
-        {{- else }}
         args: ["serve"]
-        {{- end }}
         ports:
         - containerPort: {{ .Values.service.api.port }}
         env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}

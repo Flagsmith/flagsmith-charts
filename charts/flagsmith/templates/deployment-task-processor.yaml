@@ -22,7 +22,7 @@ spec:
     metadata:
       annotations:
         checksum/secrets-api: {{ include (print $.Template.BasePath "/secrets-api.yaml") . | sha256sum }}
-        {{- if and .Values.influxdbExternal.enabled (not .Values.influxdbExternal.tokenFromExistingSecret.enabled) }}
+        {{- if and .Values.influxdb.enabled (not .Values.influxdb.token.secret) }}
         checksum/secrets-influxdb-external: {{ include (print $.Template.BasePath "/secrets-influxdb-external.yaml") . | sha256sum }}
         {{- end }}
 {{- if .Values.taskProcessor.podAnnotations }}

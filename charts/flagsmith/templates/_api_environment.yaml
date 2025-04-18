@@ -1,75 +1,79 @@
-- name: DATABASE_URL
-  valueFrom:
-    secretKeyRef:
-      {{- if and .Values.databaseExternal.enabled .Values.databaseExternal.urlFromExistingSecret.enabled }}
-      name: {{ .Values.databaseExternal.urlFromExistingSecret.name }}
-      key: {{ .Values.databaseExternal.urlFromExistingSecret.key }}
-      {{- else }}
-      name: {{ template "flagsmith.fullname" . }}
-      key: DATABASE_URL
-      {{- end }}
-{{/*
-Replica database URLs can be passed in different ways:
-- Plaintext URL
-- Plaintext dictionary config
-- Secret reference
-*/}}
-{{- range $index, $db := .Values.databaseExternal.replicas.databases }}
-- name: REPLICA_DATABASE_URL_{{ $index }}
-  {{- if $db.fromExistingSecret }}
-  valueFrom:
-    secretKeyRef:
-      name: {{ $db.fromExistingSecret.name }}
-      key: {{ $db.fromExistingSecret.key }}
-  {{- else }}
-  value: {{ include "flagsmith.api.formatDatabaseUrl" $db | quote }}
-  {{- end }}
-{{- end }}
-{{- range $index, $db := .Values.databaseExternal.crossRegionReplicas.databases }}
-- name: CROSS_REGION_REPLICA_DATABASE_URL_{{ $index }}
-  {{- if $db.fromExistingSecret }}
-  valueFrom:
-    secretKeyRef:
-      name: {{ $db.fromExistingSecret.name }}
-      key: {{ $db.fromExistingSecret.key }}
-  {{- else }}
-  value: {{ include "flagsmith.api.formatDatabaseUrl" $db | quote }}
-  {{- end }}
-{{- end }}
 - name: DJANGO_SECRET_KEY
   valueFrom:
     secretKeyRef:
       {{ include "flagsmith.api.secretKeySecretRef" . | nindent 6 }}
-{{- if .Values.influxdb2.enabled }}
+
+{{- with .Values.database }}
+
+{{- if and .database.secret .database.key }}
+- name: DJANGO_DB_NAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ .database.secret }}
+      key: {{ .database.key }}
+{{- else }}
+- name: DJANGO_DB_NAME
+  value: "postgres"
+{{- end }}
+
+{{- if and .username.secret .username.key }}
+- name: DJANGO_DB_USER
+  valueFrom:
+    secretKeyRef:
+      name: {{ .username.secret }}
+      key: {{ .username.key }}
+{{- else }}
+- name: DJANGO_DB_USER
+  value: "postgres"
+{{- end }}
+
+{{- if and .host.secret .host.key }}
+- name: DJANGO_DB_HOST
+  valueFrom:
+    secretKeyRef:
+      name: {{ .host.secret }}
+      key: {{ .host.key }}
+{{- else }}
+- name: DJANGO_DB_HOST
+  value: flagsmith-postgresql-hl
+{{- end }}
+{{- if and .portSecret .portKey }}
+- name: DJANGO_DB_PORT
+  valueFrom:
+    secretKeyRef:
+      name: {{ .portSecret }}
+      key: {{ .portKey }}
+{{- else if .port }}
+- name: DJANGO_DB_PORT
+  value: {{ .port | quote }}
+{{ end }}
+{{- if and .password.secret .password.key }}
+- name: DJANGO_DB_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ .password.secret }}
+      key: {{ .password.key }}
+{{- else }}
+- name: DJANGO_DB_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: flagsmith-postgresql
+      key: postgres-password
+{{- end }}
+{{- end }}
+{{- if .Values.influxdb.enabled }}
 - name: INFLUXDB_URL
-  value: http://{{- template "flagsmith.influxdb.hostname" . -}}:80
+  value: {{ .Values.influxdb.url | required "Must specify a URL for an external InfluxDB" }}
 - name: INFLUXDB_BUCKET
-  value: {{ .Values.influxdb2.adminUser.bucket }}
+  value: {{ .Values.influxdb.bucket | required "Must specify a bucket for an external InfluxDB" }}
 - name: INFLUXDB_ORG
-  value: {{ .Values.influxdb2.adminUser.organization }}
+  value: {{ .Values.influxdb.organization | required "Must specify an organization for an external InfluxDB" }}
 - name: INFLUXDB_TOKEN
   valueFrom:
     secretKeyRef:
-      {{- if .Values.influxdb2.adminUser.existingSecret }}
-      name: {{ .Values.influxdb2.adminUser.existingSecret }}
-      key: admin-token
-      {{- else }}
-      name: {{ template "flagsmith.influxdb.fullname" . }}-auth
-      key: admin-token
-      {{- end }}
-{{- else if .Values.influxdbExternal.enabled }}
-- name: INFLUXDB_URL
-  value: {{ .Values.influxdbExternal.url | required "Must specify a URL for an external InfluxDB" }}
-- name: INFLUXDB_BUCKET
-  value: {{ .Values.influxdbExternal.bucket | required "Must specify a bucket for an external InfluxDB" }}
-- name: INFLUXDB_ORG
-  value: {{ .Values.influxdbExternal.organization | required "Must specify an organization for an external InfluxDB" }}
-- name: INFLUXDB_TOKEN
-  valueFrom:
-    secretKeyRef:
-      {{- if .Values.influxdbExternal.tokenFromExistingSecret.enabled }}
-      name: {{ .Values.influxdbExternal.tokenFromExistingSecret.name | required "Must set secret name for external InfluxDB secret" }}
-      key: {{ .Values.influxdbExternal.tokenFromExistingSecret.key | required "Must set key for external InfluxDB secret" }}
+      {{- if .Values.influxdb.token.secret }}
+      name: {{ .Values.influxdb.token.secret | required "Must set secret name for external InfluxDB secret" }}
+      key: {{ .Values.influxdb.token.key | required "Must set key for external InfluxDB secret" }}
       {{- else }}
       name: {{ template "flagsmith.influxdb.fullname" . }}-external-auth
       key: admin-token
@@ -90,32 +94,8 @@ Replica database URLs can be passed in different ways:
 - name: {{ $envName }}
   value: {{ $envValue | quote }}
 {{- end }}
-{{- with .Values.api.statsd }}
-{{- if .enabled }}
-- name: STATSD_HOST
-{{- if .host }}
-  value: {{ .host }}
-{{- else if .hostFromNodeIp }}
-  valueFrom:
-    fieldRef:
-      fieldPath: status.hostIP
-{{- else if (and $.Values.graphite.enabled $.Values.graphite.autoSetStatsdHostEnvVar) }}
-  value: {{ template "flagsmith.graphite.fullname" $ }}
-{{- else }}
-{{ fail "Must set api.statsd.host or api.statsd.hostFromNodeIp or enable graphite and set graphite.autoSetStatsdHostEnvVar" }}
-{{- end }}
-- name: STATSD_PORT
-  value: {{ .port | quote }}
-{{- if .prefix }}
-- name: STATSD_PREFIX
-  value: {{ .prefix }}
-{{- end }}
-{{- end }}
-{{- end }}
-{{- if .Values.taskProcessor.enabled }}
 - name: TASK_RUN_METHOD
   value: TASK_PROCESSOR
-{{- end }}
 {{- range $envName, $secretKeyRef := .Values.api.extraEnvFromSecret }}
 - name: {{ $envName }}
   valueFrom:

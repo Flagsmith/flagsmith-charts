@@ -7,19 +7,10 @@ common:
 api:
   image:
     repository: flagsmith.docker.scarf.sh/flagsmith/flagsmith-api
-    tag: null # defaults to .Chart.AppVersion
+    tag: "" # defaults to .Chart.AppVersion
     imagePullPolicy: IfNotPresent
     imagePullSecrets: []
-  # Note that if setting this to false, need to set
-  # api.image.repository to flagsmith/flagsmith (or some other
-  # repository hosting the image with combined frontend and backend)
-  # and that the image tag exists (for flagsmith/flagsmith, >=2.10.0)
-  #
-  # Also, note that the ingress and service for the frontend remain
-  # (unless explicitly switched off), but both are handled by the api
-  # deployment's pods.
-  separateApiAndFrontend: true
-  replicacount: 1
+  replicaCount: 1
   deploymentStrategy: null
   podAnnotations: {}
   resources: {}
@@ -63,12 +54,6 @@ api:
     periodSeconds: 10
     successThreshold: 1
     timeoutSeconds: 2
-  statsd:
-    enabled: false
-    host: null
-    hostFromNodeIp: false
-    port: 8125
-    prefix: flagsmith.api
   influxdbSetup:
     enabled: false
   extraInitContainers: []
@@ -76,8 +61,7 @@ api:
   extraVolumes: []
   volumeMounts: []
   logging:
-    format: generic # options are generic or json.
-  enableMigrateDbInitContainer: true
+    format: json # options are generic or json.
   bootstrap:
     # Set to `true` to create initial superuser, organisation, and project.
     # If `adminEmail`, `organisationName` or `projectName` not set, defaults are used.
@@ -92,7 +76,6 @@ api:
   # will be created to generate one.
   # See https://docs.djangoproject.com/en/4.2/topics/signing/
   secretKeyFromExistingSecret:
-    enabled: false
     name: ""
     key: ""
 
@@ -203,150 +186,40 @@ taskProcessor:
   volumeMounts: []
   extraSpec: {} # Will be added to `spec` for `flagsmith-task-processor` deployment.
 
-devPostgresql:
-  enabled: true
-  serviceAccount:
-    create: true
-  nameOverride: dev-postgresql
-  auth:
-    postgresPassword: flagsmith
-    database: flagsmith
-
-databaseExternal:
-  enabled: false
-  url: null
+database:
   type: postgres
-  host: null
-  port: 5432
-  database: null
-  username: null
-  password: null
-  urlFromExistingSecret:
-    enabled: false
-    name: null
-    key: null
-  # Configuration for replica databases used for read operations
-  replicas:
-    # List of replica database configurations
-    databases: []
-    # Example:
-    # databases:
-    #   - url: postgres://user:password@replica1.db.host/flagsmith
-    #   - type: postgres
-    #     host: replica2.db.host
-    #     port: 5432
-    #     database: flagsmith
-    #     username: user
-    #     password: password
-    #   - fromExistingSecret:
-    #       name: my-replica-secret
-    #       key: database-url
-  crossRegionReplicas:
-    databases: []
-
-pgbouncer:
-  enabled: false
-  image:
-    repository: bitnami/pgbouncer
-    tag: 1.16.0
-    imagePullPolicy: IfNotPresent
-    imagePullSecrets: []
-  replicaCount: 1
-  deploymentStrategy: null
-
-  # passwordFromExistingSecret references a Secret that contains the Postgres password for this user.
-  passwordFromExistingSecret:
-    enabled: false
-    name: ""
+  # database is a Secret with the logical database name.
+  database:
+    secret: ""
+    key: ""
+  # username is a Secret with the database username.
+  username:
+    secret: ""
+    key: ""
+  # password is a Secret with the database password.
+  password:
+    secret: ""
+    key: ""
+  # host is a Secret with the database hostname.
+  host:
+    secret: ""
     key: ""
 
-  # passwordOverride is a plain-text password that PgBouncer will use to authenticate with Postgres.
-  #
-  # If passwordFromExistingSecret and passwordOverride were not provided, this Helm chart will attempt to extract the
-  # password from the URL of the downstream Postgres database. This behaviour is deprecated, and the password should
-  # be provided explicitly to both PgBouncer and the database configuration in this chart.
-  passwordOverride: ""
+  port: 5432
+  portSecret: ""
+  portKey: ""
 
-  podAnnotations: {}
-  resources: {}
-  podLabels: {}
-  extraEnv: {}
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-  podSecurityContext: {}
-  defaultPodSecurityContext:
-    enabled: true
-    # runAsNonRoot: true
-  securityContext: {}
-  defaultSecurityContext:
-    enabled: true
-    allowPrivilegeEscalation: false
-    capabilities:
-      drop:
-        - all
-
-  livenessProbe:
-    failureThreshold: 5
-    initialDelaySeconds: 5
-    periodSeconds: 10
-    successThreshold: 1
-    timeoutSeconds: 2
-  readinessProbe:
-    failureThreshold: 10
-    initialDelaySeconds: 1
-    periodSeconds: 10
-    successThreshold: 1
-    timeoutSeconds: 2
-  extraInitContainers: []
-  extraContainers: []
-  extraVolumes: []
-  volumeMounts: []
-
-influxdb2:
-  enabled: true
-  adminUser:
-    organization: "influxdata"
-    bucket: "default"
-    user: "admin"
-    retention_policy: "0s"
-    ## Leave empty to generate a random password and token.
-    ## Or fill any of these values to use fixed values.
-    password: ""
-    token: ""
-    ## The password and token are obtained from an existing secret. The expected
-    ## keys are `admin-password` and `admin-token`.
-    ## If set, the password and token values above are ignored.
-    existingSecret: null
-  persistence:
-    enabled: false
-    # storageClass: "-"
-    # accessMode: ReadWriteOnce
-    # size: 50Gi
-  resources: {}
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-
-influxdbExternal:
+influxdb:
   enabled: false
   url: null
   bucket: null
   organization: null
-  token: null
-  tokenFromExistingSecret:
-    enabled: false
-    name: null
+  token:
+    secret: null
     key: null
 
 UsePostgresForAnalytics:
   enabled: false
-
-# This is included primarily for easy testing of statsd integration from the application.
-graphite:
-  enabled: false
-  nameOverride: flagsmith-graphite
-  autoSetStatsdHostEnvVar: true
 
 sse:
   enabled: false
@@ -480,7 +353,7 @@ ingress:
 
 jobs:
   migrateDb:
-    enabled: false
+    enabled: true
     ttlSecondsAfterFinished: 3600
     restartPolicy: OnFailure
     defaultPodSecurityContext:

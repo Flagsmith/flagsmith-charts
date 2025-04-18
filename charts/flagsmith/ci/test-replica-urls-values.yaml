@@ -4,9 +4,6 @@ tests:
 influxdb2:
   enabled: false
 
-devPostgresql:
-  enabled: true
-
 pgbouncer:
   enabled: true
 
