@@ -2,20 +2,11 @@ apiVersion: v2
 name: flagsmith
 description: Flagsmith
 type: application
-version: 0.73.1
+version: 1.0.0-rc.1
 appVersion: 2.171.0
 dependencies:
   - name: postgresql
     repository: https://charts.bitnami.com/bitnami
     version: 12.5.8
-    condition: postgresql.enabled,devPostgresql.enabled
-    alias: devPostgresql
-  - name: influxdb2
-    repository: https://helm.influxdata.com/
-    version: 2.1.1
-    condition: influxdb2.enabled
-  - name: graphite
-    repository: https://kiwigrid.github.io
-    version: 0.7.3
-    condition: graphite.enabled
+
 icon: https://docs.flagsmith.com/img/square-icon.png
