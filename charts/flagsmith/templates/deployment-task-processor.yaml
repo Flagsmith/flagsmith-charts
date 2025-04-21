@@ -56,12 +56,9 @@ spec:
       {{- if .Values.taskProcessor.schedulerName }}
       schedulerName: "{{ .Values.taskProcessor.schedulerName }}"
       {{- end }}
-      {{- if .Values.taskProcessor.image.imagePullSecrets }}
+      {{- with .Values.taskProcessor.image.imagePullSecrets | default .Values.api.image.imagePullSecrets | default .Values.global.image.imagePullSecrets }}
       imagePullSecrets:
-{{ toYaml .Values.taskProcessor.image.imagePullSecrets | indent 8 }}
-      {{- else if .Values.api.image.imagePullSecrets }}
-      imagePullSecrets:
-{{ toYaml .Values.api.image.imagePullSecrets | indent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
         {{- $securityContext := .Values.taskProcessor.podSecurityContext | default (dict) | deepCopy }}
@@ -78,8 +75,8 @@ spec:
 {{- end }}
       containers:
       - name: {{ .Chart.Name }}-task-processor
-        image: {{ .Values.taskProcessor.image.repository | default .Values.api.image.repository }}:{{ .Values.taskProcessor.image.tag | default .Values.api.image.tag | default .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.taskProcessor.image.imagePullPolicy | default .Values.api.image.imagePullPolicy }}
+        image: {{ .Values.taskProcessor.image.repository | default .Values.api.image.repository }}:{{ .Values.taskProcessor.image.tag | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.taskProcessor.image.imagePullPolicy | default .Values.api.image.imagePullPolicy | default .Values.global.image.imagePullPolicy }}
         command:
           - ./scripts/run-docker.sh
         args:
