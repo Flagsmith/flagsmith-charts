@@ -133,10 +133,14 @@ spec:
         env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
         livenessProbe:
           failureThreshold: {{ .Values.api.livenessProbe.failureThreshold }}
+          {{- if .Values.api.livenessProbe.exec }}
+          exec: {{ .Values.api.livenessProbe.exec | toYaml | nindent 12 }}
+          {{- else if .Values.api.livenessProbe.path }}
           httpGet:
             path: {{ .Values.api.livenessProbe.path }}
             port: {{ .Values.service.api.port }}
             scheme: HTTP
+          {{- end }}
           initialDelaySeconds: {{ .Values.api.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.api.livenessProbe.periodSeconds }}
           successThreshold: {{ .Values.api.livenessProbe.successThreshold }}
