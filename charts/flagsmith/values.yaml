@@ -196,6 +196,9 @@ taskProcessor:
   queuePopSize: null
 
   livenessProbe:
+    # exec describes an ExecAction command which will run inside the API container.
+    # See https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Probe
+    exec: {}
     failureThreshold: 5
     initialDelaySeconds: 5
     periodSeconds: 10
