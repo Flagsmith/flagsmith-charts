@@ -197,6 +197,7 @@ taskProcessor:
 
   livenessProbe:
     # exec describes an ExecAction command which will run inside the API container.
+    # Defaults to api.livenessProbe.exec.
     # See https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Probe
     exec: {}
     failureThreshold: 5
