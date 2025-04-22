@@ -76,7 +76,11 @@ api:
     # runAsUser: 1000
     # runAsGroup: 1000
   livenessProbe:
+    # path is the API path to be used for health checks. Used if exec is not set.
     path: /health/liveness
+    # exec describes an ExecAction command which will run inside the API container.
+    # See https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Probe
+    exec: {}
     failureThreshold: 5
     initialDelaySeconds: 5
     periodSeconds: 10
@@ -192,6 +196,10 @@ taskProcessor:
   queuePopSize: null
 
   livenessProbe:
+    # exec describes an ExecAction command which will run inside the API container.
+    # Defaults to api.livenessProbe.exec.
+    # See https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Probe
+    exec: {}
     failureThreshold: 5
     initialDelaySeconds: 5
     periodSeconds: 10

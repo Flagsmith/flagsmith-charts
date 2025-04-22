@@ -85,11 +85,16 @@ spec:
         - containerPort: {{ .Values.service.taskProcessor.port }}
         env: {{ include (print $.Template.BasePath "/_task_processor_environment.yaml") . | nindent 8 }}
         livenessProbe:
-          failureThreshold: {{ .Values.taskProcessor.livenessProbe.failureThreshold }}
+          {{- $exec := .Values.taskProcessor.livenessProbe.exec | default .Values.api.livenessProbe.exec }}
+          {{- if $exec }}
+          exec: {{ $exec | toYaml | nindent 12 }}
+          {{- else }}
           httpGet:
             path: /health/liveness
             port: {{ .Values.service.taskProcessor.port }}
             scheme: HTTP
+          {{- end }}
+          failureThreshold: {{ .Values.taskProcessor.livenessProbe.failureThreshold }}
           initialDelaySeconds: {{ .Values.taskProcessor.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.taskProcessor.livenessProbe.periodSeconds }}
           successThreshold: {{ .Values.taskProcessor.livenessProbe.successThreshold }}
