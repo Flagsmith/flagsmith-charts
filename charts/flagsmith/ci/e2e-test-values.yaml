@@ -2,10 +2,14 @@ _destructiveTests:
   enabled: true
 
 frontend:
+  image:
+    repository: flagsmith/flagsmith-frontend
   extraEnv:
     SLACK_TOKEN: "${SLACK_TOKEN}"
 
 api:
+  image:
+    repository: flagsmith/flagsmith-api
   analytics:
     enabled: true
   extraEnv:
