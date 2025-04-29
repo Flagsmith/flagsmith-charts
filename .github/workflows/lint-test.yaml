@@ -38,5 +38,7 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
       - name: Run chart-testing (install)
         run: ct install --namespace flagsmith --config ct.yaml --debug
-      - run: kubectl --namespace flagsmith describe pods
+      - name: Debug Output
+        run: |
+          kubectl --namespace flagsmith describe pods
         if: failure()
