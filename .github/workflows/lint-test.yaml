@@ -39,3 +39,4 @@ jobs:
       - name: Run chart-testing (install)
         run: ct install --namespace flagsmith --config ct.yaml --debug
       - run: kubectl --namespace flagsmith describe pods
+        if: failure()
