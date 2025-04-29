@@ -7,4 +7,4 @@ chart-repos:
   - kiwigrid=https://kiwigrid.github.io
 target-branch: main
 validate-maintainers: false
-helm-extra-args: '--timeout 30m'
+helm-extra-args: '--timeout 1m'
