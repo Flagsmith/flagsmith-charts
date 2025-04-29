@@ -23,7 +23,7 @@ jobs:
           version: v3.5.4
 
       - name: Add chart repo dependencies
-        # Note: this repos should match whith the repos set in ct.yaml
+        # Note: this repos should match with the repos set in ct.yaml
         # See https://github.com/Flagsmith/flagsmith-charts/issues/105
         run: |
           helm repo add stable https://charts.helm.sh/stable
@@ -44,9 +44,3 @@ jobs:
         uses: helm/chart-releaser-action@v1.2.0
         env:
           CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-
-      - name: Check if release was published
-        if: steps.chart-releaser.outputs.changed_charts == ''
-        run: |
-          echo "No new releases were published. If a tag and/or release already exist for this version but they have not been published to the Helm repository, delete them and run this workflow again."
-          exit 1
