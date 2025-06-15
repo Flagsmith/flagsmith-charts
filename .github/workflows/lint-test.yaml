@@ -1,7 +1,5 @@
 name: Lint and Test Charts
-
 on: pull_request
-
 jobs:
   lint-test:
     runs-on: ubuntu-latest
@@ -10,7 +8,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
       - name: Envsubst
         uses: danielr1996/envsubst-action@1.0.0
         env:
@@ -18,19 +15,15 @@ jobs:
         with:
           input: charts/flagsmith/ci/e2e-test-values.yaml
           output: charts/flagsmith/ci/e2e-test-values.yaml
-
       - name: Set up Helm
         uses: azure/setup-helm@v4
         with:
           version: v3.17.0
-
       - uses: actions/setup-python@v5
         with:
           python-version: 3.11
-
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.7.0
-
       - name: Run chart-testing (list-changed)
         id: list-changed
         run: |
@@ -38,13 +31,14 @@ jobs:
           if [[ -n "$changed" ]]; then
             echo "::set-output name=changed::true"
           fi
-
       - name: Run chart-testing (lint)
         run: ct lint --config ct.yaml --lint-conf lintconf.yaml --check-version-increment=false
-
       - name: Create kind cluster
         uses: helm/kind-action@v1.2.0
         if: steps.list-changed.outputs.changed == 'true'
-
       - name: Run chart-testing (install)
-        run: ct install --config ct.yaml
+        run: ct install --namespace flagsmith --config ct.yaml --debug
+      - name: Debug Output
+        run: |
+          kubectl --namespace flagsmith describe pods
+        if: failure()
