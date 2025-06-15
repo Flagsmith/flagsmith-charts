@@ -1,0 +1,48 @@
+{{- if and .Values.tests.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ template "flagsmith.fullname" . }}-test-replica-database-urls
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: test-replica-database-urls
+  annotations:
+    {{- $annotations := include "flagsmith.annotations" .Values.common }}
+    {{- if $annotations }}
+    {{- $annotations | nindent 4 }}
+    {{- end }}
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: test-replica-database-urls
+      image: bitnami/kubectl
+      command:
+        - /bin/bash
+        - -c
+        - |
+          set -e
+          set -o pipefail
+
+          expected_replicas=(
+            "postgres://user:password@127.0.0.1:5432/flagsmith"
+            "postgres://user:password@127.0.0.1:5433/flagsmith"
+            "postgres://user:password@127.0.0.1:5434/flagsmith"
+          )
+
+          # Get all environment variables in one command
+          replicas=( $(
+            kubectl exec deploy/{{ template "flagsmith.fullname" . }}-api --\
+            sh -c "echo \$REPLICA_DATABASE_URL_0; echo \$REPLICA_DATABASE_URL_1; echo \$REPLICA_DATABASE_URL_2"
+          ) )
+
+          for i in "${!expected_replicas[@]}"; do
+            echo "REPLICA_DATABASE_URL_$i = ${replicas[$i]}"
+            if [ "${replicas[$i]}" != "${expected_replicas[$i]}" ]; then
+              echo "Replica $i did not match expected value. Expected: ${expected_replicas[$i]}, Got: ${replicas[$i]}"
+              exit 1
+            fi
+          done
+
+  serviceAccountName: {{ .Release.Name }}-test-serviceaccount
+  restartPolicy: Never
+{{- end }}
