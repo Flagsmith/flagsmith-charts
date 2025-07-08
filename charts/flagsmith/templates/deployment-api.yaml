@@ -61,9 +61,9 @@ spec:
       {{- if .Values.api.schedulerName }}
       schedulerName: "{{ .Values.api.schedulerName }}"
       {{- end }}
-      {{- if .Values.api.image.imagePullSecrets }}
+      {{- with .Values.api.image.imagePullSecrets | default .Values.global.image.imagePullSecrets }}
       imagePullSecrets:
-{{ toYaml .Values.api.image.imagePullSecrets | indent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
         {{- $securityContext := .Values.api.podSecurityContext | default (dict) | deepCopy }}
@@ -77,15 +77,15 @@ spec:
       initContainers:
 {{- if .Values.api.enableMigrateDbInitContainer }}
       - name: migrate-db
-        image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
-        imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
+        image: {{ printf "%s:%s" ( .Values.api.image.repository  ) ( .Values.api.image.tag | default .Chart.AppVersion) }}
+        imagePullPolicy: {{ .Values.api.image.imagePullPolicy | default .Values.global.image.imagePullPolicy }}
         args: ["migrate"]
         env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
 {{- end }}
 {{- if .Values.api.bootstrap.enabled }}
       - name: bootstrap
-        image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
-        imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
+        image: {{ printf "%s:%s" ( .Values.api.image.repository  ) ( .Values.api.image.tag | default .Chart.AppVersion ) }}
+        imagePullPolicy: {{ .Values.api.image.imagePullPolicy | default .Values.global.image.imagePullPolicy }}
         command: ["/bin/sh", "-c"]
         args: ["python manage.py waitfordb && python manage.py bootstrap"]
         env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
@@ -106,8 +106,8 @@ spec:
 {{- end }}
 {{- if .Values.api.influxdbSetup.enabled }}
       - name: influxdb-setup
-        image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
-        imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
+        image: {{ printf "%s:%s" ( .Values.api.image.repository  ) ( .Values.api.image.tag  | default .Chart.AppVersion ) }}
+        imagePullPolicy: {{ .Values.api.image.imagePullPolicy | default .Values.global.image.imagePullPolicy }}
         command:
           - python
           - /influxdb_setup/influxdb_setup.py
@@ -121,8 +121,8 @@ spec:
 {{- end }}
       containers:
       - name: {{ .Chart.Name }}-api
-        image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default (printf "%s" .Chart.AppVersion) }}
-        imagePullPolicy: {{ .Values.api.image.imagePullPolicy }}
+        image: {{ printf "%s:%s" ( .Values.api.image.repository  ) ( .Values.api.image.tag  | default .Chart.AppVersion ) }}
+        imagePullPolicy: {{ .Values.api.image.imagePullPolicy | default .Values.global.image.imagePullPolicy }}
         {{- if .Values.api.enableMigrateAndServe }}
         args: ["migrate-and-serve"]
         {{- else }}
@@ -132,11 +132,15 @@ spec:
         - containerPort: {{ .Values.service.api.port }}
         env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
         livenessProbe:
-          failureThreshold: {{ .Values.api.livenessProbe.failureThreshold }}
+          {{- if .Values.api.livenessProbe.exec }}
+          exec: {{ .Values.api.livenessProbe.exec | toYaml | nindent 12 }}
+          {{- else if .Values.api.livenessProbe.path }}
           httpGet:
             path: {{ .Values.api.livenessProbe.path }}
             port: {{ .Values.service.api.port }}
             scheme: HTTP
+          {{- end }}
+          failureThreshold: {{ .Values.api.livenessProbe.failureThreshold }}
           initialDelaySeconds: {{ .Values.api.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.api.livenessProbe.periodSeconds }}
           successThreshold: {{ .Values.api.livenessProbe.successThreshold }}
