@@ -2,7 +2,7 @@ apiVersion: v2
 name: flagsmith
 description: Flagsmith
 type: application
-version: 0.74.0
+version: 1.0.0
 appVersion: 2.184.0
 dependencies:
   - name: postgresql
