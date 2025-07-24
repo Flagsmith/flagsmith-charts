@@ -46,6 +46,9 @@ jobs:
         id: chart-releaser
         uses: helm/chart-releaser-action@v1
         with:
+          # Since release please will create the release, we are just using chart-releaser
+          # to upload the charts. By default, it will skip upload if it finds an existing
+          # release / tag.
           skip_existing: false
         env:
           CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
