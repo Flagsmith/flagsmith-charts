@@ -1,8 +1,8 @@
 {
     "bootstrap-sha": "e44f9f26670de2b11336009a988e86bb4cd32676",
     "packages": {
-        "flagsmith": {
-            "path": "charts/flagsmith",
+        "charts/flagsmith": {
+            "package-name": "flagsmith",
             "release-type": "helm",
             "changelog-path": "CHANGELOG.md",
             "bump-minor-pre-major": false,
@@ -10,6 +10,7 @@
             "draft": false,
             "prerelease": false,
             "include-component-in-tag": true,
+            "include-v-in-tag": false,
             "tag-separator": "-"
         }
     },
