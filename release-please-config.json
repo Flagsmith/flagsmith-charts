@@ -1,8 +1,7 @@
 {
     "bootstrap-sha": "e44f9f26670de2b11336009a988e86bb4cd32676",
     "packages": {
-        "flagsmith": {
-            "path": "charts/flagsmith",
+        "charts/flagsmith": {
             "release-type": "helm",
             "changelog-path": "CHANGELOG.md",
             "bump-minor-pre-major": false,
