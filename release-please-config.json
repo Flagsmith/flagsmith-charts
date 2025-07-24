@@ -10,6 +10,7 @@
             "draft": false,
             "prerelease": false,
             "include-component-in-tag": true,
+            "include-v-in-tag": false,
             "tag-separator": "-"
         }
     },
