@@ -1,0 +1,32 @@
+name: Testing docker.flagsmith.com access
+
+on:
+  pull_request:
+
+jobs:
+  foo:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello world"
+
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      flagsmith:
+        image: docker.flagsmith.com/flagsmith/flagsmith
+        ports:
+          - 8000:8000
+        env:
+          DATABASE_URL: "postgresql://postgres:password@postgres:5432/postgres"
+      postgres:
+        image: postgres:14
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: postgres
+
+    steps:
+      - run: curl http://localhost:8000/version
