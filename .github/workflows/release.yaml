@@ -1,26 +1,27 @@
 name: Release Charts
 
 on:
-  workflow_dispatch:
+  push:
+    tags:
+      - flagsmith-*.*.*
+
+env:
+  HELM_VERSION: v3.12.3
 
 jobs:
   release:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Configure Git
-        run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-
       - name: Install Helm
-        uses: azure/setup-helm@v1
+        uses: azure/setup-helm@v3
         with:
-          version: v3.5.4
+          version: ${{ env.HELM_VERSION }}
 
       - name: Add chart repo dependencies
         # Note: this repos should match with the repos set in ct.yaml
@@ -32,15 +33,44 @@ jobs:
           helm repo add bitnami https://charts.bitnami.com/bitnami
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.0.1
+        uses: helm/chart-testing-action@v2
         with:
-          version: v3.3.0
+          version: ${{ env.HELM_VERSION }}
 
       - name: Run chart-testing (lint)
         run: ct lint --config ct.yaml --lint-conf lintconf.yaml
 
-      - name: Run chart-releaser
-        id: chart-releaser
-        uses: helm/chart-releaser-action@v1.2.0
+      # The following steps replace those originally handled by helm.chart-releaser-action
+      # Now that release-please is handling the generation of the release and tag, we just need
+      # to build the charts, upload them to the release created by release-please, and then
+      # update the gh-pages branch to update the helm repo.
+
+      - name: Build chart
+        run: |
+          mkdir -p .cr-release-packages
+          helm dependency update charts/flagsmith
+          helm package charts/flagsmith --destination .cr-release-packages
+
+      - name: Upload chart to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: .cr-release-packages/*.tgz
         env:
-          CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update GitHub Pages index
+        run: |
+          git fetch origin gh-pages
+          git worktree add gh-pages origin/gh-pages
+          cp .cr-release-packages/*.tgz gh-pages/
+          helm repo index gh-pages \
+            --merge gh-pages/index.yaml \
+            --url "https://github.com/Flagsmith/flagsmith-charts/releases/download/$GITHUB_REF_NAME"
+          cd gh-pages
+          git config user.name "flagsmithdev"
+          git config user.email "engineering@flagsmith.com"
+          git add index.yaml
+          git commit -m "Add Helm chart for $GITHUB_REF_NAME"
+          git push origin HEAD:gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
