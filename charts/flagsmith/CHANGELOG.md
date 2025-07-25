@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.76.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.75.0...flagsmith-0.76.0) (2025-07-25)
+
+
+### Features
+
+* **initcontainers:** add api volume mounts to init containers to support SSL auth methods that require certs to be mounted ([#392](https://github.com/Flagsmith/flagsmith-charts/issues/392)) ([738425e](https://github.com/Flagsmith/flagsmith-charts/commit/738425ebffaf048d1d6c99c413ed6ab01a3a2b9f))
+
 ## [0.75.0](https://github.com/Flagsmith/flagsmith-charts/compare/v0.74.0...v0.75.0) (2025-07-24)
 
 
