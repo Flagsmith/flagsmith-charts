@@ -6,20 +6,45 @@ on:
     tags:
       - flagsmith-*.*.*
 
+env:
+  HELM_VERSION: v3.12.3
+
 jobs:
   release:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # required for full tag history
+          fetch-depth: 0
 
-      - name: Set up Helm
+      - name: Install Helm
         uses: azure/setup-helm@v3
         with:
-          version: v3.12.3
+          version: ${{ env.HELM_VERSION }}
+
+      - name: Add chart repo dependencies
+        # Note: this repos should match with the repos set in ct.yaml
+        # See https://github.com/Flagsmith/flagsmith-charts/issues/105
+        run: |
+          helm repo add stable https://charts.helm.sh/stable
+          helm repo add influxdb2 https://helm.influxdata.com/
+          helm repo add kiwigrid https://kiwigrid.github.io
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2
+        with:
+          version: ${{ env.HELM_VERSION }}
+
+      - name: Run chart-testing (lint)
+        run: ct lint --config ct.yaml --lint-conf lintconf.yaml
+
+      # The following steps replace those originally handled by helm.chart-releaser-action
+      # Now that release-please is handling the generation of the release and tag, we just need
+      # to build the charts, upload them to the release created by release-please, and then
+      # update the gh-pages branch to update the helm repo.
 
       - name: Build chart
         run: |
