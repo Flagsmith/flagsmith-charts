@@ -41,6 +41,8 @@ jobs:
           cp .cr-release-packages/*.tgz gh-pages/
           helm repo index gh-pages --merge gh-pages/index.yaml
           cd gh-pages
+          git config user.name "flagsmithdev"
+          git config user.email "engineering@flagsmith.com"
           git add .
           git commit -m "Add Helm chart for $GITHUB_REF_NAME"
           git push origin gh-pages
