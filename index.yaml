@@ -3,7 +3,7 @@ entries:
   flagsmith:
   - apiVersion: v2
     appVersion: 2.188.1
-    created: "2025-07-25T16:16:19.895059381Z"
+    created: "2025-07-25T16:26:02.356781411Z"
     dependencies:
     - alias: devPostgresql
       condition: postgresql.enabled,devPostgresql.enabled
@@ -19,7 +19,7 @@ entries:
       repository: https://kiwigrid.github.io
       version: 0.7.3
     description: Flagsmith
-    digest: 2d8671e4a3e22ef1031ffa1521c2c8f24c35b0105971506485470ba5e57848a0
+    digest: 1506823633eaea0a4365514b2ed1d75e5feb159945b82b95813079e09d2c4ae9
     icon: https://docs.flagsmith.com/img/square-icon.png
     name: flagsmith
     type: application
@@ -2962,4 +2962,4 @@ entries:
     urls:
     - https://github.com/Flagsmith/flagsmith-charts/releases/download/flagsmith-0.1.0/flagsmith-0.1.0.tgz
     version: 0.1.0
-generated: "2025-07-25T16:16:19.88521142Z"
+generated: "2025-07-25T16:26:02.348004949Z"
