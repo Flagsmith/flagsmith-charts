@@ -2,8 +2,6 @@ name: Release Charts
 
 on:
   push:
-    branches:
-      - chore(ci)/revert-version-changes-in-release-pipeline
     tags:
       - flagsmith-*.*.*
 
@@ -50,26 +48,26 @@ jobs:
           helm dependency update charts/flagsmith
           helm package charts/flagsmith --destination .cr-release-packages
 
-      # - name: Upload chart to GitHub Release
-      #   uses: softprops/action-gh-release@v1
-      #   with:
-      #     files: .cr-release-packages/*.tgz
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload chart to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: .cr-release-packages/*.tgz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Update GitHub Pages index
-      #   run: |
-      #     git fetch origin gh-pages
-      #     git worktree add gh-pages origin/gh-pages
-      #     cp .cr-release-packages/*.tgz gh-pages/
-      #     helm repo index gh-pages \
-      #       --merge gh-pages/index.yaml \
-      #       --url "https://github.com/Flagsmith/flagsmith-charts/releases/download/$GITHUB_REF_NAME"
-      #     cd gh-pages
-      #     git config user.name "flagsmithdev"
-      #     git config user.email "engineering@flagsmith.com"
-      #     git add index.yaml
-      #     git commit -m "Add Helm chart for $GITHUB_REF_NAME"
-      #     git push origin HEAD:gh-pages
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update GitHub Pages index
+        run: |
+          git fetch origin gh-pages
+          git worktree add gh-pages origin/gh-pages
+          cp .cr-release-packages/*.tgz gh-pages/
+          helm repo index gh-pages \
+            --merge gh-pages/index.yaml \
+            --url "https://github.com/Flagsmith/flagsmith-charts/releases/download/$GITHUB_REF_NAME"
+          cd gh-pages
+          git config user.name "flagsmithdev"
+          git config user.email "engineering@flagsmith.com"
+          git add index.yaml
+          git commit -m "Add Helm chart for $GITHUB_REF_NAME"
+          git push origin HEAD:gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
