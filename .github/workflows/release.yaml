@@ -39,7 +39,9 @@ jobs:
           git fetch origin gh-pages
           git worktree add gh-pages origin/gh-pages
           cp .cr-release-packages/*.tgz gh-pages/
-          helm repo index gh-pages --merge gh-pages/index.yaml
+          helm repo index gh-pages \
+            --merge gh-pages/index.yaml \
+            --url "https://github.com/Flagsmith/flagsmith-charts/releases/download/$GITHUB_REF_NAME"
           cd gh-pages
           git config user.name "flagsmithdev"
           git config user.email "engineering@flagsmith.com"
