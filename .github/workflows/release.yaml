@@ -7,6 +7,9 @@ on:
     tags:
       - flagsmith-*.*.*
 
+env:
+  HELM_VERSION: v3.12.3
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -22,7 +25,7 @@ jobs:
         uses: azure/setup-helm@v1
         with:
           # TODO: standardise the version of Helm used across this workflow
-          version: v3.5.4
+          version: ${{ env.HELM_VERSION }}
 
       - name: Add chart repo dependencies
         # Note: this repos should match with the repos set in ct.yaml
@@ -37,7 +40,7 @@ jobs:
         # TODO: relax this to just v2
         uses: helm/chart-testing-action@v2.0.1
         with:
-          version: v3.3.0
+          version: ${{ env.HELM_VERSION }}
 
       - name: Run chart-testing (lint)
         run: ct lint --config ct.yaml --lint-conf lintconf.yaml
