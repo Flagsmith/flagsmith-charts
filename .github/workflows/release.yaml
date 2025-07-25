@@ -7,9 +7,6 @@ on:
     tags:
       - flagsmith-*.*.*
 
-env:
-  HELM_VERSION: v3.5.4
-
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -21,11 +18,9 @@ jobs:
           fetch-depth: 0
 
       - name: Install Helm
-        # TODO: bump this to v3
-        uses: azure/setup-helm@v1
+        uses: azure/setup-helm@v3
         with:
-          # TODO: standardise the version of Helm used across this workflow
-          version: ${{ env.HELM_VERSION }}
+          version: v3.5.4
 
       - name: Add chart repo dependencies
         # Note: this repos should match with the repos set in ct.yaml
@@ -37,10 +32,9 @@ jobs:
           helm repo add bitnami https://charts.bitnami.com/bitnami
 
       - name: Set up chart-testing
-        # TODO: relax this to just v2
-        uses: helm/chart-testing-action@v2.0.1
+        uses: helm/chart-testing-action@v2
         with:
-          version: ${{ env.HELM_VERSION }}
+          version: v3.3.0
 
       - name: Run chart-testing (lint)
         run: ct lint --config ct.yaml --lint-conf lintconf.yaml
