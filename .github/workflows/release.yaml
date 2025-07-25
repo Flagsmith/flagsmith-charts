@@ -35,9 +35,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update GitHub Pages index
-        uses: helm/chart-releaser-action@v1
-        with:
-          charts_dir: charts
-          skip_existing: false
+        run: |
+          git fetch origin gh-pages
+          git worktree add gh-pages origin/gh-pages
+          cp packaged/*.tgz gh-pages/
+          helm repo index gh-pages --merge gh-pages/index.yaml
+          cd gh-pages
+          git add .
+          git commit -m "Add Helm chart for $GITHUB_REF_NAME"
+          git push origin gh-pages
         env:
-          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
