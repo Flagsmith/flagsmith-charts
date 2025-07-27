@@ -56,7 +56,7 @@ spec:
       {{- if .Values.taskProcessor.schedulerName }}
       schedulerName: "{{ .Values.taskProcessor.schedulerName }}"
       {{- end }}
-      {{- with .Values.taskProcessor.image.imagePullSecrets | default .Values.api.image.imagePullSecrets | default .Values.global.image.imagePullSecrets }}
+      {{- with .Values.taskProcessor.image.imagePullSecrets | default .Values.extraObjectsimagePullSecrets | default .Values.global.image.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -90,7 +90,7 @@ spec:
           exec: {{ $exec | toYaml | nindent 12 }}
           {{- else }}
           httpGet:
-            path: /health/liveness
+            path: /health/liveness/
             port: {{ .Values.service.taskProcessor.port }}
             scheme: HTTP
           {{- end }}
@@ -100,11 +100,16 @@ spec:
           successThreshold: {{ .Values.taskProcessor.livenessProbe.successThreshold }}
           timeoutSeconds: {{ .Values.taskProcessor.livenessProbe.timeoutSeconds }}
         readinessProbe:
+          {{- $exec := .Values.taskProcessor.readinessProbe.exec | default .Values.api.readinessProbe.exec }}
           failureThreshold: {{ .Values.taskProcessor.readinessProbe.failureThreshold }}
+          {{- if $exec }}
+          exec: {{ $exec | toYaml | nindent 12 }}
+          {{- else }}
           httpGet:
-            path: /health/readiness
+            path: /health/readiness/
             port: {{ .Values.service.taskProcessor.port }}
             scheme: HTTP
+          {{- end }}
           initialDelaySeconds: {{ .Values.taskProcessor.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.taskProcessor.readinessProbe.periodSeconds }}
           successThreshold: {{ .Values.taskProcessor.readinessProbe.successThreshold }}
