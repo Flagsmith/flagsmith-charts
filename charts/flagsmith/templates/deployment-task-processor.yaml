@@ -56,7 +56,7 @@ spec:
       {{- if .Values.taskProcessor.schedulerName }}
       schedulerName: "{{ .Values.taskProcessor.schedulerName }}"
       {{- end }}
-      {{- with .Values.taskProcessor.image.imagePullSecrets | default .Values.extraObjectsimagePullSecrets | default .Values.global.image.imagePullSecrets }}
+      {{- with .Values.taskProcessor.image.imagePullSecrets | default .Values.api.image.imagePullSecrets | default .Values.global.image.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
