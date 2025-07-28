@@ -148,11 +148,15 @@ spec:
           successThreshold: {{ .Values.api.livenessProbe.successThreshold }}
           timeoutSeconds: {{ .Values.api.livenessProbe.timeoutSeconds }}
         readinessProbe:
-          failureThreshold: {{ .Values.api.readinessProbe.failureThreshold }}
+          {{- if .Values.api.readinessProbe.exec }}
+          exec: {{ .Values.api.readinessProbe.exec | toYaml | nindent 12 }}
+          {{- else if .Values.api.readinessProbe.path }}
           httpGet:
             path: {{ .Values.api.readinessProbe.path }}
             port: {{ .Values.service.api.port }}
             scheme: HTTP
+          {{- end }}
+          failureThreshold: {{ .Values.api.readinessProbe.failureThreshold }}
           initialDelaySeconds: {{ .Values.api.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.api.readinessProbe.periodSeconds }}
           successThreshold: {{ .Values.api.readinessProbe.successThreshold }}
