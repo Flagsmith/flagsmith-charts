@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.77.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.76.0...flagsmith-0.77.0) (2025-07-28)
+
+
+### Features
+
+* Support readiness probe overrides for API and Task processor deployments ([#405](https://github.com/Flagsmith/flagsmith-charts/issues/405)) ([8d9d921](https://github.com/Flagsmith/flagsmith-charts/commit/8d9d9219afd21cea54cc66ae66a5528e080aa53f))
+
 ## [0.76.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.75.0...flagsmith-0.76.0) (2025-07-25)
 
 
