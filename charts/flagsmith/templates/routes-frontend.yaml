@@ -3,6 +3,7 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
+  namespace: {{ .Release.Namespace }}
   name: flagsmith-frontend
   {{- $annotations := include "flagsmith.annotations" .Values.common }}
   {{- with $annotations }}
