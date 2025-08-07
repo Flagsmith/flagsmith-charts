@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.77.1](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.77.0...flagsmith-0.77.1) (2025-08-07)
+
+
+### Dependency Updates
+
+* bump Flagsmith from 2.188.1 to 2.190.0 ([#409](https://github.com/Flagsmith/flagsmith-charts/issues/409)) ([42b23f7](https://github.com/Flagsmith/flagsmith-charts/commit/42b23f7c6e5d1c2bff9a41c8d1068699dacf140d))
+
 ## [0.77.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.76.0...flagsmith-0.77.0) (2025-07-28)
 
 
