@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.77.1](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.77.0...flagsmith-0.77.1) (2025-08-27)
+
+
+### Bug Fixes
+
+* use bitnamilegacy repo for postgres and pgbouncer ([#420](https://github.com/Flagsmith/flagsmith-charts/issues/420)) ([fa84b73](https://github.com/Flagsmith/flagsmith-charts/commit/fa84b73e2744fb2178807646ba7565ca01b68a51))
+
+
+### Dependency Updates
+
+* bump Flagsmith from 2.188.1 to 2.190.0 ([#409](https://github.com/Flagsmith/flagsmith-charts/issues/409)) ([42b23f7](https://github.com/Flagsmith/flagsmith-charts/commit/42b23f7c6e5d1c2bff9a41c8d1068699dacf140d))
+* bump Flagsmith from 2.190.0 to 2.191.0 ([#412](https://github.com/Flagsmith/flagsmith-charts/issues/412)) ([bccc3ef](https://github.com/Flagsmith/flagsmith-charts/commit/bccc3ef469692982e8fba17d391602ef0d300557))
+* bump Flagsmith from 2.191.0 to 2.193.0 ([#418](https://github.com/Flagsmith/flagsmith-charts/issues/418)) ([e3327b8](https://github.com/Flagsmith/flagsmith-charts/commit/e3327b8275e1f15562e25cbed0e8d67c52b2df86))
+* bump Flagsmith from 2.193.0 to 2.194.0 ([#419](https://github.com/Flagsmith/flagsmith-charts/issues/419)) ([a3edf17](https://github.com/Flagsmith/flagsmith-charts/commit/a3edf17aa22ddadb6bf35eea6735b73ea43a7b7e))
+
 ## [0.77.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.76.0...flagsmith-0.77.0) (2025-07-28)
 
 
