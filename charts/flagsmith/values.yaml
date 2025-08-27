@@ -245,6 +245,9 @@ taskProcessor:
   extraSpec: {} # Will be added to `spec` for `flagsmith-task-processor` deployment.
 
 devPostgresql:
+  image:
+    repository: bitnamilegacy/postgresql
+    tag: 15.3.0-debian-11-r7
   enabled: true
   serviceAccount:
     create: true
@@ -270,7 +273,7 @@ databaseExternal:
 pgbouncer:
   enabled: false
   image:
-    repository: bitnami/pgbouncer
+    repository: bitnamilegacy/pgbouncer
     tag: 1.16.0
     imagePullPolicy: ""
     imagePullSecrets: []
