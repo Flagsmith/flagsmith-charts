@@ -2,6 +2,31 @@ apiVersion: v1
 entries:
   flagsmith:
   - apiVersion: v2
+    appVersion: 2.194.0
+    created: "2025-08-27T15:48:07.857635645Z"
+    dependencies:
+    - alias: devPostgresql
+      condition: postgresql.enabled,devPostgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.5.8
+    - condition: influxdb2.enabled
+      name: influxdb2
+      repository: https://helm.influxdata.com/
+      version: 2.1.1
+    - condition: graphite.enabled
+      name: graphite
+      repository: https://kiwigrid.github.io
+      version: 0.7.3
+    description: Flagsmith
+    digest: 702b11a241e74ae48067408cb446ee4de9e28279ebab5a43c7501549d0852466
+    icon: https://docs.flagsmith.com/img/square-icon.png
+    name: flagsmith
+    type: application
+    urls:
+    - https://github.com/Flagsmith/flagsmith-charts/releases/download/flagsmith-0.77.1/flagsmith-0.77.1.tgz
+    version: 0.77.1
+  - apiVersion: v2
     appVersion: 2.188.1
     created: "2025-07-28T09:30:10.140352337Z"
     dependencies:
@@ -2987,4 +3012,4 @@ entries:
     urls:
     - https://github.com/Flagsmith/flagsmith-charts/releases/download/flagsmith-0.1.0/flagsmith-0.1.0.tgz
     version: 0.1.0
-generated: "2025-07-28T09:30:10.131427609Z"
+generated: "2025-08-27T15:48:07.848652119Z"
