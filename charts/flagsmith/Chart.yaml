@@ -5,11 +5,6 @@ type: application
 version: 0.77.1
 appVersion: 2.194.0
 dependencies:
-  - name: postgresql
-    repository: https://charts.bitnami.com/bitnami
-    version: 12.5.8
-    condition: postgresql.enabled,devPostgresql.enabled
-    alias: devPostgresql
   - name: influxdb2
     repository: https://helm.influxdata.com/
     version: 2.1.1
