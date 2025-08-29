@@ -251,7 +251,8 @@ devPostgresql:
   enabled: true
   serviceAccount:
     create: true
-  nameOverride: dev-postgresql
+  nameOverride: flagsmith-postgres
+  storage: 500m
   auth:
     postgresPassword: flagsmith
     database: flagsmith

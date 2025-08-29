@@ -77,17 +77,9 @@ Common annotations
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
+
 {{- define "flagsmith.postgresql.fullname" -}}
-{{- if .Values.devPostgresql.fullnameOverride -}}
-{{- .Values.devPostgresql.fullnameOverride | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- $name := default .Chart.Name .Values.devPostgresql.nameOverride -}}
-{{- if contains $name .Release.Name -}}
-{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s" .Release.Name "bulletrain-postgresql" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
+{{- printf "%s-%s" .Release.Name "flagsmith-postgres" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -182,7 +174,7 @@ Set redis port
 Postgres hostname
 */}}
 {{- define "flagsmith.postgres.hostname" -}}
-{{- printf "%s-%s" .Release.Name .Values.devPostgresql.nameOverride -}}.{{ .Release.Namespace }}.svc.cluster.local
+{{- printf "%s-%s" .Release.Name "flagsmith-postgres" -}}.{{ .Release.Namespace }}.svc.cluster.local
 {{- end -}}
 
 {{/*
