@@ -245,9 +245,6 @@ taskProcessor:
   extraSpec: {} # Will be added to `spec` for `flagsmith-task-processor` deployment.
 
 devPostgresql:
-  image:
-    repository: bitnamilegacy/postgresql
-    tag: 15.3.0-debian-11-r7
   enabled: true
   serviceAccount:
     create: true
