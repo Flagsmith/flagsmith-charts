@@ -2,7 +2,6 @@
 # See https://github.com/Flagsmith/flagsmith-charts/issues/105
 chart-repos:
   - stable=https://charts.helm.sh/stable
-  - bitnami=https://charts.bitnami.com/bitnami
   - influxdata=https://helm.influxdata.com/
   - kiwigrid=https://kiwigrid.github.io
 target-branch: main

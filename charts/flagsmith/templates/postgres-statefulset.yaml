@@ -1,0 +1,39 @@
+{{- if .Values.devPostgresql.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "flagsmith.fullname" . }}-postgres
+spec:
+  serviceName: {{ include "flagsmith.fullname" . }}-postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "flagsmith.fullname" . }}-postgres
+  template:
+    metadata:
+      labels:
+        app: {{ include "flagsmith.fullname" . }}-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: {{ .Values.devPostgresql.auth.database}}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.devPostgresql.auth.postgresPassword}}
+
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: {{ .Values.devPostgresql.storage }}
+{{- end }}

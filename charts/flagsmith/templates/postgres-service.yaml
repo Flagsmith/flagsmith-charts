@@ -1,0 +1,12 @@
+{{- if .Values.devPostgresql.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "flagsmith.fullname" . }}-postgres
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: {{ include "flagsmith.fullname" . }}-postgres
+{{- end }}
