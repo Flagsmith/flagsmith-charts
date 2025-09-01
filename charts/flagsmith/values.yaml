@@ -246,9 +246,6 @@ taskProcessor:
 
 devPostgresql:
   enabled: true
-  serviceAccount:
-    create: true
-  nameOverride: flagsmith-postgres
   storage: 500m
   auth:
     postgresPassword: flagsmith

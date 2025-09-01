@@ -79,18 +79,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 */}}
 
 {{- define "flagsmith.postgresql.fullname" -}}
-{{- printf "%s-%s" .Release.Name "flagsmith-postgres" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Set postgres host
-*/}}
-{{- define "flagsmith.postgresql.host" -}}
-{{- if .Values.devPostgresql.enabled -}}
-{{- template "flagsmith.postgresql.fullname" . -}}
-{{- else -}}
-{{- .Values.devPostgresql.postgresqlHost | quote -}}
-{{- end -}}
+{{ include "flagsmith.fullname" . }}-postgres
 {{- end -}}
 
 {{/*
@@ -174,7 +163,7 @@ Set redis port
 Postgres hostname
 */}}
 {{- define "flagsmith.postgres.hostname" -}}
-{{- printf "%s-%s" .Release.Name "flagsmith-postgres" -}}.{{ .Release.Namespace }}.svc.cluster.local
+{{ include "flagsmith.fullname" . }}-postgres
 {{- end -}}
 
 {{/*
