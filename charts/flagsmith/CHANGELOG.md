@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.77.2](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.77.1...flagsmith-0.77.2) (2025-09-18)
+
+
+### Bug Fixes
+
+* use bitnamilegacy repo for kubectl ([#427](https://github.com/Flagsmith/flagsmith-charts/issues/427)) ([6712f8b](https://github.com/Flagsmith/flagsmith-charts/commit/6712f8b4edd5a9492b7ae19d78c5c2724daba523))
+
+
+### Dependency Updates
+
+* bump Flagsmith from 2.194.0 to 2.196.0 ([#423](https://github.com/Flagsmith/flagsmith-charts/issues/423)) ([9afd67a](https://github.com/Flagsmith/flagsmith-charts/commit/9afd67aee565ae0d93f3aa0766ff837463707745))
+* bump Flagsmith from 2.196.0 to 2.196.3 ([#428](https://github.com/Flagsmith/flagsmith-charts/issues/428)) ([f4126fb](https://github.com/Flagsmith/flagsmith-charts/commit/f4126fbc8faaf2c882264e28658b5d78702f8f06))
+
 ## [0.77.1](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.77.0...flagsmith-0.77.1) (2025-08-27)
 
 
