@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.77.3](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.77.2...flagsmith-0.77.3) (2025-09-19)
+
+
+### Bug Fixes
+
+* fetch kubectl from bitnamisecure ([#429](https://github.com/Flagsmith/flagsmith-charts/issues/429)) ([e96b4ec](https://github.com/Flagsmith/flagsmith-charts/commit/e96b4ec7a8b11f76f2b9f2020e7e3527efa92496))
+
 ## [0.77.2](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.77.1...flagsmith-0.77.2) (2025-09-18)
 
 
