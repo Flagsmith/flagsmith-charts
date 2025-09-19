@@ -23,7 +23,7 @@ spec:
       serviceAccountName: {{ include "flagsmith.sse.authenticationTokenSecretName" . }}
       containers:
         - name: secret-creator
-          image: bitnami/kubectl:latest
+          image: bitnamisecure/kubectl:latest
           imagePullPolicy: IfNotPresent
           command:
             - /bin/sh
