@@ -23,7 +23,7 @@ spec:
       serviceAccountName: {{ include "flagsmith.api.secretKeySecretName" . }}
       containers:
         - name: secret-creator
-          image: bitnamilegacy/kubectl:latest
+          image: bitnamisecure/kubectl:latest
           imagePullPolicy: IfNotPresent
           command:
             - /bin/sh
