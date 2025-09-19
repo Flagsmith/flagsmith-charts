@@ -3,11 +3,11 @@ _destructiveTests:
 
 frontend:
   extraEnv:
-    SLACK_TOKEN: "${SLACK_TOKEN}"
+    SLACK_TOKEN: '${SLACK_TOKEN}'
 
 api:
   analytics:
     enabled: true
   extraEnv:
-    EMAIL_BACKEND: "django.core.mail.backends.console.EmailBackend"
+    EMAIL_BACKEND: 'django.core.mail.backends.console.EmailBackend'
     FE_E2E_TEST_USER_EMAIL: nightwatch@solidstategroup.com

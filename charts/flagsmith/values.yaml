@@ -19,12 +19,12 @@ serviceMonitor:
   annotations: {}
   labels: []
   targetLabels: []
-  jobLabel: ""
+  jobLabel: ''
   interval: 15s
-  scheme: ""
+  scheme: ''
   tlsConfig: {}
   scrapeTimeout: 10s
-  path: "/metrics/"
+  path: '/metrics/'
   honorLabels: true
   metricRelabelings: []
   relabelings: []
@@ -32,8 +32,8 @@ serviceMonitor:
 api:
   image:
     repository: flagsmith.docker.scarf.sh/flagsmith/flagsmith-api
-    tag: "" # defaults to .Chart.AppVersion
-    imagePullPolicy: ""
+    tag: '' # defaults to .Chart.AppVersion
+    imagePullPolicy: ''
     imagePullSecrets: []
   # Note that if setting this to false, need to set
   # api.image.repository to flagsmith/flagsmith (or some other
@@ -126,8 +126,8 @@ api:
   # See https://docs.djangoproject.com/en/4.2/topics/signing/
   secretKeyFromExistingSecret:
     enabled: false
-    name: ""
-    key: ""
+    name: ''
+    key: ''
 
 frontend:
   # Set this to `false` to switch off the frontend (deployment,
@@ -137,8 +137,8 @@ frontend:
   enabled: true
   image:
     repository: flagsmith.docker.scarf.sh/flagsmith/flagsmith-frontend
-    tag: "" # defaults to .Chart.AppVersion
-    imagePullPolicy: ""
+    tag: '' # defaults to .Chart.AppVersion
+    imagePullPolicy: ''
     imagePullSecrets: []
   replicacount: 1
   deploymentStrategy: null
@@ -186,9 +186,9 @@ taskProcessor:
     # all values here default to those in .Values.api.image if not configured
     # this is to simplify the logic for those using flagsmith-api image
     # and to maintain backwards compatibility.
-    repository: ""
-    tag: "" # defaults to .Chart.AppVersion
-    imagePullPolicy: ""
+    repository: ''
+    tag: '' # defaults to .Chart.AppVersion
+    imagePullPolicy: ''
     imagePullSecrets: []
 
   enabled: false
@@ -275,12 +275,12 @@ pgbouncer:
   image:
     repository: bitnamilegacy/pgbouncer
     tag: 1.16.0
-    imagePullPolicy: ""
+    imagePullPolicy: ''
     imagePullSecrets: []
   replicaCount: 1
   deploymentStrategy: null
   # Optional: Use to override the password directly instead of extracting from the database URL
-  passwordOverride: ""
+  passwordOverride: ''
   podAnnotations: {}
   resources: {}
   podLabels: {}
@@ -320,14 +320,14 @@ pgbouncer:
 influxdb2:
   enabled: true
   adminUser:
-    organization: "influxdata"
-    bucket: "default"
-    user: "admin"
-    retention_policy: "0s"
+    organization: 'influxdata'
+    bucket: 'default'
+    user: 'admin'
+    retention_policy: '0s'
     ## Leave empty to generate a random password and token.
     ## Or fill any of these values to use fixed values.
-    password: ""
-    token: ""
+    password: ''
+    token: ''
     ## The password and token are obtained from an existing secret. The expected
     ## keys are `admin-password` and `admin-token`.
     ## If set, the password and token values above are ignored.
@@ -367,7 +367,7 @@ sse:
   image:
     repository: flagsmith/sse
     tag: 3.6.0
-    imagePullPolicy: ""
+    imagePullPolicy: ''
     imagePullSecrets: []
   # See all supported environment variables here:
   # https://docs.flagsmith.com/deployment/hosting/real-time/deployment#sse-service
@@ -384,8 +384,8 @@ sse:
   # will be created to generate one.
   authenticationTokenFromExistingSecret:
     enabled: false
-    name: ""
-    key: ""
+    name: ''
+    key: ''
   replicaCount: 1
   deploymentStrategy: null
   podAnnotations: {}
