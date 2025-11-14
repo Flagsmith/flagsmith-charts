@@ -6,7 +6,7 @@ dependencies:
   repository: https://helm.influxdata.com/
   version: 2.1.1
 - name: graphite
-  repository: https://kiwigrid.github.io
-  version: 0.7.3
-digest: sha256:6ed1b4fab608bb1039a42040c445cfdf6a74a32ac80d4b1137f420e86f08e481
-generated: "2023-06-20T13:58:28.286957382+01:00"
+  repository: file://../graphite
+  version: 2.0.0
+digest: sha256:a978f9f6b4c171ddc773f38a1c83ea50198679825b6e27d3ba06caf7b4d561c1
+generated: "2025-11-14T15:58:27.463499Z"

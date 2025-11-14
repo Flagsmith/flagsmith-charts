@@ -1,0 +1,6 @@
+apiVersion: v2
+version: 2.0.0
+appVersion: "1.1.10-3"
+description: Graphite metrics server
+name: graphite
+home: https://graphiteapp.org/
