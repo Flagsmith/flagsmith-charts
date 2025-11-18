@@ -26,7 +26,6 @@ jobs:
         run: |
           helm repo add stable https://charts.helm.sh/stable
           helm repo add influxdb2 https://helm.influxdata.com/
-          helm repo add kiwigrid https://kiwigrid.github.io
           helm repo add bitnami https://charts.bitnami.com/bitnami
 
       - name: Set up chart-testing
