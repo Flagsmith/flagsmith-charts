@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ include "flagsmith.namespace" . }}
   name: {{ template "flagsmith.fullname" . }}-influxdb-setup
   {{- $annotations := include "flagsmith.annotations" .Values.common }}
   {{- with $annotations }}
