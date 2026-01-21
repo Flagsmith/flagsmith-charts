@@ -504,6 +504,17 @@ jobs:
     extraVolumes: []
     command: []
     args: []
+    # Use separate database credentials for migrations.
+    # This allows the migration job to run with elevated privileges (e.g., CREATE,
+    # ALTER, DROP for schema modifications) while the main application uses
+    # restricted credentials (e.g., SELECT, INSERT, UPDATE, DELETE only).
+    # This improves security by not granting schema modification privileges to
+    # the running application.
+    databaseUrl:
+      fromExistingSecret:
+        enabled: false
+        name: null
+        key: null
   migrateAnalyticsData:
     enabled: false
     args: []

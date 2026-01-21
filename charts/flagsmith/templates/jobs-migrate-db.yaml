@@ -71,7 +71,16 @@ spec:
         {{- else }}
         args: ["migrate"]
         {{- end }}
-        env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
+        env:
+        {{- include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
+        {{- if and .Values.jobs.migrateDb.databaseUrl .Values.jobs.migrateDb.databaseUrl.fromExistingSecret.enabled }}
+        {{- /* Override DATABASE_URL with migration-specific credentials */}}
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.jobs.migrateDb.databaseUrl.fromExistingSecret.name | required "jobs.migrateDb.databaseUrl.fromExistingSecret.name is required when enabled" }}
+              key: {{ .Values.jobs.migrateDb.databaseUrl.fromExistingSecret.key | required "jobs.migrateDb.databaseUrl.fromExistingSecret.key is required when enabled" }}
+        {{- end }}
 {{- with .Values.jobs.migrateDb.extraContainers }}
 {{ if typeIs "string" . }}
     {{- tpl . $ | nindent 6 }}
