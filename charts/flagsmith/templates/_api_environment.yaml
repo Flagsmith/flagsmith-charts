@@ -1,5 +1,9 @@
 - name: PROMETHEUS_ENABLED
+{{- if .Values.prometheus.enabled }}
   value: 'true'
+{{- else }}
+  value: 'false'
+{{- end }}
 - name: DATABASE_URL
   valueFrom:
     secretKeyRef:
