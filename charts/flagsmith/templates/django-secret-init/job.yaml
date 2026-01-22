@@ -3,7 +3,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ include "flagsmith.api.secretKeySecretName" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include "flagsmith.namespace" . | quote }}
   labels:
     {{- include "flagsmith.labels" . | nindent 4 }}
     app.kubernetes.io/component: django-secret-init
@@ -30,7 +30,7 @@ spec:
             - -c
             - |
               SECRET_NAME={{ include "flagsmith.api.secretKeySecretName" . }}
-              NAMESPACE={{ .Release.Namespace }}
+              NAMESPACE={{ include "flagsmith.namespace" . }}
               echo "Checking for secret $SECRET_NAME in namespace $NAMESPACE"
               # Attempt to get the secret; if it fails (exit code != 0), create it.
               if ! kubectl get secret "$SECRET_NAME" -n "$NAMESPACE" -o name; then
