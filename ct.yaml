@@ -6,4 +6,4 @@ chart-repos:
   - influxdata=https://helm.influxdata.com/
 target-branch: main
 validate-maintainers: false
-helm-extra-args: '--timeout 30m'
+helm-extra-args: '--timeout 1m'
