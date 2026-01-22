@@ -29,6 +29,11 @@ serviceMonitor:
   metricRelabelings: []
   relabelings: []
 
+# Prometheus configuration applies to api and task-processor deployments.
+prometheus:
+  enabled: true
+  port: 9100
+
 api:
   image:
     repository: flagsmith.docker.scarf.sh/flagsmith/flagsmith-api

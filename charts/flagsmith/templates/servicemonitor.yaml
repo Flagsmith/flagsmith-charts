@@ -1,4 +1,4 @@
-{{- if .Values.serviceMonitor.enabled }}
+{{- if and .Values.serviceMonitor.enabled .Values.prometheus.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -21,7 +21,7 @@ spec:
   targetLabels: {{ . }}
   {{- end }}
   endpoints:
-    - port: http
+    - port: prom
       {{- with .Values.serviceMonitor.interval }}
       interval: {{ . }}
       {{- end }}

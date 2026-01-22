@@ -18,5 +18,9 @@ spec:
       targetPort: {{ .Values.service.taskProcessor.port }}
       protocol: TCP
       name: http
+    - port: {{ .Values.prometheus.port }}
+      targetPort: 9100
+      protocol: TCP
+      name: prom
   selector: {{- include "flagsmith.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: task-processor
