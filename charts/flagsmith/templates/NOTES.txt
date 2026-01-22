@@ -5,14 +5,14 @@ for more configuration options.
 
 To access Flagsmith using port-forwarding, run:
 
-kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "flagsmith.fullname" . }}-frontend 8080:{{ .Values.service.frontend.port }}
+kubectl -n {{ include "flagsmith.namespace" . }} port-forward svc/{{ include "flagsmith.fullname" . }}-frontend 8080:{{ .Values.service.frontend.port }}
 
 Then access http://localhost:8080 in a browser.
 
 {{- if .Values.api.bootstrap.enabled }}
 To see the password reset link for pre-created admin user, run:
 
-kubectl -n {{ .Release.Namespace }} logs pods/{{ include "flagsmith.fullname" . }}-api -c bootstrap
+kubectl -n {{ include "flagsmith.namespace" . }} logs pods/{{ include "flagsmith.fullname" . }}-api -c bootstrap
 {{- end }}
 
 {{ if not (and .Values.ingress.frontend.enabled .Values.ingress.api.enabled) }}

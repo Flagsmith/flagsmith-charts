@@ -119,5 +119,5 @@
     secretKeyRef:
       {{ include "flagsmith.sse.authenticationTokenSecretRef" . | nindent 6}}
 - name: SSE_SERVER_BASE_URL
-  value: http://{{ include "flagsmith.fullname" . }}-sse.{{ .Release.Namespace }}:{{ .Values.service.sse.port }}
+  value: http://{{ include "flagsmith.fullname" . }}-sse.{{ include "flagsmith.namespace" . }}:{{ .Values.service.sse.port }}
 {{- end }}
