@@ -3,7 +3,7 @@ name: flagsmith
 description: Flagsmith
 type: application
 version: 0.77.3
-appVersion: 2.211.1
+appVersion: 2.212.0
 dependencies:
   - name: postgresql
     repository: https://charts.bitnami.com/bitnami
