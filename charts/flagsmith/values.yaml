@@ -457,6 +457,18 @@ hpa:
     maxReplicas: 10
     targetCPUUtilization: 50
 
+pdb:
+  api:
+    enabled: false
+    minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: "AlwaysAllow"
+  frontend:
+    enabled: false
+    minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: "AlwaysAllow"
+
 ingress:
   frontend:
     enabled: false
