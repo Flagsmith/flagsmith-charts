@@ -45,7 +45,7 @@ spec:
       {{- end }}
       {{- with .Values.api.image.imagePullSecrets | default .Values.global.image.imagePullSecrets }}
       imagePullSecrets:
-        {{- toYaml . | indent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
         {{- $securityContext := .Values.jobs.migrateDb.podSecurityContext | default (dict) | deepCopy }}
