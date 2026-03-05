@@ -1,0 +1,29 @@
+{{- if .Values.gateway.sse.enabled -}}
+{{- $fullName := include "flagsmith.fullname" . -}}
+{{- $svcPort := .Values.service.sse.port -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  namespace: {{ include "flagsmith.namespace" . }}
+  name: {{ $fullName }}-sse
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: sse
+  {{- $annotations := include "flagsmith.annotations" ( dict "customAnnotations" .Values.gateway.annotations "commonValues" .Values.common ) }}
+  {{- with $annotations }}
+  annotations:
+    {{- . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- with .Values.gateway.sse.parentRefs }}
+  parentRefs:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.gateway.sse.hostnames }}
+  hostnames:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  # TODO: add default rule for /
+  rules:
+    {{- toYaml .Values.gateway.sse.rules | nindent 4 }}
+{{- end }}

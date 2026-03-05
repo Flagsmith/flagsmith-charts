@@ -156,7 +156,8 @@ frontend:
   #   memory: 300Mi
   apiProxy:
     enabled: true
-  extraEnv: {}
+  extraEnv:
+    FLAGSMITH_API_URL: "https://flagsmith.local/api/v1"
   extraEnvFromSecret: {}
   nodeSelector: {}
   tolerations: []
@@ -465,7 +466,7 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
     hosts:
-      - chart-example.local
+      - flagsmith.local
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
@@ -477,8 +478,12 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
     hosts:
-      - host: chart-example.local
-        paths: []
+      - host: flagsmith.local
+        paths:
+          - /api/
+          - /health/
+          - /admin/
+          - /static/admin/
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
@@ -496,6 +501,39 @@ ingress:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
+
+# Gateway API HTTPRoute configuration.
+# Prerequisites (installed independently):
+#   1. Gateway API CRDs (https://gateway-api.sigs.k8s.io/)
+#   2. A Gateway controller (e.g., Envoy Gateway, Cilium, Istio)
+#   3. A GatewayClass and Gateway resource
+# The chart only manages HTTPRoute resources.
+gateway:
+  # Annotations to add to all HTTPRoute resources.
+  annotations: {}
+  frontend:
+    enabled: true
+    # parentRefs defines which Gateway(s) this HTTPRoute attaches to.
+    # Example:
+    #   - name: my-gateway
+    #     namespace: gateway-ns
+    #     sectionName: https
+    parentRefs: []
+    hostnames: []
+    # rules defines routing rules. If empty, defaults to "/" routing to the frontend service.
+    rules: []
+  api:
+    enabled: true
+    parentRefs: []
+    hostnames: []
+    # rules defines routing rules. No defaults — must be provided by the user.
+    rules: []
+  sse:
+    enabled: false
+    parentRefs: []
+    hostnames: []
+    # rules defines routing rules. No defaults — must be provided by the user.
+    rules: []
 
 jobs:
   migrateDb:
