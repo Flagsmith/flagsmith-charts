@@ -29,6 +29,12 @@ See documentation at https://docs.flagsmith.com/deployment/hosting/kubernetes#in
 for information about how to gain web access to the application.
 
 {{- end }}
+{{- if or .Values.gateway.frontend.enabled .Values.gateway.api.enabled .Values.gateway.sse.enabled }}
+
+Gateway API HTTPRoutes are enabled. Ensure a Gateway resource exists in your cluster
+that matches the parentRefs configured in your values.
+See https://gateway-api.sigs.k8s.io/ for more information.
+{{- end }}
 
 {{- if .Values.influxdb2.enabled }}
 
