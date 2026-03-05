@@ -58,37 +58,5 @@ jobs:
             --set crds.envoyGateway.enabled=true \
             | kubectl apply --server-side -f -
 
-      # - name: Install Envoy Gateway
-      #   if: steps.list-changed.outputs.changed == 'true'
-      #   run: |
-      #     helm install eg oci://docker.io/envoyproxy/gateway-helm \
-      #       -n envoy-gateway-system --create-namespace --wait
-      #
-      # - name: Create GatewayClass and Gateway
-      #   if: steps.list-changed.outputs.changed == 'true'
-      #   run: |
-      #     kubectl apply -f - <<'EOF'
-      #     apiVersion: gateway.networking.k8s.io/v1
-      #     kind: GatewayClass
-      #     metadata:
-      #       name: eg
-      #     spec:
-      #       controllerName: gateway.envoyproxy.io/gatewayclass-controller
-      #     ---
-      #     apiVersion: gateway.networking.k8s.io/v1
-      #     kind: Gateway
-      #     metadata:
-      #       name: test-gateway
-      #     spec:
-      #       gatewayClassName: eg
-      #       listeners:
-      #         - name: http
-      #           port: 80
-      #           protocol: HTTP
-      #           allowedRoutes:
-      #             namespaces:
-      #               from: All
-      #     EOF
-
       - name: Run chart-testing (install)
         run: ct install --config ct.yaml
