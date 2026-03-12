@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.79.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.78.0...flagsmith-0.79.0) (2026-03-12)
+
+
+### Features
+
+* add command and args overrides for API and task processor ([#500](https://github.com/Flagsmith/flagsmith-charts/issues/500)) ([3b1b4d2](https://github.com/Flagsmith/flagsmith-charts/commit/3b1b4d2a71a7d7f278aa5dd8929f2385616064fa))
+
+
+### Dependency Updates
+
+* bump Flagsmith from 2.217.0 to 2.221.2 ([#496](https://github.com/Flagsmith/flagsmith-charts/issues/496)) ([1c2fef2](https://github.com/Flagsmith/flagsmith-charts/commit/1c2fef2ff2692f15618a6ef39631aa6b37027d49))
+
 ## [0.78.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.77.3...flagsmith-0.78.0) (2026-03-05)
 
 
