@@ -125,10 +125,17 @@ spec:
       - name: {{ .Chart.Name }}-api
         image: {{ printf "%s:%s" ( .Values.api.image.repository  ) ( .Values.api.image.tag  | default .Chart.AppVersion ) }}
         imagePullPolicy: {{ .Values.api.image.imagePullPolicy | default .Values.global.image.imagePullPolicy }}
+        {{- if .Values.api.command }}
+        command: {{ toYaml .Values.api.command | nindent 10 }}
+        {{- end }}
+        {{- if .Values.api.args }}
+        args: {{ toYaml .Values.api.args | nindent 10 }}
+        {{- else if not .Values.api.command }}
         {{- if .Values.api.enableMigrateAndServe }}
         args: ["migrate-and-serve"]
         {{- else }}
         args: ["serve"]
+        {{- end }}
         {{- end }}
         ports:
         - containerPort: {{ .Values.service.api.port }}
