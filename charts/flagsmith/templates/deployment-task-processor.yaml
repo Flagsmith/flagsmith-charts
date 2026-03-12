@@ -77,10 +77,18 @@ spec:
       - name: {{ .Chart.Name }}-task-processor
         image: {{ .Values.taskProcessor.image.repository | default .Values.api.image.repository }}:{{ .Values.taskProcessor.image.tag | default .Chart.AppVersion }}
         imagePullPolicy: {{ .Values.taskProcessor.image.imagePullPolicy | default .Values.api.image.imagePullPolicy | default .Values.global.image.imagePullPolicy }}
+        {{- if .Values.taskProcessor.command }}
+        command: {{ toYaml .Values.taskProcessor.command | nindent 10 }}
+        {{- else }}
         command:
           - ./scripts/run-docker.sh
+        {{- end }}
+        {{- if .Values.taskProcessor.args }}
+        args: {{ toYaml .Values.taskProcessor.args | nindent 10 }}
+        {{- else if not .Values.taskProcessor.command }}
         args:
           - run-task-processor
+        {{- end }}
         ports:
         - containerPort: {{ .Values.service.taskProcessor.port }}
         env: {{ include (print $.Template.BasePath "/_task_processor_environment.yaml") . | nindent 8 }}

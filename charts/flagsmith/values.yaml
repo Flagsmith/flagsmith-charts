@@ -109,6 +109,8 @@ api:
     prefix: flagsmith.api
   influxdbSetup:
     enabled: false
+  command: []
+  args: []
   extraInitContainers: []
   extraContainers: []
   extraVolumes: []
@@ -196,6 +198,9 @@ taskProcessor:
     tag: "" # defaults to .Chart.AppVersion
     imagePullPolicy: ""
     imagePullSecrets: []
+
+  command: []
+  args: []
 
   enabled: false
   replicacount: 1
