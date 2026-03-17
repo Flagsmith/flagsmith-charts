@@ -517,7 +517,7 @@ gateway:
   # Annotations to add to all HTTPRoute resources.
   annotations: {}
   frontend:
-    enabled: true
+    enabled: false
     # parentRefs defines which Gateway(s) this HTTPRoute attaches to.
     # Example:
     #   - name: my-gateway
@@ -528,7 +528,7 @@ gateway:
     # rules defines routing rules. If empty, defaults to "/" routing to the frontend service.
     rules: []
   api:
-    enabled: true
+    enabled: false
     parentRefs: []
     hostnames: []
     # rules defines routing rules. No defaults — must be provided by the user.
