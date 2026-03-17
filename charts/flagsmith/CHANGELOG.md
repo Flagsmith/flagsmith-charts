@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.79.1](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.79.0...flagsmith-0.79.1) (2026-03-17)
+
+
+### Bug Fixes
+
+* **Gateway API:** Fix HTTPRoutes default values ([#501](https://github.com/Flagsmith/flagsmith-charts/issues/501)) ([ccfdf56](https://github.com/Flagsmith/flagsmith-charts/commit/ccfdf56c4f53f68cdf6d0e64158c3ffc025bd43d))
+
+
+### Dependency Updates
+
+* bump Flagsmith from 2.221.2 to 2.222.0 ([#498](https://github.com/Flagsmith/flagsmith-charts/issues/498)) ([b523f7c](https://github.com/Flagsmith/flagsmith-charts/commit/b523f7ccc9356acb1cd65e6f01fcf7a56754d1fe))
+
 ## [0.79.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.78.0...flagsmith-0.79.0) (2026-03-12)
 
 
