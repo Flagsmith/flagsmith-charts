@@ -292,6 +292,10 @@ pgbouncer:
   deploymentStrategy: null
   # Optional: Use to override the password directly instead of extracting from the database URL
   passwordOverride: ""
+  # Optional: Use an existing secret for PgBouncer credentials instead of generating one.
+  # The secret must contain keys: POSTGRESQL_HOST, POSTGRESQL_DATABASE, POSTGRESQL_USER, POSTGRESQL_PASSWORD
+  # This allows use of PgBouncer with databaseExternal.urlFromExistingSecret.enabled: true
+  existingSecret: null
   podAnnotations: {}
   resources: {}
   podLabels: {}
