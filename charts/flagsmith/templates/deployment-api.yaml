@@ -71,6 +71,9 @@ spec:
         {{- $securityContext = $securityContext | merge (omit .Values.api.defaultPodSecurityContext "enabled") }}
         {{- end }}
         {{- toYaml $securityContext | nindent 8 }}
+      {{- if .Values.api.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.api.terminationGracePeriodSeconds }}
+      {{- end }}
       {{- if .Values.api.serviceAccountName }}
       serviceAccountName: {{ .Values.api.serviceAccountName }}
       {{- end }}
@@ -168,6 +171,10 @@ spec:
           periodSeconds: {{ .Values.api.readinessProbe.periodSeconds }}
           successThreshold: {{ .Values.api.readinessProbe.successThreshold }}
           timeoutSeconds: {{ .Values.api.readinessProbe.timeoutSeconds }}
+        {{- with .Values.api.lifecycle }}
+        lifecycle:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         resources:
 {{ toYaml .Values.api.resources | indent 10 }}
         volumeMounts: {{ toYaml .Values.api.volumeMounts | nindent 10 }}

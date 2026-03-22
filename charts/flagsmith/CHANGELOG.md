@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.80.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.79.1...flagsmith-0.80.0) (2026-03-18)
+
+
+### Features
+
+* Add lifecycle hooks, `terminationGracePeriodSeconds` ([#508](https://github.com/Flagsmith/flagsmith-charts/issues/508)) ([e9f6d2b](https://github.com/Flagsmith/flagsmith-charts/commit/e9f6d2bf294fe3d119e11a55534226f677c1beb5))
+
 ## [0.79.1](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.79.0...flagsmith-0.79.1) (2026-03-17)
 
 

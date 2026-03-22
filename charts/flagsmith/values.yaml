@@ -74,6 +74,10 @@ api:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  # Container lifecycle hooks (e.g. preStop for graceful shutdown)
+  lifecycle: {}
+  # Pod termination grace period in seconds
+  terminationGracePeriodSeconds: null
   podSecurityContext: {}
   defaultPodSecurityContext:
     enabled: true
@@ -164,6 +168,10 @@ frontend:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  # Container lifecycle hooks (e.g. preStop for graceful shutdown)
+  lifecycle: {}
+  # Pod termination grace period in seconds
+  terminationGracePeriodSeconds: null
   podSecurityContext: {}
   defaultPodSecurityContext:
     enabled: true
@@ -242,6 +250,10 @@ taskProcessor:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  # Container lifecycle hooks (e.g. preStop for graceful shutdown)
+  lifecycle: {}
+  # Pod termination grace period in seconds
+  terminationGracePeriodSeconds: null
   podSecurityContext: {}
   defaultPodSecurityContext:
     enabled: true
@@ -303,6 +315,10 @@ pgbouncer:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  # Container lifecycle hooks (e.g. preStop for graceful shutdown)
+  lifecycle: {}
+  # Pod termination grace period in seconds
+  terminationGracePeriodSeconds: null
   podSecurityContext: {}
   defaultPodSecurityContext:
     enabled: true
