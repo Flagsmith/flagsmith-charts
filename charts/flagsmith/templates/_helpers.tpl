@@ -203,8 +203,8 @@ PgBouncer hostname
 PgBouncer secret name
 */}}
 {{- define "flagsmith.pgbouncer.secretName" -}}
-{{- if .Values.pgbouncer.existingSecret -}}
-{{- .Values.pgbouncer.existingSecret -}}
+{{- if .Values.pgbouncer.credentialsFromExistingSecret.enabled -}}
+{{- .Values.pgbouncer.credentialsFromExistingSecret.name -}}
 {{- else -}}
 {{- template "flagsmith.fullname" . }}-pgbouncer
 {{- end -}}

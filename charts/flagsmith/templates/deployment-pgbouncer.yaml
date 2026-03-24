@@ -24,7 +24,7 @@ spec:
   template:
     metadata:
       annotations:
-        {{- if not .Values.pgbouncer.existingSecret }}
+        {{- if not .Values.pgbouncer.credentialsFromExistingSecret.enabled }}
         checksum/secrets-pgbouncer: {{ include (print $.Template.BasePath "/secrets-pgbouncer.yaml") . | sha256sum }}
         {{- end }}
 {{- if .Values.pgbouncer.podAnnotations }}

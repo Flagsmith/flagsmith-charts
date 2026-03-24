@@ -307,7 +307,9 @@ pgbouncer:
   # Optional: Use an existing secret for PgBouncer credentials instead of generating one.
   # The secret must contain keys: POSTGRESQL_HOST, POSTGRESQL_DATABASE, POSTGRESQL_USER, POSTGRESQL_PASSWORD
   # This allows use of PgBouncer with databaseExternal.urlFromExistingSecret.enabled: true
-  existingSecret: null
+  credentialsFromExistingSecret:
+    enabled: false
+    name: ""
   podAnnotations: {}
   resources: {}
   podLabels: {}
