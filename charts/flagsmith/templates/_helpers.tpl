@@ -200,6 +200,17 @@ PgBouncer hostname
 {{- end -}}
 
 {{/*
+PgBouncer secret name
+*/}}
+{{- define "flagsmith.pgbouncer.secretName" -}}
+{{- if .Values.pgbouncer.credentialsFromExistingSecret.enabled -}}
+{{- .Values.pgbouncer.credentialsFromExistingSecret.name -}}
+{{- else -}}
+{{- template "flagsmith.fullname" . }}-pgbouncer
+{{- end -}}
+{{- end -}}
+
+{{/*
 Expand the name of the chart.
 */}}
 {{- define "flagsmith.influxdb.name" -}}

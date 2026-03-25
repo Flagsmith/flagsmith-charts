@@ -24,7 +24,9 @@ spec:
   template:
     metadata:
       annotations:
+        {{- if not .Values.pgbouncer.credentialsFromExistingSecret.enabled }}
         checksum/secrets-pgbouncer: {{ include (print $.Template.BasePath "/secrets-pgbouncer.yaml") . | sha256sum }}
+        {{- end }}
 {{- if .Values.pgbouncer.podAnnotations }}
 {{ toYaml .Values.pgbouncer.podAnnotations | nindent 8 }}
 {{- end }}
@@ -83,28 +85,28 @@ spec:
         - name: POSTGRESQL_HOST
           valueFrom:
             secretKeyRef:
-              name: {{ template "flagsmith.fullname" . }}-pgbouncer
+              name: {{ include "flagsmith.pgbouncer.secretName" . }}
               key: POSTGRESQL_HOST
         - name: POSTGRESQL_DATABASE
           valueFrom:
             secretKeyRef:
-              name: {{ template "flagsmith.fullname" . }}-pgbouncer
+              name: {{ include "flagsmith.pgbouncer.secretName" . }}
               key: POSTGRESQL_DATABASE
         # Expose the database with its actual name
         - name: PGBOUNCER_DATABASE
           valueFrom:
             secretKeyRef:
-              name: {{ template "flagsmith.fullname" . }}-pgbouncer
+              name: {{ include "flagsmith.pgbouncer.secretName" . }}
               key: POSTGRESQL_DATABASE
         - name: POSTGRESQL_USERNAME
           valueFrom:
             secretKeyRef:
-              name: {{ template "flagsmith.fullname" . }}-pgbouncer
+              name: {{ include "flagsmith.pgbouncer.secretName" . }}
               key: POSTGRESQL_USER
         - name: POSTGRESQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "flagsmith.fullname" . }}-pgbouncer
+              name: {{ include "flagsmith.pgbouncer.secretName" . }}
               key: POSTGRESQL_PASSWORD
         - name: PGBOUNCER_PORT
           value: '5432'
