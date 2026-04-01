@@ -211,35 +211,11 @@ PgBouncer secret name
 {{- end -}}
 
 {{/*
-Expand the name of the chart.
-*/}}
-{{- define "flagsmith.influxdb.name" -}}
-{{- default "influxdb2" .Values.influxdb2.nameOverride | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create a default fully qualified app name.
+Create a default fully qualified name for external InfluxDB resources.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
 */}}
 {{- define "flagsmith.influxdb.fullname" -}}
-{{- if .Values.influxdb2.fullnameOverride -}}
-{{- .Values.influxdb2.fullnameOverride | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- $name := default "influxdb2" .Values.influxdb2.nameOverride -}}
-{{- if contains $name .Release.Name -}}
-{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Influxdb hostname
-*/}}
-{{- define "flagsmith.influxdb.hostname" -}}
-{{ template "flagsmith.influxdb.fullname" . }}.{{ include "flagsmith.namespace" . }}.svc.cluster.local
+{{- printf "%s-%s" .Release.Name "influxdb2" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -278,8 +254,6 @@ Frontend environment
   value: {{ .Values._destructiveTests.testToken | quote }}
 - name: FLAGSMITH_API
   value: {{ include "flagsmith.fullname" . }}-api.{{ include "flagsmith.namespace" . }}:{{ .Values.service.api.port }}/api/v1/
-- name: ENABLE_INFLUXDB_FEATURES
-  value: {{ .Values.influxdb2.enabled | ternary "true" "false" | squote }}
 {{- end }}
 {{- range $envName, $envValue := .Values.frontend.extraEnv }}
 - name: {{ $envName }}
