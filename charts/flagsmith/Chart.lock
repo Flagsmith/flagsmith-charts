@@ -2,11 +2,8 @@ dependencies:
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 12.5.8
-- name: influxdb2
-  repository: https://helm.influxdata.com/
-  version: 2.1.1
 - name: graphite
   repository: file://../graphite
   version: 2.0.0
-digest: sha256:a978f9f6b4c171ddc773f38a1c83ea50198679825b6e27d3ba06caf7b4d561c1
-generated: "2025-11-14T15:58:27.463499Z"
+digest: sha256:6efbaac5196fbb4f0f82bbf8afb9dcd5226f4efba5c93a0d1034d096358ce3f1
+generated: "2026-04-01T12:17:08.910881+02:00"
