@@ -4,15 +4,18 @@ kind: PodDisruptionBudget
 metadata:
   namespace: {{ .Release.Namespace }}
   name: {{ template "flagsmith.fullname" . }}-api-pdb
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
 spec:
   selector:
     matchLabels:
       {{- include "flagsmith.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: api
-  {{- if and .Values.pdb.api.minAvailable (not (hasKey .Values.pdb.api "maxUnavailable")) }}
-  minAvailable: {{ .Values.pdb.api.minAvailable }}
-  {{- else if .Values.pdb.api.maxUnavailable }}
+  {{- if hasKey .Values.pdb.api "maxUnavailable" }}
   maxUnavailable: {{ .Values.pdb.api.maxUnavailable }}
+  {{- else if hasKey .Values.pdb.api "minAvailable" }}
+  minAvailable: {{ .Values.pdb.api.minAvailable }}
   {{- end }}
   {{- if .Values.pdb.api.unhealthyPodEvictionPolicy }}
   unhealthyPodEvictionPolicy: {{ .Values.pdb.api.unhealthyPodEvictionPolicy }}
