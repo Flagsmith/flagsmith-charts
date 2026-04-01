@@ -111,8 +111,6 @@ api:
     hostFromNodeIp: false
     port: 8125
     prefix: flagsmith.api
-  influxdbSetup:
-    enabled: false
   command: []
   args: []
   extraInitContainers: []
@@ -349,31 +347,6 @@ pgbouncer:
   extraContainers: []
   extraVolumes: []
   volumeMounts: []
-
-influxdb2:
-  enabled: true
-  adminUser:
-    organization: "influxdata"
-    bucket: "default"
-    user: "admin"
-    retention_policy: "0s"
-    ## Leave empty to generate a random password and token.
-    ## Or fill any of these values to use fixed values.
-    password: ""
-    token: ""
-    ## The password and token are obtained from an existing secret. The expected
-    ## keys are `admin-password` and `admin-token`.
-    ## If set, the password and token values above are ignored.
-    existingSecret: null
-  persistence:
-    enabled: false
-    # storageClass: "-"
-    # accessMode: ReadWriteOnce
-    # size: 50Gi
-  resources: {}
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
 
 influxdbExternal:
   enabled: false

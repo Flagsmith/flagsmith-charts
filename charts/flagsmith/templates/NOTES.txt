@@ -36,15 +36,19 @@ that matches the parentRefs configured in your values.
 See https://gateway-api.sigs.k8s.io/ for more information.
 {{- end }}
 
-{{- if .Values.influxdb2.enabled }}
+######################################################
+#####  In-chart InfluxDB has been removed.       #####
+######################################################
 
-######################################
-##### Warning: influxdb2 #####
-######################################
+If you were using the chart-provisioned InfluxDB instance,
+it is no longer deployed. Your options for analytics are:
 
-InfluxDB2 is deprecated and will be removed in the next major version.
-Please set values under the `influxdbExternal` key
-or migrate your analytics data to PostgreSQL by enabling `jobs.migrateAnalytics`.
-{{- end }}
+  1. External InfluxDB: set `influxdbExternal.enabled` to `true`
+     and configure connection details under the `influxdbExternal` key.
+  2. PostgreSQL: set `UsePostgresForAnalytics.enabled` to `true`
+     (requires `taskProcessor.enabled` to also be `true`).
+
+To migrate existing analytics data from InfluxDB to PostgreSQL,
+enable `jobs.migrateAnalyticsData`.
 
 --------------------------------------
