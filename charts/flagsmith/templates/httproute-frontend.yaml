@@ -1,0 +1,35 @@
+{{- if and .Values.frontend.enabled .Values.gateway.frontend.enabled -}}
+{{- $fullName := include "flagsmith.fullname" . -}}
+{{- $svcPort := .Values.service.frontend.port -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  namespace: {{ include "flagsmith.namespace" . }}
+  name: {{ $fullName }}-frontend
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: frontend
+  {{- $annotations := include "flagsmith.annotations" ( dict "customAnnotations" .Values.gateway.annotations "commonValues" .Values.common ) }}
+  {{- with $annotations }}
+  annotations:
+    {{- . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- with .Values.gateway.frontend.parentRefs }}
+  parentRefs:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.gateway.frontend.hostnames }}
+  hostnames:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  rules:
+  {{- if .Values.gateway.frontend.rules }}
+    {{- toYaml .Values.gateway.frontend.rules | nindent 4 }}
+  {{- else }}
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+  {{- end }}
+{{- end }}

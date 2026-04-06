@@ -7,6 +7,13 @@ Expand the name of the chart.
 {{- end -}}
 
 {{/*
+Allow the release namespace to be overridden for multi-namespace deployments in combined charts
+*/}}
+{{- define "flagsmith.namespace" -}}
+{{- default .Release.Namespace .Values.namespaceOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
@@ -182,46 +189,33 @@ Set redis port
 Postgres hostname
 */}}
 {{- define "flagsmith.postgres.hostname" -}}
-{{- printf "%s-%s" .Release.Name .Values.devPostgresql.nameOverride -}}.{{ .Release.Namespace }}.svc.cluster.local
+{{- printf "%s-%s" .Release.Name .Values.devPostgresql.nameOverride -}}.{{ include "flagsmith.namespace" . }}.svc.cluster.local
 {{- end -}}
 
 {{/*
 PgBouncer hostname
 */}}
 {{- define "flagsmith.pgbouncer.hostname" -}}
-{{- printf "%s-%s" .Release.Name "pgbouncer" -}}.{{ .Release.Namespace }}.svc.cluster.local
+{{- printf "%s-%s" .Release.Name "pgbouncer" -}}.{{ include "flagsmith.namespace" . }}.svc.cluster.local
 {{- end -}}
 
 {{/*
-Expand the name of the chart.
+PgBouncer secret name
 */}}
-{{- define "flagsmith.influxdb.name" -}}
-{{- default "influxdb2" .Values.influxdb2.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- define "flagsmith.pgbouncer.secretName" -}}
+{{- if .Values.pgbouncer.credentialsFromExistingSecret.enabled -}}
+{{- .Values.pgbouncer.credentialsFromExistingSecret.name -}}
+{{- else -}}
+{{- template "flagsmith.fullname" . }}-pgbouncer
+{{- end -}}
 {{- end -}}
 
 {{/*
-Create a default fully qualified app name.
+Create a default fully qualified name for external InfluxDB resources.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
 */}}
 {{- define "flagsmith.influxdb.fullname" -}}
-{{- if .Values.influxdb2.fullnameOverride -}}
-{{- .Values.influxdb2.fullnameOverride | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- $name := default "influxdb2" .Values.influxdb2.nameOverride -}}
-{{- if contains $name .Release.Name -}}
-{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Influxdb hostname
-*/}}
-{{- define "flagsmith.influxdb.hostname" -}}
-{{ template "flagsmith.influxdb.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+{{- printf "%s-%s" .Release.Name "influxdb2" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -249,9 +243,9 @@ Frontend environment
   value: '/'
 {{- if .Values.frontend.apiProxy.enabled }}
 - name: PROXY_API_URL
-  value: http://{{ include "flagsmith.fullname" . }}-api.{{ .Release.Namespace }}:{{ .Values.service.api.port }}
+  value: http://{{ include "flagsmith.fullname" . }}-api.{{ include "flagsmith.namespace" . }}:{{ .Values.service.api.port }}
 - name: FLAGSMITH_PROXY_API_URL
-  value: http://{{ include "flagsmith.fullname" . }}-api.{{ .Release.Namespace }}:{{ .Values.service.api.port }}
+  value: http://{{ include "flagsmith.fullname" . }}-api.{{ include "flagsmith.namespace" . }}:{{ .Values.service.api.port }}
 {{- end }}
 {{- if and .Values._destructiveTests.enabled .Values._destructiveTests.testToken }}
 - name: E2E_TEST_TOKEN_E2E
@@ -259,9 +253,7 @@ Frontend environment
 - name: E2E_TEST_TOKEN
   value: {{ .Values._destructiveTests.testToken | quote }}
 - name: FLAGSMITH_API
-  value: {{ include "flagsmith.fullname" . }}-api.{{ .Release.Namespace }}:{{ .Values.service.api.port }}/api/v1/
-- name: ENABLE_INFLUXDB_FEATURES
-  value: {{ .Values.influxdb2.enabled | ternary "true" "false" | squote }}
+  value: {{ include "flagsmith.fullname" . }}-api.{{ include "flagsmith.namespace" . }}:{{ .Values.service.api.port }}/api/v1/
 {{- end }}
 {{- range $envName, $envValue := .Values.frontend.extraEnv }}
 - name: {{ $envName }}

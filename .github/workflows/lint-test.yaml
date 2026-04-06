@@ -34,8 +34,21 @@ jobs:
       - name: Run chart-testing (lint)
         run: ct lint --config ct.yaml --lint-conf lintconf.yaml --check-version-increment=false
       - name: Create kind cluster
-        uses: helm/kind-action@v1.2.0
+        uses: helm/kind-action@v1.12.0
         if: steps.list-changed.outputs.changed == 'true'
+        with:
+          node_image: kindest/node:v1.31.4
+
+      - name: Install Gateway API CRDs
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          helm template eg oci://docker.io/envoyproxy/gateway-crds-helm \
+            --version v1.7.0 \
+            --set crds.gatewayAPI.enabled=true \
+            --set crds.gatewayAPI.channel=standard \
+            --set crds.envoyGateway.enabled=true \
+            | kubectl apply --server-side -f -
+
       - name: Run chart-testing (install)
         run: ct install --namespace flagsmith --config ct.yaml --debug
       - name: Debug Output

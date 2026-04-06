@@ -5,14 +5,14 @@ for more configuration options.
 
 To access Flagsmith using port-forwarding, run:
 
-kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "flagsmith.fullname" . }}-frontend 8080:{{ .Values.service.frontend.port }}
+kubectl -n {{ include "flagsmith.namespace" . }} port-forward svc/{{ include "flagsmith.fullname" . }}-frontend 8080:{{ .Values.service.frontend.port }}
 
 Then access http://localhost:8080 in a browser.
 
 {{- if .Values.api.bootstrap.enabled }}
 To see the password reset link for pre-created admin user, run:
 
-kubectl -n {{ .Release.Namespace }} logs pods/{{ include "flagsmith.fullname" . }}-api -c bootstrap
+kubectl -n {{ include "flagsmith.namespace" . }} logs pods/{{ include "flagsmith.fullname" . }}-api -c bootstrap
 {{- end }}
 
 {{ if not (and .Values.ingress.frontend.enabled .Values.ingress.api.enabled) }}
@@ -29,16 +29,26 @@ See documentation at https://docs.flagsmith.com/deployment/hosting/kubernetes#in
 for information about how to gain web access to the application.
 
 {{- end }}
+{{- if or .Values.gateway.frontend.enabled .Values.gateway.api.enabled .Values.gateway.sse.enabled }}
 
-{{- if .Values.influxdb2.enabled }}
-
-######################################
-##### Warning: influxdb2 #####
-######################################
-
-InfluxDB2 is deprecated and will be removed in the next major version.
-Please set values under the `influxdbExternal` key
-or migrate your analytics data to PostgreSQL by enabling `jobs.migrateAnalytics`.
+Gateway API HTTPRoutes are enabled. Ensure a Gateway resource exists in your cluster
+that matches the parentRefs configured in your values.
+See https://gateway-api.sigs.k8s.io/ for more information.
 {{- end }}
+
+######################################################
+#####  In-chart InfluxDB has been removed.       #####
+######################################################
+
+If you were using the chart-provisioned InfluxDB instance,
+it is no longer deployed. Your options for analytics are:
+
+  1. External InfluxDB: set `influxdbExternal.enabled` to `true`
+     and configure connection details under the `influxdbExternal` key.
+  2. PostgreSQL: set `UsePostgresForAnalytics.enabled` to `true`
+     (requires `taskProcessor.enabled` to also be `true`).
+
+To migrate existing analytics data from InfluxDB to PostgreSQL,
+enable `jobs.migrateAnalyticsData`.
 
 --------------------------------------

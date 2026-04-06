@@ -29,6 +29,11 @@ serviceMonitor:
   metricRelabelings: []
   relabelings: []
 
+# Prometheus configuration applies to api and task-processor deployments.
+prometheus:
+  enabled: true
+  port: 9100
+
 api:
   image:
     repository: docker.flagsmith.com/flagsmith/flagsmith-api
@@ -69,6 +74,10 @@ api:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  # Container lifecycle hooks (e.g. preStop for graceful shutdown)
+  lifecycle: {}
+  # Pod termination grace period in seconds
+  terminationGracePeriodSeconds: null
   podSecurityContext: {}
   defaultPodSecurityContext:
     enabled: true
@@ -77,7 +86,7 @@ api:
     # runAsGroup: 1000
   livenessProbe:
     # path is the API path to be used for health checks. Used if exec is not set.
-    path: /health/liveness
+    path: /health/liveness/
     # exec describes an ExecAction command which will run inside the API container.
     # See https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Probe
     exec: {}
@@ -87,7 +96,10 @@ api:
     successThreshold: 1
     timeoutSeconds: 2
   readinessProbe:
-    path: /health/readiness
+    path: /health/readiness/
+    # exec describes an ExecAction command which will run inside the API container.
+    # See https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Probe
+    exec: {}
     failureThreshold: 10
     initialDelaySeconds: 1
     periodSeconds: 10
@@ -99,8 +111,8 @@ api:
     hostFromNodeIp: false
     port: 8125
     prefix: flagsmith.api
-  influxdbSetup:
-    enabled: false
+  command: []
+  args: []
   extraInitContainers: []
   extraContainers: []
   extraVolumes: []
@@ -148,11 +160,16 @@ frontend:
   #   memory: 300Mi
   apiProxy:
     enabled: true
-  extraEnv: {}
+  extraEnv:
+    FLAGSMITH_API_URL: "https://flagsmith.local/api/v1"
   extraEnvFromSecret: {}
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  # Container lifecycle hooks (e.g. preStop for graceful shutdown)
+  lifecycle: {}
+  # Pod termination grace period in seconds
+  terminationGracePeriodSeconds: null
   podSecurityContext: {}
   defaultPodSecurityContext:
     enabled: true
@@ -188,6 +205,9 @@ taskProcessor:
     imagePullPolicy: ""
     imagePullSecrets: []
 
+  command: []
+  args: []
+
   enabled: false
   replicacount: 1
   sleepIntervalMs: null
@@ -206,6 +226,10 @@ taskProcessor:
     successThreshold: 1
     timeoutSeconds: 30
   readinessProbe:
+    # exec describes an ExecAction command which will run inside the API container.
+    # Defaults to api.readinessProbe.exec.
+    # See https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Probe
+    exec: {}
     failureThreshold: 10
     initialDelaySeconds: 1
     periodSeconds: 10
@@ -224,6 +248,10 @@ taskProcessor:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  # Container lifecycle hooks (e.g. preStop for graceful shutdown)
+  lifecycle: {}
+  # Pod termination grace period in seconds
+  terminationGracePeriodSeconds: null
   podSecurityContext: {}
   defaultPodSecurityContext:
     enabled: true
@@ -238,6 +266,9 @@ taskProcessor:
   extraSpec: {} # Will be added to `spec` for `flagsmith-task-processor` deployment.
 
 devPostgresql:
+  image:
+    repository: bitnamilegacy/postgresql
+    tag: 15.3.0-debian-11-r7
   enabled: true
   serviceAccount:
     create: true
@@ -263,7 +294,7 @@ databaseExternal:
 pgbouncer:
   enabled: false
   image:
-    repository: bitnami/pgbouncer
+    repository: bitnamilegacy/pgbouncer
     tag: 1.16.0
     imagePullPolicy: ""
     imagePullSecrets: []
@@ -271,6 +302,12 @@ pgbouncer:
   deploymentStrategy: null
   # Optional: Use to override the password directly instead of extracting from the database URL
   passwordOverride: ""
+  # Optional: Use an existing secret for PgBouncer credentials instead of generating one.
+  # The secret must contain keys: POSTGRESQL_HOST, POSTGRESQL_DATABASE, POSTGRESQL_USER, POSTGRESQL_PASSWORD
+  # This allows use of PgBouncer with databaseExternal.urlFromExistingSecret.enabled: true
+  credentialsFromExistingSecret:
+    enabled: false
+    name: ""
   podAnnotations: {}
   resources: {}
   podLabels: {}
@@ -278,6 +315,10 @@ pgbouncer:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  # Container lifecycle hooks (e.g. preStop for graceful shutdown)
+  lifecycle: {}
+  # Pod termination grace period in seconds
+  terminationGracePeriodSeconds: null
   podSecurityContext: {}
   defaultPodSecurityContext:
     enabled: true
@@ -306,31 +347,6 @@ pgbouncer:
   extraContainers: []
   extraVolumes: []
   volumeMounts: []
-
-influxdb2:
-  enabled: true
-  adminUser:
-    organization: "influxdata"
-    bucket: "default"
-    user: "admin"
-    retention_policy: "0s"
-    ## Leave empty to generate a random password and token.
-    ## Or fill any of these values to use fixed values.
-    password: ""
-    token: ""
-    ## The password and token are obtained from an existing secret. The expected
-    ## keys are `admin-password` and `admin-token`.
-    ## If set, the password and token values above are ignored.
-    existingSecret: null
-  persistence:
-    enabled: false
-    # storageClass: "-"
-    # accessMode: ReadWriteOnce
-    # size: 50Gi
-  resources: {}
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
 
 influxdbExternal:
   enabled: false
@@ -397,14 +413,14 @@ sse:
     # runAsUser: 1000
     # runAsGroup: 1000
   livenessProbe:
-    path: /health/liveness
+    path: /health/liveness/
     failureThreshold: 5
     initialDelaySeconds: 5
     periodSeconds: 10
     successThreshold: 1
     timeoutSeconds: 2
   readinessProbe:
-    path: /health/readiness
+    path: /health/readiness/
     failureThreshold: 10
     initialDelaySeconds: 1
     periodSeconds: 10
@@ -442,6 +458,18 @@ hpa:
     maxReplicas: 10
     targetCPUUtilization: 50
 
+pdb:
+  api:
+    enabled: false
+    minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: "AlwaysAllow"
+  frontend:
+    enabled: false
+    minAvailable: 1
+    # maxUnavailable: 1
+    # unhealthyPodEvictionPolicy: "AlwaysAllow"
+
 ingress:
   frontend:
     enabled: false
@@ -450,7 +478,7 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
     hosts:
-      - chart-example.local
+      - flagsmith.local
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
@@ -462,8 +490,12 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
     hosts:
-      - host: chart-example.local
-        paths: []
+      - host: flagsmith.local
+        paths:
+          - /api/
+          - /health/
+          - /admin/
+          - /static/admin/
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
@@ -481,6 +513,39 @@ ingress:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
+
+# Gateway API HTTPRoute configuration.
+# Prerequisites (installed independently):
+#   1. Gateway API CRDs (https://gateway-api.sigs.k8s.io/)
+#   2. A Gateway controller (e.g., Envoy Gateway, Cilium, Istio)
+#   3. A GatewayClass and Gateway resource
+# The chart only manages HTTPRoute resources.
+gateway:
+  # Annotations to add to all HTTPRoute resources.
+  annotations: {}
+  frontend:
+    enabled: false
+    # parentRefs defines which Gateway(s) this HTTPRoute attaches to.
+    # Example:
+    #   - name: my-gateway
+    #     namespace: gateway-ns
+    #     sectionName: https
+    parentRefs: []
+    hostnames: []
+    # rules defines routing rules. If empty, defaults to "/" routing to the frontend service.
+    rules: []
+  api:
+    enabled: false
+    parentRefs: []
+    hostnames: []
+    # rules defines routing rules. No defaults — must be provided by the user.
+    rules: []
+  sse:
+    enabled: false
+    parentRefs: []
+    hostnames: []
+    # rules defines routing rules. No defaults — must be provided by the user.
+    rules: []
 
 jobs:
   migrateDb:
