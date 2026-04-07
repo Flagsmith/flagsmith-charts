@@ -538,13 +538,13 @@ gateway:
     enabled: false
     parentRefs: []
     hostnames: []
-    # rules defines routing rules. No defaults — must be provided by the user.
+    # rules defines routing rules. If empty, defaults to /api/, /health/, /admin/, /static/admin/ routing to the API service.
     rules: []
   sse:
     enabled: false
     parentRefs: []
     hostnames: []
-    # rules defines routing rules. No defaults — must be provided by the user.
+    # rules defines routing rules. If empty, defaults to "/" routing to the SSE service.
     rules: []
 
 jobs:

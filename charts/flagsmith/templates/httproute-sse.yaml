@@ -23,7 +23,16 @@ spec:
   hostnames:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  # TODO: add default rule for /
   rules:
+  {{- if .Values.gateway.sse.rules }}
     {{- toYaml .Values.gateway.sse.rules | nindent 4 }}
+  {{- else }}
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: {{ $fullName }}-sse
+          port: {{ $svcPort }}
+  {{- end }}
 {{- end }}
