@@ -1,0 +1,11 @@
+api:
+  enableMigrateDbInitContainer: false
+
+jobs:
+  migrateDb:
+    enabled: true
+    databaseUrl:
+      fromExistingSecret:
+        enabled: true
+        name: flagsmith-migrate-db-credentials
+        key: DATABASE_URL
