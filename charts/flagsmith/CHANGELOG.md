@@ -1,5 +1,57 @@
 # Changelog
 
+## [0.80.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.79.1...flagsmith-0.80.0) (2026-03-18)
+
+
+### Features
+
+* Add lifecycle hooks, `terminationGracePeriodSeconds` ([#508](https://github.com/Flagsmith/flagsmith-charts/issues/508)) ([e9f6d2b](https://github.com/Flagsmith/flagsmith-charts/commit/e9f6d2bf294fe3d119e11a55534226f677c1beb5))
+
+## [0.79.1](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.79.0...flagsmith-0.79.1) (2026-03-17)
+
+
+### Bug Fixes
+
+* **Gateway API:** Fix HTTPRoutes default values ([#501](https://github.com/Flagsmith/flagsmith-charts/issues/501)) ([ccfdf56](https://github.com/Flagsmith/flagsmith-charts/commit/ccfdf56c4f53f68cdf6d0e64158c3ffc025bd43d))
+
+
+### Dependency Updates
+
+* bump Flagsmith from 2.221.2 to 2.222.0 ([#498](https://github.com/Flagsmith/flagsmith-charts/issues/498)) ([b523f7c](https://github.com/Flagsmith/flagsmith-charts/commit/b523f7ccc9356acb1cd65e6f01fcf7a56754d1fe))
+
+## [0.79.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.78.0...flagsmith-0.79.0) (2026-03-12)
+
+
+### Features
+
+* add command and args overrides for API and task processor ([#500](https://github.com/Flagsmith/flagsmith-charts/issues/500)) ([3b1b4d2](https://github.com/Flagsmith/flagsmith-charts/commit/3b1b4d2a71a7d7f278aa5dd8929f2385616064fa))
+
+
+### Dependency Updates
+
+* bump Flagsmith from 2.217.0 to 2.221.2 ([#496](https://github.com/Flagsmith/flagsmith-charts/issues/496)) ([1c2fef2](https://github.com/Flagsmith/flagsmith-charts/commit/1c2fef2ff2692f15618a6ef39631aa6b37027d49))
+
+## [0.78.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.77.3...flagsmith-0.78.0) (2026-03-05)
+
+
+### Features
+
+* add HTTPRoutes support ([#492](https://github.com/Flagsmith/flagsmith-charts/issues/492)) ([050ccb2](https://github.com/Flagsmith/flagsmith-charts/commit/050ccb2ad9d3197ac8662b4781724ad920fe5682))
+* add namespaceOverride support for sub-chart deployments ([#453](https://github.com/Flagsmith/flagsmith-charts/issues/453)) ([9aee239](https://github.com/Flagsmith/flagsmith-charts/commit/9aee239b89c7279d6712ae7764b11ed3fa4d6471))
+* Add Prometheus port support for API and task-processor services ([#469](https://github.com/Flagsmith/flagsmith-charts/issues/469)) ([c57eb36](https://github.com/Flagsmith/flagsmith-charts/commit/c57eb36b16e0092ddc3fccb5d98e221c7737d144))
+
+
+### Bug Fixes
+
+* Use nindent for imagePullSecrets in migrate-db job template ([#485](https://github.com/Flagsmith/flagsmith-charts/issues/485)) ([f1ac72e](https://github.com/Flagsmith/flagsmith-charts/commit/f1ac72e7ca3e902793b65f4ece12eddb64009c30))
+
+
+### Dependency Updates
+
+* bump Flagsmith from 2.196.3 to 2.210.0 ([#465](https://github.com/Flagsmith/flagsmith-charts/issues/465)) ([4cf0d58](https://github.com/Flagsmith/flagsmith-charts/commit/4cf0d584e5e2a19e33440c74c5990f461508bcea))
+* bump Flagsmith from 2.210.0 to 2.211.1 ([#468](https://github.com/Flagsmith/flagsmith-charts/issues/468)) ([5a4aed4](https://github.com/Flagsmith/flagsmith-charts/commit/5a4aed42fe25cabd3d4c79e515e1b04e207a9213))
+* bump Flagsmith from 2.211.1 to 2.217.0 ([#486](https://github.com/Flagsmith/flagsmith-charts/issues/486)) ([0f7a71e](https://github.com/Flagsmith/flagsmith-charts/commit/0f7a71e9c53e23f6cefb7198e5e590253505df78))
+
 ## [0.77.3](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.77.2...flagsmith-0.77.3) (2025-09-19)
 
 
