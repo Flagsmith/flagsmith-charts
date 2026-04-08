@@ -1,0 +1,6 @@
+api:
+  enableMigrateDbInitContainer: false
+
+jobs:
+  migrateDb:
+    enabled: true

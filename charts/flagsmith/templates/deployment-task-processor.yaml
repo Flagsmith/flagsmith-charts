@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ include "flagsmith.namespace" . }}
   name: {{ template "flagsmith.fullname" . }}-task-processor
   {{- $annotations := include "flagsmith.annotations" .Values.common }}
   {{- with $annotations }}
@@ -66,6 +66,9 @@ spec:
         {{- $securityContext = $securityContext | merge (omit .Values.taskProcessor.defaultPodSecurityContext "enabled") }}
         {{- end }}
         {{- toYaml $securityContext | nindent 8 }}
+      {{- if .Values.taskProcessor.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.taskProcessor.terminationGracePeriodSeconds }}
+      {{- end }}
       {{- if .Values.taskProcessor.serviceAccountName }}
       serviceAccountName: {{ .Values.taskProcessor.serviceAccountName }}
       {{- end }}
@@ -77,10 +80,18 @@ spec:
       - name: {{ .Chart.Name }}-task-processor
         image: {{ .Values.taskProcessor.image.repository | default .Values.api.image.repository }}:{{ .Values.taskProcessor.image.tag | default .Chart.AppVersion }}
         imagePullPolicy: {{ .Values.taskProcessor.image.imagePullPolicy | default .Values.api.image.imagePullPolicy | default .Values.global.image.imagePullPolicy }}
+        {{- if .Values.taskProcessor.command }}
+        command: {{ toYaml .Values.taskProcessor.command | nindent 10 }}
+        {{- else }}
         command:
           - ./scripts/run-docker.sh
+        {{- end }}
+        {{- if .Values.taskProcessor.args }}
+        args: {{ toYaml .Values.taskProcessor.args | nindent 10 }}
+        {{- else if not .Values.taskProcessor.command }}
         args:
           - run-task-processor
+        {{- end }}
         ports:
         - containerPort: {{ .Values.service.taskProcessor.port }}
         env: {{ include (print $.Template.BasePath "/_task_processor_environment.yaml") . | nindent 8 }}
@@ -114,6 +125,10 @@ spec:
           periodSeconds: {{ .Values.taskProcessor.readinessProbe.periodSeconds }}
           successThreshold: {{ .Values.taskProcessor.readinessProbe.successThreshold }}
           timeoutSeconds: {{ .Values.taskProcessor.readinessProbe.timeoutSeconds }}
+        {{- with .Values.taskProcessor.lifecycle }}
+        lifecycle:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         resources:
 {{ toYaml .Values.taskProcessor.resources | indent 10 }}
         volumeMounts:

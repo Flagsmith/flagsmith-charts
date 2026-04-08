@@ -1,0 +1,29 @@
+tests:
+  enabled: true
+
+gateway:
+  frontend:
+    enabled: true
+    parentRefs:
+      - name: test-gateway
+  api:
+    enabled: true
+    parentRefs:
+      - name: test-gateway
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /api/
+          - path:
+              type: PathPrefix
+              value: /health/
+          - path:
+              type: PathPrefix
+              value: /admin/
+          - path:
+              type: PathPrefix
+              value: /static/admin/
+        backendRefs:
+          - name: flagsmith-api
+            port: 8000
