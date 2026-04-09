@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.81.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.80.0...flagsmith-0.81.0) (2026-04-09)
+
+
+### Features
+
+* Add API and Frontend PDB ([#518](https://github.com/Flagsmith/flagsmith-charts/issues/518)) ([2784516](https://github.com/Flagsmith/flagsmith-charts/commit/27845160aa55c93096148db002db60292c73827c))
+* Add default rules for API, SSE, and frontend HTTPRoutes ([#522](https://github.com/Flagsmith/flagsmith-charts/issues/522)) ([48d3848](https://github.com/Flagsmith/flagsmith-charts/commit/48d38482bd0cab20a70b4f8e9cc5cb0a4a0c38b4))
+* Add specific database URL for migrateDb job ([#449](https://github.com/Flagsmith/flagsmith-charts/issues/449)) ([d3b2aed](https://github.com/Flagsmith/flagsmith-charts/commit/d3b2aedf67f7d4167303195132bf18fce61fa4da))
+* Create hpas for task processor and sse ([#343](https://github.com/Flagsmith/flagsmith-charts/issues/343)) ([6b46efe](https://github.com/Flagsmith/flagsmith-charts/commit/6b46efea78ca97a4fea58f13e018139c15a6130e))
+* **pgbouncer:** Support existing secret for PgBouncer credentials ([#513](https://github.com/Flagsmith/flagsmith-charts/issues/513)) ([563b8c6](https://github.com/Flagsmith/flagsmith-charts/commit/563b8c630f062b98d458959f0c03ce150cbf3abb))
+* Remove in-chart InfluxDB ([#517](https://github.com/Flagsmith/flagsmith-charts/issues/517)) ([014f925](https://github.com/Flagsmith/flagsmith-charts/commit/014f9256fb7d81ebd63da20d3b3a9e371186ab32))
+
+
+### Dependency Updates
+
+* bump Flagsmith from 2.222.0 to 2.224.0 ([#515](https://github.com/Flagsmith/flagsmith-charts/issues/515)) ([90ccbac](https://github.com/Flagsmith/flagsmith-charts/commit/90ccbacb435cd74c0c9fe91953f7ffc5bfbf670f))
+* bump Flagsmith from 2.224.0 to 2.227.0 ([#521](https://github.com/Flagsmith/flagsmith-charts/issues/521)) ([8f6a3d7](https://github.com/Flagsmith/flagsmith-charts/commit/8f6a3d740a3818bff942b53c4ad638e461a66b3d))
+
+
+### Other
+
+* update docker proxy URL ([#340](https://github.com/Flagsmith/flagsmith-charts/issues/340)) ([d5ca818](https://github.com/Flagsmith/flagsmith-charts/commit/d5ca8186f294e774b6fff04168efc15906381ea1))
+
 ## [0.80.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.79.1...flagsmith-0.80.0) (2026-03-18)
 
 
