@@ -31,5 +31,8 @@ spec:
         - path:
             type: PathPrefix
             value: /
+      backendRefs:
+        - name: {{ $fullName }}-frontend
+          port: {{ $svcPort }}
   {{- end }}
 {{- end }}

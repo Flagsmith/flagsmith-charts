@@ -23,7 +23,25 @@ spec:
   hostnames:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  # TODO: add default rules for /api/, /health/, /admin/, /static/admin/
   rules:
+  {{- if .Values.gateway.api.rules }}
     {{- toYaml .Values.gateway.api.rules | nindent 4 }}
+  {{- else }}
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/
+        - path:
+            type: PathPrefix
+            value: /health/
+        - path:
+            type: PathPrefix
+            value: /admin/
+        - path:
+            type: PathPrefix
+            value: /static/admin/
+      backendRefs:
+        - name: {{ $fullName }}-api
+          port: {{ $svcPort }}
+  {{- end }}
 {{- end }}
