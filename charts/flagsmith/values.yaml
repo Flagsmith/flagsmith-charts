@@ -74,11 +74,12 @@ api:
   nodeSelector: {}
   tolerations: []
   affinity: {}
-  # Container lifecycle hooks. Default preStop delays SIGTERM so the
-  # LB / endpoints controller has time to deregister the pod before
-  # gunicorn closes its listen socket. Without this, rolling deploys
-  # and HPA scale-down can cause a short 5xx spike on traffic that
-  # the LB routes to the pod after it has stopped accepting connections.
+  # Container lifecycle hooks. The preStop sleep below ships as the
+  # default so the LB / endpoints controller has time to deregister
+  # the pod before gunicorn closes its listen socket. Without it,
+  # rolling deploys and HPA scale-down can cause a short 5xx spike on
+  # traffic the LB routes to the pod after it stops accepting
+  # connections. Override `lifecycle` to customise.
   lifecycle:
     preStop:
       exec:
