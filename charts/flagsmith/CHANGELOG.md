@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.82.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.81.0...flagsmith-0.82.0) (2026-06-04)
+
+
+### Features
+
+* **flagsmith:** Allow custom annotations on migrate jobs ([#542](https://github.com/Flagsmith/flagsmith-charts/issues/542)) ([a377ab7](https://github.com/Flagsmith/flagsmith-charts/commit/a377ab7f36f443d289fd9ebc81bcb2f8c832251d))
+
+
+### Bug Fixes
+
+* **api,task-processor:** Close shutdown drain gap and name container ports ([#533](https://github.com/Flagsmith/flagsmith-charts/issues/533)) ([44054ab](https://github.com/Flagsmith/flagsmith-charts/commit/44054ab9934c9873a69a051d37bbb5f191f9153a))
+
+
+### Dependency Updates
+
+* bump Flagsmith from 2.227.0 to 2.238.0 ([#541](https://github.com/Flagsmith/flagsmith-charts/issues/541)) ([c1993d5](https://github.com/Flagsmith/flagsmith-charts/commit/c1993d57c537e104daa4d56546bd885d4c2d1968))
+
 ## [0.81.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.80.0...flagsmith-0.81.0) (2026-04-09)
 
 
