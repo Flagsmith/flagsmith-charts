@@ -4,10 +4,11 @@ kind: Job
 metadata:
   namespace: {{ include "flagsmith.namespace" . }}
   name: {{ template "flagsmith.fullname" . }}-migrate-analytics-data-{{ .Release.Revision }}-{{ randAlphaNum 5 | lower }}
-  {{- $annotations := include "flagsmith.annotations" .Values.common }}
-  {{- with $annotations }}
+  {{- $commonAnnotations := include "flagsmith.annotations" .Values.common | fromYaml | default dict }}
+  {{- $jobAnnotations := .Values.jobs.migrateAnalyticsData.annotations | default dict }}
+  {{- with merge (dict) $jobAnnotations $commonAnnotations }}
   annotations:
-    {{- . | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:
     {{- include "flagsmith.labels" . | nindent 4 }}
