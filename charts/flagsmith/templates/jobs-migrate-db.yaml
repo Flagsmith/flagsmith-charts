@@ -6,7 +6,7 @@ metadata:
   name: {{ template "flagsmith.fullname" . }}-migrate-db-{{ .Release.Revision }}-{{ randAlphaNum 5 | lower }}
   {{- $commonAnnotations := include "flagsmith.annotations" .Values.common | fromYaml | default dict }}
   {{- $jobAnnotations := .Values.jobs.migrateDb.annotations | default dict }}
-  {{- with merge $jobAnnotations $commonAnnotations }}
+  {{- with merge (dict) $jobAnnotations $commonAnnotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
