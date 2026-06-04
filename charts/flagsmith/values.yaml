@@ -560,6 +560,19 @@ gateway:
 jobs:
   migrateDb:
     enabled: false
+    # Annotations to set on the migrate-db Job resource itself
+    # (i.e. on `metadata.annotations`). Use this for tooling that reads
+    # Job-level annotations, such as Helm hooks
+    # (`helm.sh/hook`, `helm.sh/hook-weight`, `helm.sh/hook-delete-policy`),
+    # ArgoCD sync waves, or Kyverno policy exceptions.
+    # Note: this is distinct from `jobAnnotations` below, which targets
+    # the pod template (`spec.template.metadata.annotations`).
+    # Example — promote the migrate Job into a pre-upgrade hook:
+    # annotations:
+    #   helm.sh/hook: pre-upgrade
+    #   helm.sh/hook-weight: "-5"
+    #   helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+    annotations: {}
     ttlSecondsAfterFinished: 3600
     restartPolicy: OnFailure
     defaultPodSecurityContext:
@@ -582,6 +595,10 @@ jobs:
         key: null
   migrateAnalyticsData:
     enabled: false
+    # Annotations to set on the migrate-analytics-data Job resource
+    # itself (`metadata.annotations`). See `jobs.migrateDb.annotations`
+    # for typical use cases (Helm hooks, ArgoCD sync waves, etc.).
+    annotations: {}
     args: []
     extraContainers: []
     extraVolumes: []
