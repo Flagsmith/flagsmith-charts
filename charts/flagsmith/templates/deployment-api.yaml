@@ -126,7 +126,12 @@ spec:
         {{- end }}
         {{- end }}
         ports:
-        - containerPort: {{ .Values.service.api.port }}
+        - name: http
+          containerPort: {{ .Values.service.api.port }}
+        {{- if .Values.prometheus.enabled }}
+        - name: prom
+          containerPort: 9100
+        {{- end }}
         env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
         livenessProbe:
           {{- if .Values.api.livenessProbe.exec }}

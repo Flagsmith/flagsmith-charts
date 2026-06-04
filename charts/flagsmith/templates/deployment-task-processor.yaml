@@ -93,7 +93,12 @@ spec:
           - run-task-processor
         {{- end }}
         ports:
-        - containerPort: {{ .Values.service.taskProcessor.port }}
+        - name: http
+          containerPort: {{ .Values.service.taskProcessor.port }}
+        {{- if .Values.prometheus.enabled }}
+        - name: prom
+          containerPort: 9100
+        {{- end }}
         env: {{ include (print $.Template.BasePath "/_task_processor_environment.yaml") . | nindent 8 }}
         livenessProbe:
           {{- $exec := .Values.taskProcessor.livenessProbe.exec | default .Values.api.livenessProbe.exec }}

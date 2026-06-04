@@ -74,10 +74,20 @@ api:
   nodeSelector: {}
   tolerations: []
   affinity: {}
-  # Container lifecycle hooks (e.g. preStop for graceful shutdown)
-  lifecycle: {}
-  # Pod termination grace period in seconds
-  terminationGracePeriodSeconds: null
+  # Container lifecycle hooks. The preStop sleep below ships as the
+  # default so the LB / endpoints controller has time to deregister
+  # the pod before gunicorn closes its listen socket. Without it,
+  # rolling deploys and HPA scale-down can cause a short 5xx spike on
+  # traffic the LB routes to the pod after it stops accepting
+  # connections. Override `lifecycle` to customise.
+  lifecycle:
+    preStop:
+      exec:
+        command: ["sleep", "20"]
+  # Pod termination grace period in seconds. Must exceed the LB's
+  # connection-draining timeout so the kubelet does not SIGKILL
+  # the pod while the LB is still draining in-flight connections.
+  terminationGracePeriodSeconds: 75
   podSecurityContext: {}
   defaultPodSecurityContext:
     enabled: true
@@ -461,7 +471,7 @@ hpa:
     enabled: false
     minReplicas: 2
     maxReplicas: 10
-    targetCPUUtilization: 50 
+    targetCPUUtilization: 50
   sse:
     enabled: true
     minReplicas: 1
