@@ -117,8 +117,8 @@ spec:
     {{- tpl (toYaml .) $ | nindent 6 }}
 {{- end }}
 {{- end }}
-      volumes:
 {{- with .Values.frontend.extraVolumes }}
+      volumes:
 {{- toYaml . | nindent 6 }}
 {{- end }}
 {{- with .Values.frontend.extraTemplateSpec }}

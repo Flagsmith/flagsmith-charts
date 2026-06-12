@@ -152,8 +152,8 @@ spec:
     {{- tpl (toYaml .) $ | nindent 6 }}
 {{- end }}
 {{- end }}
-      volumes:
 {{- with .Values.pgbouncer.extraVolumes }}
+      volumes:
 {{- toYaml . | nindent 6 }}
 {{- end }}
 {{- with .Values.pgbouncer.extraTemplateSpec }}

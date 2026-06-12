@@ -145,8 +145,8 @@ spec:
     {{- tpl (toYaml .) $ | nindent 6 }}
 {{- end }}
 {{- end }}
-      volumes:
 {{- with .Values.taskProcessor.extraVolumes }}
+      volumes:
 {{- toYaml . | nindent 6 }}
 {{- end }}
 {{- with .Values.taskProcessor.extraTemplateSpec }}
