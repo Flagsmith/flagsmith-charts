@@ -119,6 +119,9 @@ spec:
 {{- with .Values.sse.extraVolumes }}
 {{- toYaml . | nindent 6 }}
 {{- end }}
+{{- with .Values.sse.extraTemplateSpec }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
 {{- with .Values.sse.extraSpec }}
 {{- toYaml . | nindent 2 }}
 {{- end }}

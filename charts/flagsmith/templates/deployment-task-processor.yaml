@@ -149,6 +149,9 @@ spec:
 {{- with .Values.taskProcessor.extraVolumes }}
 {{- toYaml . | nindent 6 }}
 {{- end }}
+{{- with .Values.taskProcessor.extraTemplateSpec }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
 {{- with .Values.taskProcessor.extraSpec }}
 {{- toYaml . | nindent 2 }}
 {{- end }}

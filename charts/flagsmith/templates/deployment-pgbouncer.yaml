@@ -156,4 +156,7 @@ spec:
 {{- with .Values.pgbouncer.extraVolumes }}
 {{- toYaml . | nindent 6 }}
 {{- end }}
+{{- with .Values.pgbouncer.extraTemplateSpec }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
 {{- end }}

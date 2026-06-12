@@ -121,6 +121,9 @@ spec:
 {{- with .Values.frontend.extraVolumes }}
 {{- toYaml . | nindent 6 }}
 {{- end }}
+{{- with .Values.frontend.extraTemplateSpec }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
 {{- with .Values.frontend.extraSpec }}
 {{- toYaml . | nindent 2 }}
 {{- end }}

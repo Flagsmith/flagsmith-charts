@@ -139,6 +139,7 @@ api:
     organisationName: null
     projectName: null
     extraSpec: {} # Will be added to `spec` for `flagsmith-api` deployment.
+  extraTemplateSpec: {} # Will be added to `spec.template.spec` for `flagsmith-api` deployment.
 
   # secretKeyFromExistingSecret points to the Secret that contains the Django secret key. If none is provided, a Job
   # will be created to generate one.
@@ -203,6 +204,7 @@ frontend:
   extraVolumes: []
   volumeMounts: []
   extraSpec: {} # Will be added to `spec` for `flagsmith-frontend` deployment.
+  extraTemplateSpec: {} # Will be added to `spec.template.spec` for `flagsmith-frontend` deployment.
 
 # See https://docs.flagsmith.com/deployment/task-processor
 taskProcessor:
@@ -274,6 +276,7 @@ taskProcessor:
   extraVolumes: []
   volumeMounts: []
   extraSpec: {} # Will be added to `spec` for `flagsmith-task-processor` deployment.
+  extraTemplateSpec: {} # Will be added to `spec.template.spec` for `flagsmith-task-processor` deployment.
 
 devPostgresql:
   image:
@@ -357,6 +360,7 @@ pgbouncer:
   extraContainers: []
   extraVolumes: []
   volumeMounts: []
+  extraTemplateSpec: {} # Will be added to `spec.template.spec` for `flagsmith-pgbouncer` deployment.
 
 influxdbExternal:
   enabled: false
@@ -442,6 +446,7 @@ sse:
   extraContainers: []
   extraVolumes: []
   volumeMounts: []
+  extraTemplateSpec: {} # Will be added to `spec.template.spec` for `flagsmith-sse` deployment.
 
 service:
   api:
