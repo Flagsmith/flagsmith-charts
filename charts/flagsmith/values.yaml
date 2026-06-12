@@ -138,7 +138,8 @@ api:
     adminEmail: null
     organisationName: null
     projectName: null
-    extraSpec: {} # Will be added to `spec` for `flagsmith-api` deployment.
+
+  extraSpec: {} # Will be added to `spec` for `flagsmith-api` deployment.
   extraTemplateSpec: {} # Will be added to `spec.template.spec` for `flagsmith-api` deployment.
 
   # secretKeyFromExistingSecret points to the Secret that contains the Django secret key. If none is provided, a Job
