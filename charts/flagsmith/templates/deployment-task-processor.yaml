@@ -134,6 +134,12 @@ spec:
         lifecycle:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+        securityContext:
+          {{- $securityContext := .Values.taskProcessor.securityContext | default (dict) | deepCopy }}
+          {{- if .Values.taskProcessor.defaultSecurityContext.enabled }}
+          {{- $securityContext = $securityContext | merge (omit .Values.taskProcessor.defaultSecurityContext "enabled") }}
+          {{- end }}
+          {{- toYaml $securityContext | nindent 10 }}
         resources:
 {{ toYaml .Values.taskProcessor.resources | indent 10 }}
         volumeMounts:

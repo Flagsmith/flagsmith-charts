@@ -72,6 +72,12 @@ spec:
         {{- else }}
         args: ["migrate"]
         {{- end }}
+        securityContext:
+          {{- $securityContext := .Values.jobs.migrateDb.securityContext | default (dict) | deepCopy }}
+          {{- if .Values.jobs.migrateDb.defaultSecurityContext.enabled }}
+          {{- $securityContext = $securityContext | merge (omit .Values.jobs.migrateDb.defaultSecurityContext "enabled") }}
+          {{- end }}
+          {{- toYaml $securityContext | nindent 10 }}
         env:
         {{- include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
         {{- if and .Values.jobs.migrateDb.databaseUrl .Values.jobs.migrateDb.databaseUrl.fromExistingSecret.enabled }}

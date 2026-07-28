@@ -106,6 +106,12 @@ spec:
         lifecycle:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+        securityContext:
+          {{- $securityContext := .Values.frontend.securityContext | default (dict) | deepCopy }}
+          {{- if .Values.frontend.defaultSecurityContext.enabled }}
+          {{- $securityContext = $securityContext | merge (omit .Values.frontend.defaultSecurityContext "enabled") }}
+          {{- end }}
+          {{- toYaml $securityContext | nindent 10 }}
         resources:
 {{ toYaml .Values.frontend.resources | indent 10 }}
         volumeMounts:

@@ -94,6 +94,15 @@ api:
     # runAsNonRoot: true  # TODO: enable this, conditional on tag semver
     # runAsUser: 1000
     # runAsGroup: 1000
+  # Applies to the flagsmith-api container, the migrate-db init container,
+  # and the bootstrap init container (all run the same image).
+  securityContext: {}
+  defaultSecurityContext:
+    enabled: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
   livenessProbe:
     # path is the API path to be used for health checks. Used if exec is not set.
     path: /health/liveness/
@@ -188,6 +197,13 @@ frontend:
     # runAsNonRoot: true  # TODO: enable this, conditional on tag semver
     # runAsUser: 1000
     # runAsGroup: 1000
+  securityContext: {}
+  defaultSecurityContext:
+    enabled: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
   livenessProbe:
     failureThreshold: 20
     initialDelaySeconds: 20
@@ -271,6 +287,13 @@ taskProcessor:
     # runAsNonRoot: true  # TODO: enable this, conditional on tag semver
     # runAsUser: 1000
     # runAsGroup: 1000
+  securityContext: {}
+  defaultSecurityContext:
+    enabled: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
   extraInitContainers: []
   extraContainers: []
   extraEnv: {}
@@ -427,6 +450,13 @@ sse:
     # runAsNonRoot: true  # TODO: enable this, conditional on tag semver
     # runAsUser: 1000
     # runAsGroup: 1000
+  securityContext: {}
+  defaultSecurityContext:
+    enabled: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
   livenessProbe:
     path: /health/liveness/
     failureThreshold: 5
@@ -591,9 +621,17 @@ jobs:
     annotations: {}
     ttlSecondsAfterFinished: 3600
     restartPolicy: OnFailure
+    podSecurityContext: {}
     defaultPodSecurityContext:
       enabled: true
       # runAsNonRoot: true
+    securityContext: {}
+    defaultSecurityContext:
+      enabled: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
     extraContainers: []
     extraVolumes: []
     command: []
@@ -615,6 +653,17 @@ jobs:
     # itself (`metadata.annotations`). See `jobs.migrateDb.annotations`
     # for typical use cases (Helm hooks, ArgoCD sync waves, etc.).
     annotations: {}
+    podSecurityContext: {}
+    defaultPodSecurityContext:
+      enabled: true
+      # runAsNonRoot: true
+    securityContext: {}
+    defaultSecurityContext:
+      enabled: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
     args: []
     extraContainers: []
     extraVolumes: []
