@@ -343,7 +343,7 @@ pgbouncer:
     allowPrivilegeEscalation: false
     capabilities:
       drop:
-        - all
+        - ALL
 
   livenessProbe:
     failureThreshold: 5
