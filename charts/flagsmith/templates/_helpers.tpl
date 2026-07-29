@@ -196,7 +196,7 @@ Postgres hostname
 PgBouncer hostname
 */}}
 {{- define "flagsmith.pgbouncer.hostname" -}}
-{{- printf "%s-%s" .Release.Name "pgbouncer" -}}.{{ include "flagsmith.namespace" . }}.svc.cluster.local
+{{- template "flagsmith.fullname" . }}-pgbouncer.{{ include "flagsmith.namespace" . }}.svc.cluster.local
 {{- end -}}
 
 {{/*
