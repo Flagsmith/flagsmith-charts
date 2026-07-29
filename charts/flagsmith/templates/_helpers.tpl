@@ -364,3 +364,17 @@ key: {{ default "django-secret-key" .Values.api.secretKeyFromExistingSecret.key 
 name: {{ include "flagsmith.sse.authenticationTokenSecretName" . }}
 key: {{ default "sse-authentication-token" .Values.sse.authenticationTokenFromExistingSecret.key }}
 {{- end }}
+
+{{/*
+Security context: chart defaults with user values merged on top (user wins).
+Usage: (dict "component" .Values.api "key" "securityContext"|"podSecurityContext")
+*/}}
+{{- define "flagsmith.mergedSecurityContext" -}}
+{{- $defaultKey := printf "default%s" (.key | title) -}}
+{{- $ctx := index .component .key | default dict | deepCopy -}}
+{{- $defaults := index .component $defaultKey | default dict -}}
+{{- if $defaults.enabled -}}
+{{- $ctx = $ctx | merge (omit $defaults "enabled") -}}
+{{- end -}}
+{{- toYaml $ctx -}}
+{{- end -}}
