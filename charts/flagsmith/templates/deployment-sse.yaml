@@ -56,12 +56,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      securityContext:
-        {{- $securityContext := .Values.sse.podSecurityContext | default (dict) | deepCopy }}
-        {{- if .Values.sse.defaultPodSecurityContext.enabled }}
-        {{- $securityContext = $securityContext | merge (omit .Values.sse.defaultPodSecurityContext "enabled") }}
-        {{- end }}
-        {{- toYaml $securityContext | nindent 8 }}
+      securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" .Values.sse "key" "podSecurityContext") | nindent 8 }}
       {{- if .Values.sse.terminationGracePeriodSeconds }}
       terminationGracePeriodSeconds: {{ .Values.sse.terminationGracePeriodSeconds }}
       {{- end }}
@@ -104,6 +99,7 @@ spec:
         lifecycle:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+        securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" .Values.sse "key" "securityContext") | nindent 10 }}
         resources:
 {{ toYaml .Values.sse.resources | indent 10 }}
         volumeMounts:

@@ -48,12 +48,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      securityContext:
-        {{- $securityContext := .Values.jobs.migrateDb.podSecurityContext | default (dict) | deepCopy }}
-        {{- if .Values.jobs.migrateDb.defaultPodSecurityContext.enabled }}
-        {{- $securityContext = $securityContext | merge (omit .Values.jobs.migrateDb.defaultPodSecurityContext "enabled") }}
-        {{- end }}
-        {{- toYaml $securityContext | nindent 8 }}
+      securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" .Values.jobs.migrateDb "key" "podSecurityContext") | nindent 8 }}
       {{- if .Values.jobs.migrateDb.serviceAccountName }}
       serviceAccountName: {{ .Values.jobs.migrateDb.serviceAccountName }}
       {{- end }}
@@ -72,6 +67,7 @@ spec:
         {{- else }}
         args: ["migrate"]
         {{- end }}
+        securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" .Values.jobs.migrateDb "key" "securityContext") | nindent 10 }}
         env:
         {{- include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
         {{- if and .Values.jobs.migrateDb.databaseUrl .Values.jobs.migrateDb.databaseUrl.fromExistingSecret.enabled }}

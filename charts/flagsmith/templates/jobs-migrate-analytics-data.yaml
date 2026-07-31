@@ -23,6 +23,7 @@ spec:
       {{- if .Values.jobs.migrateDb.shareProcessNamespace }}
       {{- end }}
       shareProcessNamespace: true
+      securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" .Values.jobs.migrateAnalyticsData "key" "podSecurityContext") | nindent 8 }}
       containers:
       - name: migrate-analytics-data
         image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default .Chart.AppVersion }}
@@ -30,6 +31,7 @@ spec:
         {{- if .Values.jobs.migrateAnalyticsData.args }}
         args: {{ toYaml .Values.jobs.migrateAnalyticsData.args | nindent 8 }}
         {{- end }}
+        securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" .Values.jobs.migrateAnalyticsData "key" "securityContext") | nindent 10 }}
         env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
 {{- with .Values.jobs.migrateDb.extraContainers }}
 {{ if typeIs "string" . }}
