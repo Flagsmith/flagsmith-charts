@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.83.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.82.0...flagsmith-0.83.0) (2026-07-31)
+
+
+### Features
+
+* expose container-level securityContext for api, frontend, taskProcessor, sse, and migrate jobs ([#571](https://github.com/Flagsmith/flagsmith-charts/issues/571)) ([e8d443e](https://github.com/Flagsmith/flagsmith-charts/commit/e8d443ee00241db53776ccd84e8e289bf22df8df))
+* Expose extraTemplateSpec, fix api extraSpec location ([#547](https://github.com/Flagsmith/flagsmith-charts/issues/547)) ([cf7c7d2](https://github.com/Flagsmith/flagsmith-charts/commit/cf7c7d21df866f87adce75cea378c671df3576d5))
+
+
+### Bug Fixes
+
+* **pgbouncer:** PgBouncer cannot run in a namespace with restricted Pod Security enforced ([#573](https://github.com/Flagsmith/flagsmith-charts/issues/573)) ([6f03ab6](https://github.com/Flagsmith/flagsmith-charts/commit/6f03ab66b2997a9a8377778ed2961a53e6da3f82))
+* **pgbouncer:** PgBouncer is unreachable when the release name does not contain "flagsmith" ([#574](https://github.com/Flagsmith/flagsmith-charts/issues/574)) ([e741078](https://github.com/Flagsmith/flagsmith-charts/commit/e74107870371232d7595fff0be7f6d5f76e91e59))
+
+
+### Dependency Updates
+
+* bump Flagsmith from 2.238.0 to 2.260.0 ([#576](https://github.com/Flagsmith/flagsmith-charts/issues/576)) ([609240e](https://github.com/Flagsmith/flagsmith-charts/commit/609240e61d7a5a27878be5341c956bb9243fb9c7))
+
 ## [0.82.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.81.0...flagsmith-0.82.0) (2026-06-04)
 
 
