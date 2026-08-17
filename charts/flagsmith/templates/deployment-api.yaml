@@ -130,34 +130,9 @@ spec:
           containerPort: 9100
         {{- end }}
         env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
-        livenessProbe:
-          {{- if .Values.api.livenessProbe.exec }}
-          exec: {{ .Values.api.livenessProbe.exec | toYaml | nindent 12 }}
-          {{- else if .Values.api.livenessProbe.path }}
-          httpGet:
-            path: {{ .Values.api.livenessProbe.path }}
-            port: {{ .Values.service.api.port }}
-            scheme: HTTP
-          {{- end }}
-          failureThreshold: {{ .Values.api.livenessProbe.failureThreshold }}
-          initialDelaySeconds: {{ .Values.api.livenessProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.api.livenessProbe.periodSeconds }}
-          successThreshold: {{ .Values.api.livenessProbe.successThreshold }}
-          timeoutSeconds: {{ .Values.api.livenessProbe.timeoutSeconds }}
-        readinessProbe:
-          {{- if .Values.api.readinessProbe.exec }}
-          exec: {{ .Values.api.readinessProbe.exec | toYaml | nindent 12 }}
-          {{- else if .Values.api.readinessProbe.path }}
-          httpGet:
-            path: {{ .Values.api.readinessProbe.path }}
-            port: {{ .Values.service.api.port }}
-            scheme: HTTP
-          {{- end }}
-          failureThreshold: {{ .Values.api.readinessProbe.failureThreshold }}
-          initialDelaySeconds: {{ .Values.api.readinessProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.api.readinessProbe.periodSeconds }}
-          successThreshold: {{ .Values.api.readinessProbe.successThreshold }}
-          timeoutSeconds: {{ .Values.api.readinessProbe.timeoutSeconds }}
+        {{- include "flagsmith.probe" (dict "name" "livenessProbe" "probe" .Values.api.livenessProbe "port" "http") | nindent 8 }}
+        {{- include "flagsmith.probe" (dict "name" "readinessProbe" "probe" .Values.api.readinessProbe "port" "http") | nindent 8 }}
+        {{- include "flagsmith.probe" (dict "name" "startupProbe" "probe" .Values.api.startupProbe "port" "http") | nindent 8 }}
         {{- with .Values.api.lifecycle }}
         lifecycle:
           {{- toYaml . | nindent 10 }}

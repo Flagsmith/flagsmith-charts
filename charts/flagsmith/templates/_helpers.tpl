@@ -378,3 +378,30 @@ Usage: (dict "component" .Values.api "key" "securityContext"|"podSecurityContext
 {{- end -}}
 {{- toYaml $ctx -}}
 {{- end -}}
+
+{{/*
+Container probe, with its field name. Set the probe to null to leave it out.
+`exec` and `path` are shorthands for the handler: `exec` wins, `path` becomes an
+`httpGet` on `port`. Every other key passes through, so to use a `tcpSocket`,
+`grpc` or full `httpGet` handler, clear `path` and write it in the probe values.
+`port` is the name of the container port to probe, so that the probe follows the
+port wherever it moves.
+Usage: (dict "name" "livenessProbe" "probe" .Values.api.livenessProbe "port" "http")
+  Add "defaultExec" to fall back to another component's exec handler.
+*/}}
+{{- define "flagsmith.probe" -}}
+{{- with .probe -}}
+{{- $probe := omit . "exec" "path" -}}
+{{- $exec := .exec | default $.defaultExec -}}
+{{- if $exec -}}
+{{- $probe = set $probe "exec" $exec -}}
+{{- else if .path -}}
+{{- $probe = set $probe "httpGet" (dict "path" .path "port" $.port "scheme" "HTTP") -}}
+{{- end -}}
+{{- if not (or $probe.exec $probe.httpGet $probe.tcpSocket $probe.grpc) -}}
+{{- fail (printf "%s needs a handler. Set `path` or `exec`, or write an `httpGet`, `tcpSocket` or `grpc` handler in the probe values. To remove the probe, set %s to null." $.name $.name) -}}
+{{- end -}}
+{{ $.name }}:
+{{- toYaml $probe | nindent 2 }}
+{{- end -}}
+{{- end -}}

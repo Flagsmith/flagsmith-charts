@@ -124,6 +124,18 @@ api:
     periodSeconds: 10
     successThreshold: 1
     timeoutSeconds: 2
+  # startupProbe holds back the liveness and readiness probes until the API
+  # answers. Set `startupProbe: null` to remove the probe from the pod spec.
+  startupProbe:
+    # path is the API path to be used for health checks. Used if exec is not set.
+    path: /health/readiness/
+    # exec describes an ExecAction command which will run inside the API container.
+    # See https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Probe
+    exec: {}
+    # failureThreshold x periodSeconds is the time the API has to start.
+    failureThreshold: 20
+    periodSeconds: 10
+    timeoutSeconds: 2
   statsd:
     enabled: false
     host: null
@@ -245,6 +257,8 @@ taskProcessor:
   queuePopSize: null
 
   livenessProbe:
+    # path is the API path to be used for health checks. Used if exec is not set.
+    path: /health/liveness/
     # exec describes an ExecAction command which will run inside the API container.
     # Defaults to api.livenessProbe.exec.
     # See https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Probe
@@ -255,6 +269,7 @@ taskProcessor:
     successThreshold: 1
     timeoutSeconds: 30
   readinessProbe:
+    path: /health/readiness/
     # exec describes an ExecAction command which will run inside the API container.
     # Defaults to api.readinessProbe.exec.
     # See https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Probe
