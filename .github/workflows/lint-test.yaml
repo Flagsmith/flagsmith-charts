@@ -48,6 +48,7 @@ jobs:
           helm dependency build charts/flagsmith
           helm plugin install https://github.com/helm-unittest/helm-unittest.git --version v1.0.3
           helm unittest -f 'unittests/**/*_test.yaml' charts/flagsmith
+          sh charts/flagsmith/unittests/experimentation/init-scripts_test.sh
 
       - name: Create kind cluster
         uses: helm/kind-action@v1.12.0
