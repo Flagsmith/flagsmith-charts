@@ -1,0 +1,21 @@
+{{- if .Values.experimentation.enabled }}{{- if .Values.openshift }}{{- if .Values.openshift.route }}{{- if .Values.openshift.route.ingestion }}{{- if .Values.openshift.route.ingestion.enabled }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  namespace: {{ include "flagsmith.namespace" . }}
+  name: {{ include "flagsmith.fullname" . }}-ingestion
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ingestion
+spec:
+  {{- with .Values.openshift.route.ingestion.host }}
+  host: {{ . }}
+  {{- end }}
+  port:
+    targetPort: http
+  to:
+    kind: Service
+    name: {{ include "flagsmith.fullname" . }}-ingestion
+    weight: 100
+  wildcardPolicy: None
+{{- end }}{{- end }}{{- end }}{{- end }}{{- end }}

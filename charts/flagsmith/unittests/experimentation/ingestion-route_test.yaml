@@ -1,0 +1,27 @@
+suite: ingestion OpenShift route
+templates:
+  - experimentation/ingestion-route.yaml
+release:
+  name: flagsmith
+values:
+  - ../values/experimentation.yaml
+tests:
+  - it: renders nothing unless enabled
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: points at the ingestion service
+    set:
+      openshift:
+        route:
+          ingestion:
+            enabled: true
+            host: events.example.com
+    asserts:
+      - equal:
+          path: spec.to.name
+          value: flagsmith-ingestion
+      - equal:
+          path: spec.host
+          value: events.example.com

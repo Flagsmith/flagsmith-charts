@@ -1,0 +1,37 @@
+suite: ingestion ingress
+templates:
+  - experimentation/ingestion-ingress.yaml
+release:
+  name: flagsmith
+values:
+  - ../values/experimentation.yaml
+tests:
+  - it: renders nothing unless enabled
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders nothing when experimentation is disabled
+    set:
+      experimentation.enabled: false
+      ingress.ingestion.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: routes the host to the ingestion service
+    set:
+      ingress.ingestion.enabled: true
+      ingress.ingestion.hosts:
+        - host: events.example.com
+          paths: [/]
+    asserts:
+      - equal:
+          path: spec.rules[0].host
+          value: events.example.com
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.name
+          value: flagsmith-ingestion
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.port.number
+          value: 8080

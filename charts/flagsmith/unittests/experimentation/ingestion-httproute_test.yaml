@@ -1,0 +1,24 @@
+suite: ingestion HTTPRoute
+templates:
+  - experimentation/ingestion-httproute.yaml
+release:
+  name: flagsmith
+values:
+  - ../values/experimentation.yaml
+tests:
+  - it: renders nothing unless enabled
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: sends / to the ingestion service by default
+    set:
+      gateway.ingestion.enabled: true
+      gateway.ingestion.parentRefs: [{name: gw}]
+    asserts:
+      - equal:
+          path: spec.rules[0].backendRefs[0].name
+          value: flagsmith-ingestion
+      - equal:
+          path: spec.rules[0].matches[0].path.value
+          value: /
