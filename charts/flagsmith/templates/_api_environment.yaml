@@ -98,3 +98,4 @@
 - name: SSE_SERVER_BASE_URL
   value: http://{{ include "flagsmith.fullname" . }}-sse.{{ include "flagsmith.namespace" . }}:{{ .Values.service.sse.port }}
 {{- end }}
+{{- include "flagsmith.experimentation.apiEnv" . }}

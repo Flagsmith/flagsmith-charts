@@ -511,6 +511,10 @@ service:
     type: ClusterIP
     port: 8000
     annotations: {}
+  ingestion:
+    type: ClusterIP
+    port: 8080
+    annotations: {}
 
 hpa:
   api:
@@ -528,6 +532,11 @@ hpa:
     minReplicas: 1
     maxReplicas: 5
     targetCPUUtilization: 50
+  ingestion:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilization: 70
 
 pdb:
   api:
@@ -540,6 +549,10 @@ pdb:
     minAvailable: 1
     # maxUnavailable: 1
     # unhealthyPodEvictionPolicy: "AlwaysAllow"
+  ingestion:
+    enabled: true
+    maxUnavailable: 1
+    unhealthyPodEvictionPolicy: AlwaysAllow
 
 ingress:
   frontend:
@@ -584,6 +597,15 @@ ingress:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
+  ingestion:
+    enabled: false
+    annotations: {}
+    ingressClassName: null
+    hosts: []
+    #  - host: events.flagsmith.local
+    #    paths:
+    #      - /
+    tls: []
 
 # Gateway API HTTPRoute configuration.
 # Prerequisites (installed independently):
@@ -617,6 +639,94 @@ gateway:
     hostnames: []
     # rules defines routing rules. If empty, defaults to "/" routing to the SSE service.
     rules: []
+  ingestion:
+    enabled: false
+    parentRefs: []
+    hostnames: []
+    # rules defines routing rules. If empty, defaults to "/" routing to the ingestion service.
+    rules: []
+
+# Experimentation: event ingestion for SDKs, plus the Kafka topic and the
+# ClickHouse schema the API reads results from. Bring your own Kafka and
+# ClickHouse. See https://docs.flagsmith.com/deployment-self-hosting/hosting-guides/kubernetes-openshift
+experimentation:
+  enabled: false
+
+  clickhouse:
+    # e.g. clickhouses://user:password@host:9440/flagsmith_exp
+    url: null
+    urlFromExistingSecret:
+      enabled: false
+      name: null
+      key: null
+
+  kafka:
+    bootstrapServers: null # host1:9096,host2:9096
+    topic: flagsmith_warehouse_events
+    topicPartitions: 8
+    topicReplicationFactor: 3
+    auth: scram # scram | none
+    username: null
+    password: null
+    passwordFromExistingSecret:
+      enabled: false
+      name: null
+      key: null
+
+  ingestion:
+    # Defaults to the API's DATABASE_URL.
+    databaseUrl:
+      fromExistingSecret:
+        enabled: false
+        name: null
+        key: null
+    image:
+      repository: flagsmith/events-ingestion-api
+      tag: ""
+      imagePullPolicy: ""
+      imagePullSecrets: []
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+      limits:
+        memory: 512Mi
+    podAnnotations: {}
+    podLabels: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    podSecurityContext: {}
+    defaultPodSecurityContext:
+      enabled: true
+      runAsNonRoot: true
+    securityContext: {}
+    defaultSecurityContext:
+      enabled: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+    livenessProbe:
+      path: /health
+      failureThreshold: 5
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 2
+    readinessProbe:
+      path: /health
+      failureThreshold: 3
+      initialDelaySeconds: 1
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 2
+    extraEnv: {}
+    # extraEnvFromSecret:
+    #   NAME:
+    #     secretName: my-secret
+    #     secretKey: my-key
+    extraEnvFromSecret: {}
 
 jobs:
   migrateDb:
@@ -682,6 +792,38 @@ jobs:
     args: []
     extraContainers: []
     extraVolumes: []
+  # Runs when experimentation.enabled is true, as a post-install/post-upgrade hook.
+  experimentationInit:
+    annotations: {}
+    ttlSecondsAfterFinished: 3600
+    backoffLimit: 3
+    kafkaImage: apache/kafka:4.3.1
+    clickhouseImage: clickhouse/clickhouse-server:26.8
+    imagePullSecrets: []
+    resources: {}
+    podSecurityContext: {}
+    defaultPodSecurityContext:
+      enabled: true
+    securityContext: {}
+    defaultSecurityContext:
+      enabled: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+    # Optional admin DSN for creating the schema. Defaults to experimentation.clickhouse.
+    clickhouseUrl:
+      fromExistingSecret:
+        enabled: false
+        name: null
+        key: null
+    # Optional admin login for creating the topic. Defaults to experimentation.kafka.
+    kafka:
+      username: null
+      passwordFromExistingSecret:
+        enabled: false
+        name: null
+        key: null
 
 # These tests just make non-destructive requests to the services in
 # the cluster. Enabling this and running helm test is safe.
