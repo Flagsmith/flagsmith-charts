@@ -42,6 +42,13 @@ jobs:
       - name: Run chart-testing (lint)
         run: ct lint --config ct.yaml --lint-conf lintconf.yaml --check-version-increment=false
 
+      - name: Run unit tests
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm dependency build charts/flagsmith
+          helm plugin install https://github.com/helm-unittest/helm-unittest.git --version v1.0.3
+          helm unittest -f 'unittests/**/*_test.yaml' charts/flagsmith
+
       - name: Create kind cluster
         uses: helm/kind-action@v1.12.0
         if: steps.list-changed.outputs.changed == 'true'
