@@ -1,0 +1,86 @@
+{{- if .Values.experimentation.enabled }}
+{{- $ingestion := .Values.experimentation.ingestion }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ include "flagsmith.namespace" . }}
+  name: {{ include "flagsmith.fullname" . }}-ingestion
+  {{- with include "flagsmith.annotations" .Values.common }}
+  annotations:
+    {{- . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ingestion
+spec:
+  selector:
+    matchLabels:
+      {{- include "flagsmith.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: ingestion
+  template:
+    metadata:
+      annotations:
+        checksum/secrets-experimentation: {{ include (print $.Template.BasePath "/experimentation/secret.yaml") . | sha256sum }}
+        {{- with $ingestion.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- with .Values.common.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- include "flagsmith.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: ingestion
+        {{- with $ingestion.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with $ingestion.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $ingestion.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $ingestion.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $ingestion.image.imagePullSecrets | default .Values.global.image.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" $ingestion "key" "podSecurityContext") | nindent 8 }}
+      containers:
+        - name: ingestion
+          image: {{ printf "%s:%s" $ingestion.image.repository (required "experimentation.ingestion.image.tag is required" $ingestion.image.tag) }}
+          imagePullPolicy: {{ $ingestion.image.imagePullPolicy | default .Values.global.image.imagePullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            {{- include "flagsmith.experimentation.kafkaEnv" (dict "root" . "username" .Values.experimentation.kafka.username "passwordRef" (include "flagsmith.experimentation.kafkaPasswordSecretRef" .)) | nindent 12 }}
+            # One topic: events for every environment go to the chart's ClickHouse.
+            - name: KAFKA_EXTERNAL_TOPIC
+              value: {{ .Values.experimentation.kafka.topic | quote }}
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  {{- include "flagsmith.experimentation.ingestionDatabaseUrlSecretRef" . | nindent 18 }}
+            {{- range $name, $value := $ingestion.extraEnv }}
+            - name: {{ $name }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- range $name, $ref := $ingestion.extraEnvFromSecret }}
+            - name: {{ $name }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $ref.secretName }}
+                  key: {{ $ref.secretKey }}
+            {{- end }}
+          {{- include "flagsmith.probe" (dict "name" "livenessProbe" "probe" $ingestion.livenessProbe "port" "http") | nindent 10 }}
+          {{- include "flagsmith.probe" (dict "name" "readinessProbe" "probe" $ingestion.readinessProbe "port" "http") | nindent 10 }}
+          securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" $ingestion "key" "securityContext") | nindent 12 }}
+          resources:
+            {{- toYaml $ingestion.resources | nindent 12 }}
+{{- end }}
