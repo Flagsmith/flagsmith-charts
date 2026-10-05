@@ -32,3 +32,9 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].env
           content: {name: KAFKA_USERNAME, value: ingestion}
+
+  - it: runs as non-root
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.runAsNonRoot
+          value: true

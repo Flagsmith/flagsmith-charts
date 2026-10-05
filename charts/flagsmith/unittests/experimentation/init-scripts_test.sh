@@ -13,9 +13,11 @@ check "TLS scheme flag" "$CH_SECURE" '--secure'
 parse_clickhouse_url 'clickhouse://u:p@h:9000/db?secure=True&verify=False'
 check "secure query database" "$CH_DATABASE" 'db'
 check "secure query flag" "$CH_SECURE" '--secure'
+check "verify=False flag" "$CH_INSECURE" '--accept-invalid-certificate'
 
 parse_clickhouse_url 'clickhouse://u:p@h:9000/db'
 check "plain flag" "$CH_SECURE" ''
+check "verified by default" "$CH_INSECURE" ''
 
 if (parse_clickhouse_url 'clickhouse://u:p@h:9000') 2>/dev/null; then echo "FAIL: URL without database accepted"; exit 1; fi
 if (parse_clickhouse_url 'https://h:8443/db') 2>/dev/null; then echo "FAIL: HTTP URL accepted"; exit 1; fi

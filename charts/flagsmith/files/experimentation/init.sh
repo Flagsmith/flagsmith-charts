@@ -21,6 +21,7 @@ jaas_quote() {
 # Turns the clickhouse-driver DSN the API uses into clickhouse-client arguments.
 parse_clickhouse_url() {
   CH_SECURE=
+  CH_INSECURE=
   case $1 in
   clickhouses://*)
     CH_SECURE=--secure
@@ -35,8 +36,13 @@ parse_clickhouse_url() {
     rest=${rest%%\?*}
     ;;
   esac
-  case "&$(printf '%s' "$query" | tr 'A-Z' 'a-z')" in
+  query=$(printf '%s' "$query" | tr 'A-Z' 'a-z')
+  case "&$query" in
   *\&secure=true* | *\&secure=1*) CH_SECURE=--secure ;;
+  esac
+  # The API accepts self-signed certificates with verify=False, so the job does too.
+  case "&$query" in
+  *\&verify=false* | *\&verify=0*) CH_INSECURE=--accept-invalid-certificate ;;
   esac
   authority=${rest%%/*}
   CH_DATABASE=${rest#"$authority"}
@@ -74,8 +80,8 @@ init_clickhouse() {
         kafka_sasl_username = $(sql_quote "$KAFKA_USERNAME"),
         kafka_sasl_password = $(sql_quote "$KAFKA_PASSWORD")"
   fi
-  clickhouse-client "$CH_SERVER" $CH_SECURE --query "CREATE DATABASE IF NOT EXISTS \"$CH_DATABASE\""
-  clickhouse-client "$CH_SERVER/$CH_DATABASE" $CH_SECURE --multiquery <<SQL
+  clickhouse-client "$CH_SERVER" $CH_SECURE $CH_INSECURE --query "CREATE DATABASE IF NOT EXISTS \"$CH_DATABASE\""
+  clickhouse-client "$CH_SERVER/$CH_DATABASE" $CH_SECURE $CH_INSECURE --multiquery <<SQL
 -- Same DDL as docs/docs/experimentation/connect-a-warehouse.md in Flagsmith/flagsmith.
 CREATE TABLE IF NOT EXISTS events
 (

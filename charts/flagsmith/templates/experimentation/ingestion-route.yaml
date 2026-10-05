@@ -4,6 +4,10 @@ kind: Route
 metadata:
   namespace: {{ include "flagsmith.namespace" . }}
   name: {{ include "flagsmith.fullname" . }}-ingestion
+  {{- with include "flagsmith.annotations" .Values.common }}
+  annotations:
+    {{- . | nindent 4 }}
+  {{- end }}
   labels:
     {{- include "flagsmith.labels" . | nindent 4 }}
     app.kubernetes.io/component: ingestion

@@ -804,6 +804,10 @@ jobs:
     podSecurityContext: {}
     defaultPodSecurityContext:
       enabled: true
+      # The ClickHouse image runs as root by default; both steps work as any user.
+      runAsNonRoot: true
+      runAsUser: 10001
+      runAsGroup: 10001
     securityContext: {}
     defaultSecurityContext:
       enabled: true
