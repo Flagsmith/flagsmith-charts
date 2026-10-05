@@ -1,0 +1,35 @@
+suite: ingestion PDB
+templates:
+  - experimentation/ingestion-pdb.yaml
+release:
+  name: flagsmith
+values:
+  - ../values/experimentation.yaml
+tests:
+  - it: renders nothing when experimentation is disabled
+    set:
+      experimentation.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders nothing when the PDB is disabled
+    set:
+      pdb.ingestion.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: never blocks a node drain
+    asserts:
+      - equal:
+          path: spec.maxUnavailable
+          value: 1
+      - notExists:
+          path: spec.minAvailable
+      - equal:
+          path: spec.unhealthyPodEvictionPolicy
+          value: AlwaysAllow
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/component"]
+          value: ingestion
