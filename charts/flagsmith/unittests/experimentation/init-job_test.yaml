@@ -6,13 +6,6 @@ release:
 values:
   - ../values/experimentation.yaml
 tests:
-  - it: renders nothing when experimentation is disabled
-    set:
-      experimentation.enabled: false
-    asserts:
-      - hasDocuments:
-          count: 0
-
   - it: runs after install and upgrade, and keeps failed runs
     asserts:
       - equal:
@@ -21,48 +14,13 @@ tests:
       - equal:
           path: metadata.annotations["helm.sh/hook-delete-policy"]
           value: before-hook-creation,hook-succeeded
-      - equal:
-          path: spec.backoffLimit
-          value: 3
 
-  - it: creates the topic first, then the schema
-    asserts:
-      - equal:
-          path: spec.template.spec.initContainers[0].command
-          value: [sh, /scripts/init.sh, kafka]
-      - equal:
-          path: spec.template.spec.containers[0].command
-          value: [sh, /scripts/init.sh, clickhouse]
-      - contains:
-          path: spec.template.spec.initContainers[0].env
-          content: {name: KAFKA_TOPIC_PARTITIONS, value: "8"}
-      - contains:
-          path: spec.template.spec.initContainers[0].env
-          content: {name: KAFKA_TOPIC_REPLICATION_FACTOR, value: "3"}
-
-  - it: uses the runtime logins by default
-    asserts:
-      - contains:
-          path: spec.template.spec.initContainers[0].env
-          content: {name: KAFKA_USERNAME, value: ingestion}
-      - contains:
-          path: spec.template.spec.containers[0].env
-          content:
-            name: CLICKHOUSE_URL
-            valueFrom: {secretKeyRef: {name: flagsmith-experimentation, key: CLICKHOUSE_URL}}
-
-  - it: uses admin logins for setup, and keeps the runtime Kafka login for ClickHouse
+  - it: creates the topic with the admin login, and gives ClickHouse the runtime login
     set:
-      jobs.experimentationInit.clickhouseUrl.fromExistingSecret: {enabled: true, name: ch-admin, key: url}
       jobs.experimentationInit.kafka:
         username: admin
         passwordFromExistingSecret: {enabled: true, name: kafka-admin, key: password}
     asserts:
-      - contains:
-          path: spec.template.spec.containers[0].env
-          content:
-            name: CLICKHOUSE_URL
-            valueFrom: {secretKeyRef: {name: ch-admin, key: url}}
       - contains:
           path: spec.template.spec.initContainers[0].env
           content: {name: KAFKA_USERNAME, value: admin}

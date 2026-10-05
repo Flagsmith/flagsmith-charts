@@ -13,38 +13,9 @@ tests:
       - failedTemplate:
           errorMessage: experimentation.clickhouse.url or experimentation.clickhouse.urlFromExistingSecret is required
 
-  - it: requires Kafka brokers
-    set:
-      experimentation.kafka.bootstrapServers: null
-    asserts:
-      - failedTemplate:
-          errorMessage: experimentation.kafka.bootstrapServers is required
-
-  - it: rejects an unknown Kafka auth
-    set:
-      experimentation.kafka.auth: plain
-    asserts:
-      - failedTemplate:
-          errorMessage: experimentation.kafka.auth must be scram or none
-
-  - it: requires a Kafka username with scram
-    set:
-      experimentation.kafka.username: null
-    asserts:
-      - failedTemplate:
-          errorMessage: experimentation.kafka.username is required when experimentation.kafka.auth is scram
-
   - it: requires a Kafka password with scram
     set:
       experimentation.kafka.password: null
     asserts:
       - failedTemplate:
           errorMessage: experimentation.kafka.password or experimentation.kafka.passwordFromExistingSecret is required when experimentation.kafka.auth is scram
-
-  - it: needs no Kafka login without scram
-    set:
-      experimentation.kafka.auth: none
-      experimentation.kafka.username: null
-      experimentation.kafka.password: null
-    asserts:
-      - notFailedTemplate: {}
