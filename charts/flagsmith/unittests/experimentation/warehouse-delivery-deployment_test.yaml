@@ -52,3 +52,10 @@ tests:
       - equal:
           path: spec.template.spec.securityContext.runAsNonRoot
           value: true
+
+  - it: restarts the pod when a delivery loop hangs
+    template: experimentation/warehouse-delivery-deployment.yaml
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].livenessProbe.exec.command[2]
+          pattern: /tmp/heartbeat-events /tmp/heartbeat-retry

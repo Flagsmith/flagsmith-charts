@@ -742,7 +742,7 @@ experimentation:
     enabled: false
     image:
       repository: flagsmith/warehouse-delivery
-      tag: "0.2"
+      tag: "0.3"
       imagePullPolicy: ""
       imagePullSecrets: []
     resources:
@@ -767,6 +767,18 @@ experimentation:
       capabilities:
         drop:
           - ALL
+    livenessProbe:
+      exec:
+        command:
+          - sh
+          - -c
+          - >-
+            for f in /tmp/heartbeat-events /tmp/heartbeat-retry; do
+            [ $(( $(date +%s) - $(stat -c %Y "$f") )) -lt 900 ] || exit 1;
+            done
+      initialDelaySeconds: 30
+      periodSeconds: 30
+      failureThreshold: 2
     # Tuning (BATCH_MAX_RECORDS, MAX_RETRIES, RETRY_DELAY_MS, DELIVERY_CONCURRENCY) goes here.
     extraEnv: {}
     extraEnvFromSecret: {}

@@ -81,6 +81,7 @@ spec:
                   name: {{ $ref.secretName }}
                   key: {{ $ref.secretKey }}
             {{- end }}
+          {{- include "flagsmith.probe" (dict "name" "livenessProbe" "probe" $delivery.livenessProbe) | nindent 10 }}
           securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" $delivery "key" "securityContext") | nindent 12 }}
           resources:
             {{- toYaml $delivery.resources | nindent 12 }}
