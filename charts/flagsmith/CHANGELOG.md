@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.84.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.83.0...flagsmith-0.84.0) (2026-10-06)
+
+
+### Features
+
+* **api:** Add a startup probe so a slow start does not restart the API ([#580](https://github.com/Flagsmith/flagsmith-charts/issues/580)) ([a439845](https://github.com/Flagsmith/flagsmith-charts/commit/a4398452c2077ce239d2608d57e64b677151cd87))
+
+
+### Dependency Updates
+
+* bump Flagsmith from 2.260.0 to 2.273.0 ([#595](https://github.com/Flagsmith/flagsmith-charts/issues/595)) ([75c95a9](https://github.com/Flagsmith/flagsmith-charts/commit/75c95a9bac2b37cb518eaefd8307310ba8b19d29))
+* bump Flagsmith from 2.273.0 to 2.280.0 ([#605](https://github.com/Flagsmith/flagsmith-charts/issues/605)) ([8e897ce](https://github.com/Flagsmith/flagsmith-charts/commit/8e897ce6fd14fdc315d83b819ec97a115805cf11))
+
 ## [0.83.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.82.0...flagsmith-0.83.0) (2026-07-31)
 
 
