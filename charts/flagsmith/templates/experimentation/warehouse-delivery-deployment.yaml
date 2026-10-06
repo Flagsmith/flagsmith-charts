@@ -64,7 +64,7 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  {{- include "flagsmith.api.databaseUrlSecretRef" . | nindent 18 }}
+                  {{- include "flagsmith.experimentation.databaseUrlSecretRef" (dict "root" . "existingSecret" $delivery.databaseUrlFromExistingSecret) | nindent 18 }}
             # The API encrypts warehouse logins with this key, so delivery must use the same one.
             - name: WAREHOUSE_CREDENTIALS_SECRET
               valueFrom:

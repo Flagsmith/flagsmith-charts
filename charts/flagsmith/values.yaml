@@ -740,6 +740,12 @@ experimentation:
   # Sends events for environments with their own warehouse
   warehouseDelivery:
     enabled: false
+    # Optional database user that can only read experimentation_delivery_connections and write
+    # experimentation_warehousedeliverystatus. Defaults to the API's DATABASE_URL.
+    databaseUrlFromExistingSecret:
+      enabled: false
+      name: null
+      key: null
     image:
       repository: flagsmith/warehouse-delivery
       tag: "0.3"
