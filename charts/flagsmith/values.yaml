@@ -674,12 +674,6 @@ experimentation:
       key: null
 
   ingestion:
-    # Defaults to the API's DATABASE_URL.
-    databaseUrl:
-      fromExistingSecret:
-        enabled: false
-        name: null
-        key: null
     image:
       repository: flagsmith/events-ingestion-api
       tag: ""

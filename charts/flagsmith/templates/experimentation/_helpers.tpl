@@ -37,17 +37,6 @@ key: KAFKA_PASSWORD
 {{- end -}}
 {{- end -}}
 
-{{- define "flagsmith.experimentation.ingestionDatabaseUrlSecretRef" -}}
-{{- with .Values.experimentation.ingestion.databaseUrl.fromExistingSecret -}}
-{{- if .enabled -}}
-name: {{ required "experimentation.ingestion.databaseUrl.fromExistingSecret.name is required" .name }}
-key: {{ required "experimentation.ingestion.databaseUrl.fromExistingSecret.key is required" .key }}
-{{- else -}}
-{{- include "flagsmith.api.databaseUrlSecretRef" $ -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}
-
 {{/*
 Kafka env for a container.
 Usage: (dict "root" . "username" <string> "passwordRef" <secretKeyRef body>)
