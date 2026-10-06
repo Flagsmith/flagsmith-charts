@@ -107,13 +107,18 @@ ENGINE = MergeTree
 PARTITION BY toYYYYMMDD(timestamp)
 ORDER BY (environment_key, event, feature_name, timestamp, identifier);
 
-CREATE TABLE IF NOT EXISTS events_queue (raw String)
+-- Recreated on every run, so changed Kafka settings (brokers, topic, login) take effect.
+-- The consumer group keeps its offsets in Kafka, so reading resumes where it stopped.
+DROP TABLE IF EXISTS events_mv;
+DROP TABLE IF EXISTS events_queue;
+
+CREATE TABLE events_queue (raw String)
 ENGINE = Kafka
 SETTINGS $settings;
 
 -- Rows that fail to parse, or would break a constraint on events, are skipped
 -- so that one bad message cannot stop the consumer.
-CREATE MATERIALIZED VIEW IF NOT EXISTS events_mv TO events AS
+CREATE MATERIALIZED VIEW events_mv TO events AS
 SELECT
     JSONExtractString(raw, 'environment_key') AS environment_key,
     JSONExtractString(raw, 'event') AS event,

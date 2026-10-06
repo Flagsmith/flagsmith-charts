@@ -10,4 +10,10 @@ tests:
     asserts:
       - matchRegex:
           path: data["init.sh"]
-          pattern: CREATE MATERIALIZED VIEW IF NOT EXISTS events_mv
+          pattern: CREATE MATERIALIZED VIEW events_mv
+
+  - it: recreates the Kafka table so changed Kafka settings reach ClickHouse
+    asserts:
+      - matchRegex:
+          path: data["init.sh"]
+          pattern: DROP TABLE IF EXISTS events_queue
