@@ -1,0 +1,37 @@
+suite: API deployment
+templates:
+  - deployment-api.yaml
+  - secrets-api.yaml # deployment-api.yaml includes it for a checksum
+release:
+  name: flagsmith
+tests:
+  - it: reads DATABASE_URL from the chart secret by default
+    template: deployment-api.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: flagsmith
+                key: DATABASE_URL
+
+  - it: reads DATABASE_URL from an existing secret when configured
+    set:
+      databaseExternal:
+        enabled: true
+        urlFromExistingSecret:
+          enabled: true
+          name: my-db
+          key: url
+    template: deployment-api.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: my-db
+                key: url

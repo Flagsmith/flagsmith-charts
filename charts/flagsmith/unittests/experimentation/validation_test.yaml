@@ -1,0 +1,21 @@
+suite: experimentation validation
+templates:
+  - experimentation/secret.yaml
+release:
+  name: flagsmith
+values:
+  - ../values/experimentation.yaml
+tests:
+  - it: requires a ClickHouse URL
+    set:
+      experimentation.clickhouse.url: null
+    asserts:
+      - failedTemplate:
+          errorMessage: experimentation.clickhouse.url or experimentation.clickhouse.urlFromExistingSecret is required
+
+  - it: requires a Kafka password with scram
+    set:
+      experimentation.kafka.password: null
+    asserts:
+      - failedTemplate:
+          errorMessage: experimentation.kafka.password or experimentation.kafka.passwordFromExistingSecret is required when experimentation.kafka.auth is scram

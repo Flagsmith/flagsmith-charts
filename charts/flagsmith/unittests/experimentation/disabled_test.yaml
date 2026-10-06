@@ -1,0 +1,23 @@
+suite: experimentation disabled
+templates:
+  - experimentation/secret.yaml
+  - experimentation/ingestion-deployment.yaml
+  - experimentation/ingestion-service.yaml
+  - experimentation/ingestion-hpa.yaml
+  - experimentation/ingestion-pdb.yaml
+  - experimentation/ingestion-ingress.yaml
+  - experimentation/ingestion-httproute.yaml
+  - experimentation/ingestion-route.yaml
+  - experimentation/init-configmap.yaml
+  - experimentation/init-job.yaml
+release:
+  name: flagsmith
+tests:
+  - it: renders nothing by default
+    set:
+      ingress.ingestion.enabled: true
+      gateway.ingestion.enabled: true
+      openshift.route.ingestion.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 0

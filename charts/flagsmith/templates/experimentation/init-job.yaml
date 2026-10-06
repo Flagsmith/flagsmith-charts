@@ -1,0 +1,77 @@
+{{- if .Values.experimentation.enabled }}
+{{- $job := .Values.jobs.experimentationInit }}
+{{- $kafka := .Values.experimentation.kafka }}
+{{- $runtimePasswordRef := include "flagsmith.experimentation.kafkaPasswordSecretRef" . }}
+{{- $adminPasswordRef := $runtimePasswordRef }}
+{{- with $job.kafka.passwordFromExistingSecret }}
+{{- if .enabled }}
+{{- $adminPasswordRef = printf "name: %s\nkey: %s" (required "jobs.experimentationInit.kafka.passwordFromExistingSecret.name is required" .name) (required "jobs.experimentationInit.kafka.passwordFromExistingSecret.key is required" .key) }}
+{{- end }}
+{{- end }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: {{ include "flagsmith.namespace" . }}
+  name: {{ include "flagsmith.fullname" . }}-experimentation-init
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+    {{- with $job.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: job-experimentation-init
+spec:
+  backoffLimit: {{ $job.backoffLimit }}
+  ttlSecondsAfterFinished: {{ $job.ttlSecondsAfterFinished }}
+  template:
+    metadata:
+      labels:
+        {{- include "flagsmith.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: job-experimentation-init
+    spec:
+      restartPolicy: Never
+      {{- with $job.imagePullSecrets | default .Values.global.image.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" $job "key" "podSecurityContext") | nindent 8 }}
+      volumes:
+        - name: scripts
+          configMap:
+            name: {{ include "flagsmith.fullname" . }}-experimentation-init
+      initContainers:
+        - name: kafka-topic
+          image: {{ $job.kafkaImage }}
+          command: [sh, /scripts/init.sh, kafka]
+          env:
+            {{- include "flagsmith.experimentation.kafkaEnv" (dict "root" . "username" ($job.kafka.username | default $kafka.username) "passwordRef" $adminPasswordRef) | nindent 12 }}
+            - name: KAFKA_TOPIC_PARTITIONS
+              value: {{ $kafka.topicPartitions | quote }}
+            - name: KAFKA_TOPIC_REPLICATION_FACTOR
+              value: {{ $kafka.topicReplicationFactor | quote }}
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+          securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" $job "key" "securityContext") | nindent 12 }}
+          resources:
+            {{- toYaml $job.resources | nindent 12 }}
+      containers:
+        - name: clickhouse-schema
+          image: {{ $job.clickhouseImage }}
+          command: [sh, /scripts/init.sh, clickhouse]
+          env:
+            - name: CLICKHOUSE_URL
+              valueFrom:
+                secretKeyRef:
+                  {{- include "flagsmith.experimentation.adminClickhouseUrlSecretRef" . | nindent 18 }}
+            # The runtime login: ClickHouse keeps it in events_queue to consume the topic.
+            {{- include "flagsmith.experimentation.kafkaEnv" (dict "root" . "username" $kafka.username "passwordRef" $runtimePasswordRef) | nindent 12 }}
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+          securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" $job "key" "securityContext") | nindent 12 }}
+          resources:
+            {{- toYaml $job.resources | nindent 12 }}
+{{- end }}

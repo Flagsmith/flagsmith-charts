@@ -1,0 +1,11 @@
+experimentation:
+  enabled: true
+  clickhouse:
+    url: clickhouses://flagsmith:ch-secret@clickhouse.example.com:9440/flagsmith_exp
+  kafka:
+    bootstrapServers: kafka-1:9096,kafka-2:9096
+    username: ingestion
+    password: kafka-secret
+  ingestion:
+    image:
+      tag: "1.0.0"

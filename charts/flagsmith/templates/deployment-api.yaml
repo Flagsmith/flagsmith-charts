@@ -27,6 +27,9 @@ spec:
         {{- if and .Values.influxdbExternal.enabled (not .Values.influxdbExternal.tokenFromExistingSecret.enabled) }}
         checksum/secrets-influxdb-external: {{ include (print $.Template.BasePath "/secrets-influxdb-external.yaml") . | sha256sum }}
         {{- end }}
+        {{- if .Values.experimentation.enabled }}
+        checksum/secrets-experimentation: {{ include (print $.Template.BasePath "/experimentation/secret.yaml") . | sha256sum }}
+        {{- end }}
 {{- if .Values.api.podAnnotations }}
 {{ toYaml .Values.api.podAnnotations | nindent 8 }}
 {{- end }}

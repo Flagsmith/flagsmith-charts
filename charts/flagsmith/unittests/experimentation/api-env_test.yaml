@@ -1,0 +1,36 @@
+suite: experimentation API env
+templates:
+  - deployment-api.yaml
+  - secrets-api.yaml # deployment-api.yaml includes it for a checksum
+  - experimentation/secret.yaml # and this one
+release:
+  name: flagsmith
+values:
+  - ../values/experimentation.yaml
+tests:
+  - it: gives the API the ClickHouse URL
+    template: deployment-api.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: EXPERIMENTATION_CLICKHOUSE_URL
+            valueFrom: {secretKeyRef: {name: flagsmith-experimentation, key: CLICKHOUSE_URL}}
+
+  - it: restarts the API when the experimentation secret changes
+    template: deployment-api.yaml
+    asserts:
+      - exists:
+          path: spec.template.metadata.annotations["checksum/secrets-experimentation"]
+
+  - it: leaves the API unchanged when experimentation is disabled
+    template: deployment-api.yaml
+    set:
+      experimentation.enabled: false
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].env
+          any: true
+          content: {name: EXPERIMENTATION_CLICKHOUSE_URL}
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/secrets-experimentation"]
