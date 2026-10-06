@@ -742,7 +742,7 @@ experimentation:
     enabled: false
     image:
       repository: flagsmith/warehouse-delivery
-      tag: ""
+      tag: "0.2"
       imagePullPolicy: ""
       imagePullSecrets: []
     resources:
