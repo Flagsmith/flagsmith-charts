@@ -1,0 +1,87 @@
+{{- if and .Values.experimentation.enabled .Values.experimentation.warehouseDelivery.enabled }}
+{{- $delivery := .Values.experimentation.warehouseDelivery }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ include "flagsmith.namespace" . }}
+  name: {{ include "flagsmith.fullname" . }}-warehouse-delivery
+  {{- with include "flagsmith.annotations" .Values.common }}
+  annotations:
+    {{- . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: warehouse-delivery
+spec:
+  selector:
+    matchLabels:
+      {{- include "flagsmith.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: warehouse-delivery
+  template:
+    metadata:
+      annotations:
+        checksum/secrets-experimentation: {{ include (print $.Template.BasePath "/experimentation/secret.yaml") . | sha256sum }}
+        {{- with $delivery.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- with .Values.common.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- include "flagsmith.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: warehouse-delivery
+        {{- with $delivery.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with $delivery.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $delivery.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $delivery.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $delivery.image.imagePullSecrets | default .Values.global.image.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" $delivery "key" "podSecurityContext") | nindent 8 }}
+      containers:
+        - name: warehouse-delivery
+          image: {{ printf "%s:%s" $delivery.image.repository (required "experimentation.warehouseDelivery.image.tag is required" $delivery.image.tag) }}
+          imagePullPolicy: {{ $delivery.image.imagePullPolicy | default .Values.global.image.imagePullPolicy }}
+          env:
+            {{- include "flagsmith.experimentation.kafkaEnv" (dict "root" . "username" .Values.experimentation.kafka.username "passwordRef" (include "flagsmith.experimentation.kafkaPasswordSecretRef" .)) | nindent 12 }}
+            - name: EXTERNAL_WAREHOUSE_TOPIC
+              value: {{ include "flagsmith.experimentation.externalTopic" . | quote }}
+            - name: EXTERNAL_WAREHOUSE_RETRY_TOPIC
+              value: {{ include "flagsmith.experimentation.retryTopic" . | quote }}
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  {{- include "flagsmith.api.databaseUrlSecretRef" . | nindent 18 }}
+            # The API encrypts warehouse logins with this key, so delivery must use the same one.
+            - name: WAREHOUSE_CREDENTIALS_SECRET
+              valueFrom:
+                secretKeyRef:
+                  {{- include "flagsmith.api.secretKeySecretRef" . | nindent 18 }}
+            {{- range $name, $value := $delivery.extraEnv }}
+            - name: {{ $name }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- range $name, $ref := $delivery.extraEnvFromSecret }}
+            - name: {{ $name }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $ref.secretName }}
+                  key: {{ $ref.secretKey }}
+            {{- end }}
+          securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" $delivery "key" "securityContext") | nindent 12 }}
+          resources:
+            {{- toYaml $delivery.resources | nindent 12 }}
+{{- end }}

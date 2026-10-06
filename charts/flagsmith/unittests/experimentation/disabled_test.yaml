@@ -10,6 +10,9 @@ templates:
   - experimentation/ingestion-route.yaml
   - experimentation/init-configmap.yaml
   - experimentation/init-job.yaml
+  - experimentation/warehouse-delivery-deployment.yaml
+  - experimentation/warehouse-delivery-hpa.yaml
+  - experimentation/warehouse-delivery-pdb.yaml
 release:
   name: flagsmith
 tests:
@@ -18,6 +21,7 @@ tests:
       ingress.ingestion.enabled: true
       gateway.ingestion.enabled: true
       openshift.route.ingestion.enabled: true
+      experimentation.warehouseDelivery.enabled: true
     asserts:
       - hasDocuments:
           count: 0
