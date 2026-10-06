@@ -537,6 +537,11 @@ hpa:
     minReplicas: 1
     maxReplicas: 5
     targetCPUUtilization: 70
+  warehouseDelivery:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilization: 70
 
 pdb:
   api:
@@ -550,6 +555,10 @@ pdb:
     # maxUnavailable: 1
     # unhealthyPodEvictionPolicy: "AlwaysAllow"
   ingestion:
+    enabled: true
+    maxUnavailable: 1
+    unhealthyPodEvictionPolicy: AlwaysAllow
+  warehouseDelivery:
     enabled: true
     maxUnavailable: 1
     unhealthyPodEvictionPolicy: AlwaysAllow
@@ -726,6 +735,40 @@ experimentation:
     #   NAME:
     #     secretName: my-secret
     #     secretKey: my-key
+    extraEnvFromSecret: {}
+
+  # Sends events for environments with their own warehouse
+  warehouseDelivery:
+    enabled: false
+    image:
+      repository: flagsmith/warehouse-delivery
+      tag: ""
+      imagePullPolicy: ""
+      imagePullSecrets: []
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        memory: 1Gi
+    podAnnotations: {}
+    podLabels: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    podSecurityContext: {}
+    defaultPodSecurityContext:
+      enabled: true
+      runAsNonRoot: true
+    securityContext: {}
+    defaultSecurityContext:
+      enabled: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+    # Tuning (BATCH_MAX_RECORDS, MAX_RETRIES, RETRY_DELAY_MS, DELIVERY_CONCURRENCY) goes here.
+    extraEnv: {}
     extraEnvFromSecret: {}
 
 jobs:

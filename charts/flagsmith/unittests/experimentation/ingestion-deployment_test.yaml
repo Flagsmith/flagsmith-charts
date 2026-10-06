@@ -42,3 +42,12 @@ tests:
           content:
             name: DATABASE_URL
             valueFrom: {secretKeyRef: {name: ingestion-db, key: url}}
+
+  - it: sends events for own warehouses to warehouse delivery when it is on
+    template: experimentation/ingestion-deployment.yaml
+    set:
+      experimentation.warehouseDelivery.enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: {name: KAFKA_EXTERNAL_TOPIC, value: external_warehouse_events}
