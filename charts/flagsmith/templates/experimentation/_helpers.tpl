@@ -103,3 +103,21 @@ Usage: (dict "root" . "username" <string> "passwordRef" <secretKeyRef body>)
       {{- include "flagsmith.experimentation.clickhouseUrlSecretRef" . | nindent 6 }}
 {{- end }}
 {{- end -}}
+
+{{- define "flagsmith.experimentation.externalTopic" -}}
+external_warehouse_events
+{{- end -}}
+
+{{- define "flagsmith.experimentation.retryTopic" -}}
+external_warehouse_events_retry
+{{- end -}}
+
+{{/*
+Space-separated topics the init job creates.
+*/}}
+{{- define "flagsmith.experimentation.topics" -}}
+{{- .Values.experimentation.kafka.topic -}}
+{{- if .Values.experimentation.warehouseDelivery.enabled -}}
+{{- printf " %s %s" (include "flagsmith.experimentation.externalTopic" .) (include "flagsmith.experimentation.retryTopic" .) -}}
+{{- end -}}
+{{- end -}}

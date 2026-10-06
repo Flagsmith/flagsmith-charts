@@ -38,3 +38,19 @@ tests:
       - equal:
           path: spec.template.spec.securityContext.runAsNonRoot
           value: true
+
+  - it: creates one topic without warehouse delivery
+    asserts:
+      - contains:
+          path: spec.template.spec.initContainers[0].env
+          content: {name: KAFKA_TOPICS, value: flagsmith_warehouse_events}
+
+  - it: also creates the delivery topics with warehouse delivery
+    set:
+      experimentation.warehouseDelivery.enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.initContainers[0].env
+          content:
+            name: KAFKA_TOPICS
+            value: flagsmith_warehouse_events external_warehouse_events external_warehouse_events_retry
