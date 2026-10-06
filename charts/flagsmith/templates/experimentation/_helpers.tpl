@@ -38,6 +38,21 @@ key: KAFKA_PASSWORD
 {{- end -}}
 
 {{/*
+DATABASE_URL secretKeyRef body for a component: its own user if configured, else the API's.
+Usage: (dict "root" . "existingSecret" <component>.databaseUrlFromExistingSecret)
+*/}}
+{{- define "flagsmith.experimentation.databaseUrlSecretRef" -}}
+{{- with .existingSecret -}}
+{{- if .enabled -}}
+name: {{ required "databaseUrlFromExistingSecret.name is required" .name }}
+key: {{ required "databaseUrlFromExistingSecret.key is required" .key }}
+{{- else -}}
+{{- include "flagsmith.api.databaseUrlSecretRef" $.root -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Kafka env for a container.
 Usage: (dict "root" . "username" <string> "passwordRef" <secretKeyRef body>)
 */}}

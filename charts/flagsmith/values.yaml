@@ -674,6 +674,12 @@ experimentation:
       key: null
 
   ingestion:
+    # Optional database user that can only read the experimentation_environment_keys view.
+    # Defaults to the API's DATABASE_URL.
+    databaseUrlFromExistingSecret:
+      enabled: false
+      name: null
+      key: null
     image:
       repository: flagsmith/events-ingestion-api
       tag: "0.5"

@@ -66,7 +66,7 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  {{- include "flagsmith.api.databaseUrlSecretRef" . | nindent 18 }}
+                  {{- include "flagsmith.experimentation.databaseUrlSecretRef" (dict "root" . "existingSecret" $ingestion.databaseUrlFromExistingSecret) | nindent 18 }}
             {{- range $name, $value := $ingestion.extraEnv }}
             - name: {{ $name }}
               value: {{ $value | quote }}

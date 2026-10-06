@@ -31,3 +31,14 @@ tests:
       - equal:
           path: spec.template.spec.securityContext.runAsNonRoot
           value: true
+
+  - it: reads keys with its own database user when configured
+    template: experimentation/ingestion-deployment.yaml
+    set:
+      experimentation.ingestion.databaseUrlFromExistingSecret: {enabled: true, name: ingestion-db, key: url}
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: DATABASE_URL
+            valueFrom: {secretKeyRef: {name: ingestion-db, key: url}}
