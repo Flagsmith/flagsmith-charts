@@ -59,3 +59,14 @@ tests:
       - matchRegex:
           path: spec.template.spec.containers[0].livenessProbe.exec.command[2]
           pattern: /tmp/heartbeat-events /tmp/heartbeat-retry
+
+  - it: uses its own database user when configured
+    template: experimentation/warehouse-delivery-deployment.yaml
+    set:
+      experimentation.warehouseDelivery.databaseUrlFromExistingSecret: {enabled: true, name: delivery-db, key: url}
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: DATABASE_URL
+            valueFrom: {secretKeyRef: {name: delivery-db, key: url}}
