@@ -61,9 +61,11 @@ init_kafka() {
       echo "sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username=$(jaas_quote "$KAFKA_USERNAME") password=$(jaas_quote "$KAFKA_PASSWORD");"
     } >"$config"
   fi
-  /opt/kafka/bin/kafka-topics.sh --bootstrap-server "$KAFKA_BOOTSTRAP_SERVERS" \
-    --command-config "$config" --create --if-not-exists --topic "$KAFKA_TOPIC" \
-    --partitions "$KAFKA_TOPIC_PARTITIONS" --replication-factor "$KAFKA_TOPIC_REPLICATION_FACTOR"
+  for topic in $KAFKA_TOPICS; do
+    /opt/kafka/bin/kafka-topics.sh --bootstrap-server "$KAFKA_BOOTSTRAP_SERVERS" \
+      --command-config "$config" --create --if-not-exists --topic "$topic" \
+      --partitions "$KAFKA_TOPIC_PARTITIONS" --replication-factor "$KAFKA_TOPIC_REPLICATION_FACTOR"
+  done
 }
 
 init_clickhouse() {

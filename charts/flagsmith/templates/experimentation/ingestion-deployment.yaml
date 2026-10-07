@@ -60,9 +60,13 @@ spec:
               containerPort: 8080
           env:
             {{- include "flagsmith.experimentation.kafkaEnv" (dict "root" . "username" .Values.experimentation.kafka.username "passwordRef" (include "flagsmith.experimentation.kafkaPasswordSecretRef" .)) | nindent 12 }}
-            # One topic: events for every environment go to the chart's ClickHouse.
+            # Without warehouse delivery, events for every environment go to the chart's ClickHouse.
             - name: KAFKA_EXTERNAL_TOPIC
+              {{- if .Values.experimentation.warehouseDelivery.enabled }}
+              value: {{ include "flagsmith.experimentation.externalTopic" . | quote }}
+              {{- else }}
               value: {{ .Values.experimentation.kafka.topic | quote }}
+              {{- end }}
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:

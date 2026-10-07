@@ -553,6 +553,10 @@ pdb:
     enabled: true
     maxUnavailable: 1
     unhealthyPodEvictionPolicy: AlwaysAllow
+  warehouseDelivery:
+    enabled: true
+    maxUnavailable: 1
+    unhealthyPodEvictionPolicy: AlwaysAllow
 
 ingress:
   frontend:
@@ -726,6 +730,60 @@ experimentation:
     #   NAME:
     #     secretName: my-secret
     #     secretKey: my-key
+    extraEnvFromSecret: {}
+
+  # Sends events for environments with their own warehouse
+  warehouseDelivery:
+    enabled: false
+    # replicaCount <= experimentation.kafka.topicPartitions or you will have idle pods
+    replicaCount: 1
+    # Optional database user that can only read experimentation_delivery_connections and write
+    # experimentation_warehousedeliverystatus. Defaults to the API's DATABASE_URL.
+    databaseUrlFromExistingSecret:
+      enabled: false
+      name: null
+      key: null
+    image:
+      repository: flagsmith/warehouse-delivery
+      tag: "0.3"
+      imagePullPolicy: ""
+      imagePullSecrets: []
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        memory: 1Gi
+    podAnnotations: {}
+    podLabels: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    podSecurityContext: {}
+    defaultPodSecurityContext:
+      enabled: true
+      runAsNonRoot: true
+    securityContext: {}
+    defaultSecurityContext:
+      enabled: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+    livenessProbe:
+      exec:
+        command:
+          - sh
+          - -c
+          - >-
+            for f in /tmp/heartbeat-events /tmp/heartbeat-retry; do
+            [ $(( $(date +%s) - $(stat -c %Y "$f") )) -lt 900 ] || exit 1;
+            done
+      initialDelaySeconds: 30
+      periodSeconds: 30
+      failureThreshold: 2
+    # Tuning (BATCH_MAX_RECORDS, MAX_RETRIES, RETRY_DELAY_MS, DELIVERY_CONCURRENCY) goes here.
+    extraEnv: {}
     extraEnvFromSecret: {}
 
 jobs:
