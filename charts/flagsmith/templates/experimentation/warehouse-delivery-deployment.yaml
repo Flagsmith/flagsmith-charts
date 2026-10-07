@@ -17,6 +17,7 @@ spec:
     matchLabels:
       {{- include "flagsmith.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: warehouse-delivery
+  {{- include "flagsmith.replicaCount" $delivery.replicaCount | nindent 2 }}
   template:
     metadata:
       annotations:

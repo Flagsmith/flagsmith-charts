@@ -537,11 +537,6 @@ hpa:
     minReplicas: 1
     maxReplicas: 5
     targetCPUUtilization: 70
-  warehouseDelivery:
-    enabled: true
-    minReplicas: 1
-    maxReplicas: 5
-    targetCPUUtilization: 70
 
 pdb:
   api:
@@ -740,6 +735,8 @@ experimentation:
   # Sends events for environments with their own warehouse
   warehouseDelivery:
     enabled: false
+    # replicaCount <= experimentation.kafka.topicPartitions or you will have idle pods
+    replicaCount: 1
     # Optional database user that can only read experimentation_delivery_connections and write
     # experimentation_warehousedeliverystatus. Defaults to the API's DATABASE_URL.
     databaseUrlFromExistingSecret:

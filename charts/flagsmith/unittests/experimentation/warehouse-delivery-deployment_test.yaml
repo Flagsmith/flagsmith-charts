@@ -18,12 +18,6 @@ tests:
       - hasDocuments:
           count: 0
 
-  - it: leaves the replica count to the HPA
-    template: experimentation/warehouse-delivery-deployment.yaml
-    asserts:
-      - notExists:
-          path: spec.replicas
-
   - it: reads both topics, the API database and the API secret key
     template: experimentation/warehouse-delivery-deployment.yaml
     set:
