@@ -11,7 +11,6 @@ templates:
   - experimentation/init-configmap.yaml
   - experimentation/init-job.yaml
   - experimentation/warehouse-delivery-deployment.yaml
-  - experimentation/warehouse-delivery-hpa.yaml
   - experimentation/warehouse-delivery-pdb.yaml
 release:
   name: flagsmith
