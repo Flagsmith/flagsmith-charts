@@ -1,0 +1,36 @@
+{{- if and .Values.experimentation.enabled .Values.gateway.ingestion.enabled }}
+{{- $fullName := include "flagsmith.fullname" . }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  namespace: {{ include "flagsmith.namespace" . }}
+  name: {{ $fullName }}-ingestion
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ingestion
+  {{- with include "flagsmith.annotations" (dict "customAnnotations" .Values.gateway.annotations "commonValues" .Values.common) }}
+  annotations:
+    {{- . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- with .Values.gateway.ingestion.parentRefs }}
+  parentRefs:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.gateway.ingestion.hostnames }}
+  hostnames:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  rules:
+  {{- if .Values.gateway.ingestion.rules }}
+    {{- toYaml .Values.gateway.ingestion.rules | nindent 4 }}
+  {{- else }}
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: {{ $fullName }}-ingestion
+          port: {{ .Values.service.ingestion.port }}
+  {{- end }}
+{{- end }}

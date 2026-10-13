@@ -1,0 +1,19 @@
+suite: experimentation init configmap
+templates:
+  - experimentation/init-configmap.yaml
+release:
+  name: flagsmith
+values:
+  - ../values/experimentation.yaml
+tests:
+  - it: ships the init script
+    asserts:
+      - matchRegex:
+          path: data["init.sh"]
+          pattern: CREATE MATERIALIZED VIEW events_mv
+
+  - it: recreates the Kafka table so changed Kafka settings reach ClickHouse
+    asserts:
+      - matchRegex:
+          path: data["init.sh"]
+          pattern: DROP TABLE IF EXISTS events_queue

@@ -309,6 +309,19 @@ Database URL for application
 {{- end }}
 
 {{/*
+secretKeyRef body for the application DATABASE_URL.
+*/}}
+{{- define "flagsmith.api.databaseUrlSecretRef" -}}
+{{- if and .Values.databaseExternal.enabled .Values.databaseExternal.urlFromExistingSecret.enabled -}}
+name: {{ .Values.databaseExternal.urlFromExistingSecret.name }}
+key: {{ .Values.databaseExternal.urlFromExistingSecret.key }}
+{{- else -}}
+name: {{ include "flagsmith.fullname" . }}
+key: DATABASE_URL
+{{- end -}}
+{{- end -}}
+
+{{/*
 Curl Test container
 */}}
 {{- define "flagsmith.tests.curlContainer" -}}

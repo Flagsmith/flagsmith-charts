@@ -1,0 +1,13 @@
+{{- if .Values.experimentation.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ include "flagsmith.namespace" . }}
+  name: {{ include "flagsmith.fullname" . }}-experimentation-init
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: job-experimentation-init
+data:
+  init.sh: |-
+    {{- .Files.Get "files/experimentation/init.sh" | nindent 4 }}
+{{- end }}

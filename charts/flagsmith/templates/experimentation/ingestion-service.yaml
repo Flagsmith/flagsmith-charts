@@ -1,0 +1,24 @@
+{{- if .Values.experimentation.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ include "flagsmith.namespace" . }}
+  name: {{ include "flagsmith.fullname" . }}-ingestion
+  {{- with include "flagsmith.annotations" (dict "customAnnotations" .Values.service.ingestion.annotations "commonValues" .Values.common) }}
+  annotations:
+    {{- . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ingestion
+spec:
+  type: {{ .Values.service.ingestion.type }}
+  ports:
+    - port: {{ .Values.service.ingestion.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "flagsmith.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: ingestion
+{{- end }}

@@ -1,0 +1,16 @@
+suite: ingestion PDB
+templates:
+  - experimentation/ingestion-pdb.yaml
+release:
+  name: flagsmith
+values:
+  - ../values/experimentation.yaml
+tests:
+  - it: never blocks a node drain
+    asserts:
+      - equal:
+          path: spec.maxUnavailable
+          value: 1
+      - equal:
+          path: spec.unhealthyPodEvictionPolicy
+          value: AlwaysAllow

@@ -1,0 +1,44 @@
+suite: ingestion deployment
+templates:
+  - experimentation/ingestion-deployment.yaml
+  - experimentation/secret.yaml # included for a checksum
+release:
+  name: flagsmith
+values:
+  - ../values/experimentation.yaml
+tests:
+  - it: leaves the replica count to the HPA
+    template: experimentation/ingestion-deployment.yaml
+    asserts:
+      - notExists:
+          path: spec.replicas
+
+  - it: sends every event to the one topic, and reads keys from the API database
+    template: experimentation/ingestion-deployment.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: {name: KAFKA_EXTERNAL_TOPIC, value: flagsmith_warehouse_events}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: DATABASE_URL
+            valueFrom: {secretKeyRef: {name: flagsmith, key: DATABASE_URL}}
+
+  - it: runs as non-root
+    template: experimentation/ingestion-deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.runAsNonRoot
+          value: true
+
+  - it: reads keys with its own database user when configured
+    template: experimentation/ingestion-deployment.yaml
+    set:
+      experimentation.ingestion.databaseUrlFromExistingSecret: {enabled: true, name: ingestion-db, key: url}
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: DATABASE_URL
+            valueFrom: {secretKeyRef: {name: ingestion-db, key: url}}

@@ -7,13 +7,7 @@
 - name: DATABASE_URL
   valueFrom:
     secretKeyRef:
-      {{- if and .Values.databaseExternal.enabled .Values.databaseExternal.urlFromExistingSecret.enabled }}
-      name: {{ .Values.databaseExternal.urlFromExistingSecret.name }}
-      key: {{ .Values.databaseExternal.urlFromExistingSecret.key }}
-      {{- else }}
-      name: {{ template "flagsmith.fullname" . }}
-      key: DATABASE_URL
-      {{- end }}
+      {{- include "flagsmith.api.databaseUrlSecretRef" . | nindent 6 }}
 - name: DJANGO_SECRET_KEY
   valueFrom:
     secretKeyRef:
@@ -104,3 +98,4 @@
 - name: SSE_SERVER_BASE_URL
   value: http://{{ include "flagsmith.fullname" . }}-sse.{{ include "flagsmith.namespace" . }}:{{ .Values.service.sse.port }}
 {{- end }}
+{{- include "flagsmith.experimentation.apiEnv" . }}

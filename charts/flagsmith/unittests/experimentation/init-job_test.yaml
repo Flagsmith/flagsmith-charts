@@ -1,0 +1,40 @@
+suite: experimentation init job
+templates:
+  - experimentation/init-job.yaml
+release:
+  name: flagsmith
+values:
+  - ../values/experimentation.yaml
+tests:
+  - it: runs after install and upgrade, and keeps failed runs
+    asserts:
+      - equal:
+          path: metadata.annotations["helm.sh/hook"]
+          value: post-install,post-upgrade
+      - equal:
+          path: metadata.annotations["helm.sh/hook-delete-policy"]
+          value: before-hook-creation,hook-succeeded
+
+  - it: creates the topic with the admin login, and gives ClickHouse the runtime login
+    set:
+      jobs.experimentationInit.kafka:
+        username: admin
+        passwordFromExistingSecret: {enabled: true, name: kafka-admin, key: password}
+    asserts:
+      - contains:
+          path: spec.template.spec.initContainers[0].env
+          content: {name: KAFKA_USERNAME, value: admin}
+      - contains:
+          path: spec.template.spec.initContainers[0].env
+          content:
+            name: KAFKA_PASSWORD
+            valueFrom: {secretKeyRef: {name: kafka-admin, key: password}}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: {name: KAFKA_USERNAME, value: ingestion}
+
+  - it: runs as non-root
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.runAsNonRoot
+          value: true

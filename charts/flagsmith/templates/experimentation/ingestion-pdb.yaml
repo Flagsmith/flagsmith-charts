@@ -1,0 +1,19 @@
+{{- if and .Values.experimentation.enabled .Values.pdb.ingestion.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  namespace: {{ include "flagsmith.namespace" . }}
+  name: {{ include "flagsmith.fullname" . }}-ingestion
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ingestion
+spec:
+  selector:
+    matchLabels:
+      {{- include "flagsmith.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: ingestion
+  maxUnavailable: {{ .Values.pdb.ingestion.maxUnavailable }}
+  {{- with .Values.pdb.ingestion.unhealthyPodEvictionPolicy }}
+  unhealthyPodEvictionPolicy: {{ . }}
+  {{- end }}
+{{- end }}
