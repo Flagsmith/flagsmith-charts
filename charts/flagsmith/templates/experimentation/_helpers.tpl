@@ -97,6 +97,8 @@ Usage: (dict "root" . "username" <string> "passwordRef" <secretKeyRef body>)
 
 {{- define "flagsmith.experimentation.apiEnv" -}}
 {{- if .Values.experimentation.enabled }}
+- name: EXPERIMENTATION_ENABLED
+  value: "true"
 - name: EXPERIMENTATION_CLICKHOUSE_URL
   valueFrom:
     secretKeyRef:

@@ -13,6 +13,9 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].env
+          content: {name: EXPERIMENTATION_ENABLED, value: "true"}
+      - contains:
+          path: spec.template.spec.containers[0].env
           content:
             name: EXPERIMENTATION_CLICKHOUSE_URL
             valueFrom: {secretKeyRef: {name: flagsmith-experimentation, key: CLICKHOUSE_URL}}
