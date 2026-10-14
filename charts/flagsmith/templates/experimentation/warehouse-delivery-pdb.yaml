@@ -1,0 +1,19 @@
+{{- if and .Values.experimentation.enabled .Values.experimentation.warehouseDelivery.enabled .Values.pdb.warehouseDelivery.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  namespace: {{ include "flagsmith.namespace" . }}
+  name: {{ include "flagsmith.fullname" . }}-warehouse-delivery
+  labels:
+    {{- include "flagsmith.labels" . | nindent 4 }}
+    app.kubernetes.io/component: warehouse-delivery
+spec:
+  selector:
+    matchLabels:
+      {{- include "flagsmith.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: warehouse-delivery
+  maxUnavailable: {{ .Values.pdb.warehouseDelivery.maxUnavailable }}
+  {{- with .Values.pdb.warehouseDelivery.unhealthyPodEvictionPolicy }}
+  unhealthyPodEvictionPolicy: {{ . }}
+  {{- end }}
+{{- end }}

@@ -51,6 +51,8 @@ spec:
               value: {{ $kafka.topicPartitions | quote }}
             - name: KAFKA_TOPIC_REPLICATION_FACTOR
               value: {{ $kafka.topicReplicationFactor | quote }}
+            - name: KAFKA_TOPICS
+              value: {{ include "flagsmith.experimentation.topics" . | quote }}
           volumeMounts:
             - name: scripts
               mountPath: /scripts

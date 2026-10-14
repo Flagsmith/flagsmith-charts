@@ -1,0 +1,66 @@
+suite: warehouse delivery deployment
+templates:
+  - experimentation/warehouse-delivery-deployment.yaml
+  - experimentation/secret.yaml # included for a checksum
+release:
+  name: flagsmith
+values:
+  - ../values/experimentation.yaml
+set:
+  experimentation.warehouseDelivery.enabled: true
+  experimentation.warehouseDelivery.image.tag: "1.0.0"
+tests:
+  - it: renders nothing when warehouse delivery is off
+    template: experimentation/warehouse-delivery-deployment.yaml
+    set:
+      experimentation.warehouseDelivery.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: reads both topics, the API database and the API secret key
+    template: experimentation/warehouse-delivery-deployment.yaml
+    set:
+      api.secretKeyFromExistingSecret: {enabled: true, name: django, key: secret-key}
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: {name: EXTERNAL_WAREHOUSE_TOPIC, value: external_warehouse_events}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: {name: EXTERNAL_WAREHOUSE_RETRY_TOPIC, value: external_warehouse_events_retry}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: DATABASE_URL
+            valueFrom: {secretKeyRef: {name: flagsmith, key: DATABASE_URL}}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: WAREHOUSE_CREDENTIALS_SECRET
+            valueFrom: {secretKeyRef: {name: django, key: secret-key}}
+
+  - it: runs as non-root
+    template: experimentation/warehouse-delivery-deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.runAsNonRoot
+          value: true
+
+  - it: restarts the pod when a delivery loop hangs
+    template: experimentation/warehouse-delivery-deployment.yaml
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].livenessProbe.exec.command[2]
+          pattern: /tmp/heartbeat-events /tmp/heartbeat-retry
+
+  - it: uses its own database user when configured
+    template: experimentation/warehouse-delivery-deployment.yaml
+    set:
+      experimentation.warehouseDelivery.databaseUrlFromExistingSecret: {enabled: true, name: delivery-db, key: url}
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: DATABASE_URL
+            valueFrom: {secretKeyRef: {name: delivery-db, key: url}}
