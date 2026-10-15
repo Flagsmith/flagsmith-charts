@@ -6,18 +6,7 @@ release:
   name: flagsmith
 values:
   - ../values/experimentation.yaml
-set:
-  experimentation.warehouseDelivery.enabled: true
-  experimentation.warehouseDelivery.image.tag: "1.0.0"
 tests:
-  - it: renders nothing when warehouse delivery is off
-    template: experimentation/warehouse-delivery-deployment.yaml
-    set:
-      experimentation.warehouseDelivery.enabled: false
-    asserts:
-      - hasDocuments:
-          count: 0
-
   - it: reads both topics, the API database and the API secret key
     template: experimentation/warehouse-delivery-deployment.yaml
     set:
@@ -25,10 +14,10 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].env
-          content: {name: EXTERNAL_WAREHOUSE_TOPIC, value: external_warehouse_events}
+          content: {name: EXTERNAL_WAREHOUSE_TOPIC, value: flagsmith_warehouse_events}
       - contains:
           path: spec.template.spec.containers[0].env
-          content: {name: EXTERNAL_WAREHOUSE_RETRY_TOPIC, value: external_warehouse_events_retry}
+          content: {name: EXTERNAL_WAREHOUSE_RETRY_TOPIC, value: flagsmith_warehouse_events_retry}
       - contains:
           path: spec.template.spec.containers[0].env
           content:

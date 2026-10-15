@@ -650,23 +650,16 @@ gateway:
     # rules defines routing rules. If empty, defaults to "/" routing to the ingestion service.
     rules: []
 
-# Experimentation: event ingestion for SDKs, plus the Kafka topic and the
-# ClickHouse schema the API reads results from. Bring your own Kafka and
-# ClickHouse. See https://docs.flagsmith.com/deployment-self-hosting/hosting-guides/kubernetes-openshift
+# Experimentation: event ingestion for SDKs, and warehouse delivery from Kafka to
+# each environment's own warehouse, connected in the dashboard. Bring your own Kafka. See https://docs.flagsmith.com/deployment-self-hosting/hosting-guides/kubernetes-openshift
 experimentation:
   enabled: false
-
-  clickhouse:
-    # e.g. clickhouses://user:password@host:9440/flagsmith_exp
-    url: null
-    urlFromExistingSecret:
-      enabled: false
-      name: null
-      key: null
 
   kafka:
     bootstrapServers: null # host1:9096,host2:9096
     topic: flagsmith_warehouse_events
+    # Events warehouse delivery could not insert, tried again later.
+    retryTopic: flagsmith_warehouse_events_retry
     topicPartitions: 8
     topicReplicationFactor: 3
     auth: scram # scram | none
@@ -732,9 +725,8 @@ experimentation:
     #     secretKey: my-key
     extraEnvFromSecret: {}
 
-  # Sends events for environments with their own warehouse
+  # Inserts events from Kafka into each environment's warehouse.
   warehouseDelivery:
-    enabled: false
     # replicaCount <= experimentation.kafka.topicPartitions or you will have idle pods
     replicaCount: 1
     # Optional database user that can only read experimentation_delivery_connections and write
@@ -745,7 +737,7 @@ experimentation:
       key: null
     image:
       repository: flagsmith/warehouse-delivery
-      tag: "0.3"
+      tag: "0.4.0"
       imagePullPolicy: ""
       imagePullSecrets: []
     resources:
@@ -856,13 +848,11 @@ jobs:
     ttlSecondsAfterFinished: 3600
     backoffLimit: 3
     kafkaImage: apache/kafka:4.3.1
-    clickhouseImage: clickhouse/clickhouse-server:26.8
     imagePullSecrets: []
     resources: {}
     podSecurityContext: {}
     defaultPodSecurityContext:
       enabled: true
-      # The ClickHouse image runs as root by default; both steps work as any user.
       runAsNonRoot: true
       runAsUser: 10001
       runAsGroup: 10001
@@ -873,12 +863,6 @@ jobs:
       capabilities:
         drop:
           - ALL
-    # Optional admin DSN for creating the schema. Defaults to experimentation.clickhouse.
-    clickhouseUrl:
-      fromExistingSecret:
-        enabled: false
-        name: null
-        key: null
     # Optional admin login for creating the topic. Defaults to experimentation.kafka.
     kafka:
       username: null

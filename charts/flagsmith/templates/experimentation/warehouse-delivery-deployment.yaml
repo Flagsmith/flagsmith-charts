@@ -1,4 +1,4 @@
-{{- if and .Values.experimentation.enabled .Values.experimentation.warehouseDelivery.enabled }}
+{{- if .Values.experimentation.enabled }}
 {{- $delivery := .Values.experimentation.warehouseDelivery }}
 apiVersion: apps/v1
 kind: Deployment
@@ -59,9 +59,9 @@ spec:
           env:
             {{- include "flagsmith.experimentation.kafkaEnv" (dict "root" . "username" .Values.experimentation.kafka.username "passwordRef" (include "flagsmith.experimentation.kafkaPasswordSecretRef" .)) | nindent 12 }}
             - name: EXTERNAL_WAREHOUSE_TOPIC
-              value: {{ include "flagsmith.experimentation.externalTopic" . | quote }}
+              value: {{ .Values.experimentation.kafka.topic | quote }}
             - name: EXTERNAL_WAREHOUSE_RETRY_TOPIC
-              value: {{ include "flagsmith.experimentation.retryTopic" . | quote }}
+              value: {{ .Values.experimentation.kafka.retryTopic | quote }}
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:

@@ -6,13 +6,6 @@ release:
 values:
   - ../values/experimentation.yaml
 tests:
-  - it: requires a ClickHouse URL
-    set:
-      experimentation.clickhouse.url: null
-    asserts:
-      - failedTemplate:
-          errorMessage: experimentation.clickhouse.url or experimentation.clickhouse.urlFromExistingSecret is required
-
   - it: requires a Kafka password with scram
     set:
       experimentation.kafka.password: null

@@ -10,10 +10,10 @@ tests:
     asserts:
       - matchRegex:
           path: data["init.sh"]
-          pattern: CREATE MATERIALIZED VIEW events_mv
+          pattern: kafka-topics.sh --bootstrap-server
 
-  - it: recreates the Kafka table so changed Kafka settings reach ClickHouse
+  - it: leaves ClickHouse alone; warehouse delivery inserts into each environment's warehouse
     asserts:
-      - matchRegex:
+      - notMatchRegex:
           path: data["init.sh"]
-          pattern: DROP TABLE IF EXISTS events_queue
+          pattern: clickhouse

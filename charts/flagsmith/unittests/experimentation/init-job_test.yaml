@@ -15,23 +15,20 @@ tests:
           path: metadata.annotations["helm.sh/hook-delete-policy"]
           value: before-hook-creation,hook-succeeded
 
-  - it: creates the topic with the admin login, and gives ClickHouse the runtime login
+  - it: creates the topics with the admin login
     set:
       jobs.experimentationInit.kafka:
         username: admin
         passwordFromExistingSecret: {enabled: true, name: kafka-admin, key: password}
     asserts:
       - contains:
-          path: spec.template.spec.initContainers[0].env
+          path: spec.template.spec.containers[0].env
           content: {name: KAFKA_USERNAME, value: admin}
       - contains:
-          path: spec.template.spec.initContainers[0].env
+          path: spec.template.spec.containers[0].env
           content:
             name: KAFKA_PASSWORD
             valueFrom: {secretKeyRef: {name: kafka-admin, key: password}}
-      - contains:
-          path: spec.template.spec.containers[0].env
-          content: {name: KAFKA_USERNAME, value: ingestion}
 
   - it: runs as non-root
     asserts:
@@ -39,18 +36,10 @@ tests:
           path: spec.template.spec.securityContext.runAsNonRoot
           value: true
 
-  - it: creates one topic without warehouse delivery
-    asserts:
-      - contains:
-          path: spec.template.spec.initContainers[0].env
-          content: {name: KAFKA_TOPICS, value: flagsmith_warehouse_events}
-
-  - it: also creates the delivery topics with warehouse delivery
+  - it: creates the events and retry topics
     set:
-      experimentation.warehouseDelivery.enabled: true
+      experimentation.kafka: {topic: events, retryTopic: events-retry}
     asserts:
       - contains:
-          path: spec.template.spec.initContainers[0].env
-          content:
-            name: KAFKA_TOPICS
-            value: flagsmith_warehouse_events external_warehouse_events external_warehouse_events_retry
+          path: spec.template.spec.containers[0].env
+          content: {name: KAFKA_TOPICS, value: events events-retry}
