@@ -2,29 +2,6 @@
 {{- printf "%s-experimentation" (include "flagsmith.fullname" .) -}}
 {{- end -}}
 
-{{- define "flagsmith.experimentation.clickhouseUrlSecretRef" -}}
-{{- with .Values.experimentation.clickhouse.urlFromExistingSecret -}}
-{{- if .enabled -}}
-name: {{ required "experimentation.clickhouse.urlFromExistingSecret.name is required" .name }}
-key: {{ required "experimentation.clickhouse.urlFromExistingSecret.key is required" .key }}
-{{- else -}}
-name: {{ include "flagsmith.experimentation.secretName" $ }}
-key: CLICKHOUSE_URL
-{{- end -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "flagsmith.experimentation.adminClickhouseUrlSecretRef" -}}
-{{- with .Values.jobs.experimentationInit.clickhouseUrl.fromExistingSecret -}}
-{{- if .enabled -}}
-name: {{ required "jobs.experimentationInit.clickhouseUrl.fromExistingSecret.name is required" .name }}
-key: {{ required "jobs.experimentationInit.clickhouseUrl.fromExistingSecret.key is required" .key }}
-{{- else -}}
-{{- include "flagsmith.experimentation.clickhouseUrlSecretRef" $ -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}
-
 {{- define "flagsmith.experimentation.kafkaPasswordSecretRef" -}}
 {{- with .Values.experimentation.kafka.passwordFromExistingSecret -}}
 {{- if .enabled -}}
@@ -76,9 +53,6 @@ Usage: (dict "root" . "username" <string> "passwordRef" <secretKeyRef body>)
 
 {{- define "flagsmith.experimentation.validate" -}}
 {{- $e := .Values.experimentation -}}
-{{- if not (or $e.clickhouse.url $e.clickhouse.urlFromExistingSecret.enabled) -}}
-{{- fail "experimentation.clickhouse.url or experimentation.clickhouse.urlFromExistingSecret is required" -}}
-{{- end -}}
 {{- if not $e.kafka.bootstrapServers -}}
 {{- fail "experimentation.kafka.bootstrapServers is required" -}}
 {{- end -}}
@@ -99,27 +73,12 @@ Usage: (dict "root" . "username" <string> "passwordRef" <secretKeyRef body>)
 {{- if .Values.experimentation.enabled }}
 - name: EXPERIMENTATION_ENABLED
   value: "true"
-- name: EXPERIMENTATION_CLICKHOUSE_URL
-  valueFrom:
-    secretKeyRef:
-      {{- include "flagsmith.experimentation.clickhouseUrlSecretRef" . | nindent 6 }}
 {{- end }}
-{{- end -}}
-
-{{- define "flagsmith.experimentation.externalTopic" -}}
-external_warehouse_events
-{{- end -}}
-
-{{- define "flagsmith.experimentation.retryTopic" -}}
-external_warehouse_events_retry
 {{- end -}}
 
 {{/*
 Space-separated topics the init job creates.
 */}}
 {{- define "flagsmith.experimentation.topics" -}}
-{{- .Values.experimentation.kafka.topic -}}
-{{- if .Values.experimentation.warehouseDelivery.enabled -}}
-{{- printf " %s %s" (include "flagsmith.experimentation.externalTopic" .) (include "flagsmith.experimentation.retryTopic" .) -}}
-{{- end -}}
+{{- printf "%s %s" .Values.experimentation.kafka.topic .Values.experimentation.kafka.retryTopic -}}
 {{- end -}}

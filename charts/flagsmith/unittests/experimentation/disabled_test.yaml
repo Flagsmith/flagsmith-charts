@@ -20,7 +20,6 @@ tests:
       ingress.ingestion.enabled: true
       gateway.ingestion.enabled: true
       openshift.route.ingestion.enabled: true
-      experimentation.warehouseDelivery.enabled: true
     asserts:
       - hasDocuments:
           count: 0
