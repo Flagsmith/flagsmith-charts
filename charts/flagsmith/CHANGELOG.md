@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.84.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.83.0...flagsmith-0.84.0) (2026-10-15)
+
+
+### Features
+
+* **api:** Add a startup probe so a slow start does not restart the API ([#580](https://github.com/Flagsmith/flagsmith-charts/issues/580)) ([a439845](https://github.com/Flagsmith/flagsmith-charts/commit/a4398452c2077ce239d2608d57e64b677151cd87))
+* **experimentation:** Add Experimentation chart ([#606](https://github.com/Flagsmith/flagsmith-charts/issues/606)) ([4b17290](https://github.com/Flagsmith/flagsmith-charts/commit/4b1729088b41ea4ed26779a4e5612e7a33f51f35))
+* **Experimentation:** Add warehouse delivery service ([#607](https://github.com/Flagsmith/flagsmith-charts/issues/607)) ([b3dcea2](https://github.com/Flagsmith/flagsmith-charts/commit/b3dcea270d41598a8d9ba2a4f6c38663ac19575d))
+* **experimentation:** Deliver events with warehouse delivery instead of the ClickHouse Kafka engine ([#613](https://github.com/Flagsmith/flagsmith-charts/issues/613)) ([b9d127e](https://github.com/Flagsmith/flagsmith-charts/commit/b9d127ed1374fa31a615e7b81551734ac18a9225))
+
+
+### Dependency Updates
+
+* bump Flagsmith from 2.260.0 to 2.273.0 ([#595](https://github.com/Flagsmith/flagsmith-charts/issues/595)) ([75c95a9](https://github.com/Flagsmith/flagsmith-charts/commit/75c95a9bac2b37cb518eaefd8307310ba8b19d29))
+* bump Flagsmith from 2.273.0 to 2.280.0 ([#605](https://github.com/Flagsmith/flagsmith-charts/issues/605)) ([8e897ce](https://github.com/Flagsmith/flagsmith-charts/commit/8e897ce6fd14fdc315d83b819ec97a115805cf11))
+* bump Flagsmith from 2.280.0 to 2.285.0 ([#614](https://github.com/Flagsmith/flagsmith-charts/issues/614)) ([4a73fc9](https://github.com/Flagsmith/flagsmith-charts/commit/4a73fc9a486a7788d35e4946d5dfe4ff811f4e09))
+
 ## [0.83.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.82.0...flagsmith-0.83.0) (2026-07-31)
 
 
