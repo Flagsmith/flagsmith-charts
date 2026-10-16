@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.85.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.84.0...flagsmith-0.85.0) (2026-10-16)
+
+
+### Features
+
+* **experimentation:** Give warehouse credentials a secret of their own ([#616](https://github.com/Flagsmith/flagsmith-charts/issues/616)) ([f5a7fd0](https://github.com/Flagsmith/flagsmith-charts/commit/f5a7fd0c6cbcc26fc93bd0e6799c8618f2a8a23e))
+
+
+### Dependency Updates
+
+* bump Flagsmith from 2.285.0 to 2.286.0 ([#615](https://github.com/Flagsmith/flagsmith-charts/issues/615)) ([3cd9d6e](https://github.com/Flagsmith/flagsmith-charts/commit/3cd9d6e50160927c482c2439ca4337fb76dd7352))
+
 ## [0.84.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.83.0...flagsmith-0.84.0) (2026-10-15)
 
 
