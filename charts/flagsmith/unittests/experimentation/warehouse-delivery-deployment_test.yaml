@@ -62,3 +62,22 @@ tests:
           content:
             name: DATABASE_URL
             valueFrom: {secretKeyRef: {name: delivery-db, key: url}}
+
+  - it: defaults the key of an existing warehouse credentials secret
+    template: experimentation/warehouse-delivery-deployment.yaml
+    set:
+      experimentation.warehouseCredentialsSecretFromExistingSecret: {enabled: true, name: wcs}
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: WAREHOUSE_CREDENTIALS_SECRET
+            valueFrom: {secretKeyRef: {name: wcs, key: warehouse-credentials-secret}}
+
+  - it: requires a name for an existing warehouse credentials secret
+    template: experimentation/warehouse-delivery-deployment.yaml
+    set:
+      experimentation.warehouseCredentialsSecretFromExistingSecret: {enabled: true}
+    asserts:
+      - failedTemplate:
+          errorMessage: experimentation.warehouseCredentialsSecretFromExistingSecret.name is required

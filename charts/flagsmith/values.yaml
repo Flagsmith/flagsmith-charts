@@ -657,6 +657,7 @@ experimentation:
 
   # Secret the API encrypts warehouse connection credentials with, and warehouse delivery decrypts them with.
   # If none is provided, the secret-init Job generates one. Changing it makes saved credentials unreadable.
+  # key defaults to warehouse-credentials-secret.
   warehouseCredentialsSecretFromExistingSecret:
     enabled: false
     name: ""

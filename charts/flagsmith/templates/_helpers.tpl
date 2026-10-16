@@ -367,7 +367,7 @@ Name of the secret-init Job and its RBAC: kept as the Django secret name when it
 {{- if not .Values.api.secretKeyFromExistingSecret.enabled -}}
 {{- include "flagsmith.api.secretKeySecretName" . -}}
 {{- else -}}
-{{- include "flagsmith.experimentation.warehouseCredentialsSecretName" . -}}
+{{- printf "%s-secret-init" (include "flagsmith.fullname" . | trunc 51 | trimSuffix "-") -}}
 {{- end -}}
 {{- end -}}
 
