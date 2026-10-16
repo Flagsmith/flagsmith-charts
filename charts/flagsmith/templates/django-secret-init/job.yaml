@@ -29,6 +29,8 @@ spec:
             - /bin/sh
             - -c
             - |
+              # Fail the Job, and so the install or upgrade, if a secret cannot be created.
+              set -eu
               NAMESPACE={{ include "flagsmith.namespace" . }}
               # Creates the secret with a random 64-character hex value, unless it already exists.
               ensure_secret() {
@@ -38,9 +40,8 @@ spec:
                   return
                 fi
                 echo "Secret $1 not found. Creating..."
-                kubectl create secret generic "$1" -n "$NAMESPACE" \
-                  --from-literal="$2=$(openssl rand -hex 32)" \
-                  --dry-run=client -o yaml | kubectl apply -f -
+                value=$(openssl rand -hex 32)
+                kubectl create secret generic "$1" -n "$NAMESPACE" --from-literal="$2=$value"
                 echo "Secret $1 created."
               }
               {{- if not .Values.api.secretKeyFromExistingSecret.enabled }}
