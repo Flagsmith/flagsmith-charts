@@ -66,11 +66,11 @@ spec:
               valueFrom:
                 secretKeyRef:
                   {{- include "flagsmith.experimentation.databaseUrlSecretRef" (dict "root" . "existingSecret" $delivery.databaseUrlFromExistingSecret) | nindent 18 }}
-            # The API encrypts warehouse logins with this key, so delivery must use the same one.
+            # The API encrypts warehouse logins with this secret, so delivery must use the same one.
             - name: WAREHOUSE_CREDENTIALS_SECRET
               valueFrom:
                 secretKeyRef:
-                  {{- include "flagsmith.api.secretKeySecretRef" . | nindent 18 }}
+                  {{- include "flagsmith.experimentation.warehouseCredentialsSecretRef" . | nindent 18 }}
             {{- range $name, $value := $delivery.extraEnv }}
             - name: {{ $name }}
               value: {{ $value | quote }}

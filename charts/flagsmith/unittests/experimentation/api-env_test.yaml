@@ -3,6 +3,7 @@ templates:
   - deployment-api.yaml
   - secrets-api.yaml # deployment-api.yaml includes it for a checksum
   - experimentation/secret.yaml # and this one
+  - deployment-task-processor.yaml
 release:
   name: flagsmith
 values:
@@ -14,6 +15,11 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].env
           content: {name: EXPERIMENTATION_ENABLED, value: "true"}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: WAREHOUSE_CREDENTIALS_SECRET
+            valueFrom: {secretKeyRef: {name: flagsmith-warehouse-credentials-secret, key: warehouse-credentials-secret}}
 
   - it: restarts the API when the experimentation secret changes
     template: deployment-api.yaml
@@ -32,3 +38,14 @@ tests:
           content: {name: EXPERIMENTATION_ENABLED}
       - notExists:
           path: spec.template.metadata.annotations["checksum/secrets-experimentation"]
+
+  - it: gives the task processor the same warehouse credentials secret
+    template: deployment-task-processor.yaml
+    set:
+      taskProcessor.enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: WAREHOUSE_CREDENTIALS_SECRET
+            valueFrom: {secretKeyRef: {name: flagsmith-warehouse-credentials-secret, key: warehouse-credentials-secret}}
