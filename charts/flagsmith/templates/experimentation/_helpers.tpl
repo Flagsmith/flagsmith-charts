@@ -69,10 +69,42 @@ Usage: (dict "root" . "username" <string> "passwordRef" <secretKeyRef body>)
 {{- end -}}
 {{- end -}}
 
+{{/*
+The secret the API encrypts warehouse connection credentials with, and warehouse delivery decrypts them with.
+Kept apart from the Django secret key, which is not shared with other services.
+*/}}
+{{- define "flagsmith.experimentation.warehouseCredentialsSecretName" -}}
+{{- with .Values.experimentation.warehouseCredentialsSecretFromExistingSecret -}}
+{{- if .enabled -}}
+{{- required "experimentation.warehouseCredentialsSecretFromExistingSecret.name is required" .name -}}
+{{- else -}}
+{{- printf "%s-warehouse-credentials-secret" (include "flagsmith.fullname" $) -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "flagsmith.experimentation.warehouseCredentialsSecretRef" -}}
+name: {{ include "flagsmith.experimentation.warehouseCredentialsSecretName" . }}
+key: {{ default "warehouse-credentials-secret" .Values.experimentation.warehouseCredentialsSecretFromExistingSecret.key }}
+{{- end -}}
+
+{{/*
+True when the chart must generate the warehouse credentials secret.
+*/}}
+{{- define "flagsmith.experimentation.generateWarehouseCredentialsSecret" -}}
+{{- if and .Values.experimentation.enabled (not .Values.experimentation.warehouseCredentialsSecretFromExistingSecret.enabled) -}}
+true
+{{- end -}}
+{{- end -}}
+
 {{- define "flagsmith.experimentation.apiEnv" -}}
 {{- if .Values.experimentation.enabled }}
 - name: EXPERIMENTATION_ENABLED
   value: "true"
+- name: WAREHOUSE_CREDENTIALS_SECRET
+  valueFrom:
+    secretKeyRef:
+      {{- include "flagsmith.experimentation.warehouseCredentialsSecretRef" . | nindent 6 }}
 {{- end }}
 {{- end -}}
 
