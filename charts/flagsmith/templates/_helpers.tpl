@@ -360,6 +360,23 @@ replicas: {{ . }}
 {{- end }}
 {{- end }}
 
+{{/*
+Name of the secret-init Job and its RBAC: kept as the Django secret name when it generates that secret.
+*/}}
+{{- define "flagsmith.secretInit.name" -}}
+{{- if not .Values.api.secretKeyFromExistingSecret.enabled -}}
+{{- include "flagsmith.api.secretKeySecretName" . -}}
+{{- else -}}
+{{- include "flagsmith.experimentation.warehouseCredentialsSecretName" . -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "flagsmith.secretInit.enabled" -}}
+{{- if or (not .Values.api.secretKeyFromExistingSecret.enabled) (include "flagsmith.experimentation.generateWarehouseCredentialsSecret" .) -}}
+true
+{{- end -}}
+{{- end -}}
+
 {{- define "flagsmith.api.secretKeySecretRef" -}}
 name: {{ include "flagsmith.api.secretKeySecretName" . }}
 key: {{ default "django-secret-key" .Values.api.secretKeyFromExistingSecret.key }}

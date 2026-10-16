@@ -7,10 +7,8 @@ release:
 values:
   - ../values/experimentation.yaml
 tests:
-  - it: reads both topics, the API database and the API secret key
+  - it: reads both topics, the API database and the warehouse credentials secret
     template: experimentation/warehouse-delivery-deployment.yaml
-    set:
-      api.secretKeyFromExistingSecret: {enabled: true, name: django, key: secret-key}
     asserts:
       - contains:
           path: spec.template.spec.containers[0].env
@@ -27,7 +25,18 @@ tests:
           path: spec.template.spec.containers[0].env
           content:
             name: WAREHOUSE_CREDENTIALS_SECRET
-            valueFrom: {secretKeyRef: {name: django, key: secret-key}}
+            valueFrom: {secretKeyRef: {name: flagsmith-warehouse-credentials-secret, key: warehouse-credentials-secret}}
+
+  - it: reads the warehouse credentials secret from an existing secret
+    template: experimentation/warehouse-delivery-deployment.yaml
+    set:
+      experimentation.warehouseCredentialsSecretFromExistingSecret: {enabled: true, name: wcs, key: secret}
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: WAREHOUSE_CREDENTIALS_SECRET
+            valueFrom: {secretKeyRef: {name: wcs, key: secret}}
 
   - it: runs as non-root
     template: experimentation/warehouse-delivery-deployment.yaml

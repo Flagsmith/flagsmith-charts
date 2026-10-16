@@ -1,8 +1,8 @@
-{{- if not .Values.api.secretKeyFromExistingSecret.enabled -}}
+{{- if include "flagsmith.secretInit.enabled" . -}}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ include "flagsmith.api.secretKeySecretName" . }}
+  name: {{ include "flagsmith.secretInit.name" . }}
   namespace: {{ include "flagsmith.namespace" . | quote }}
   labels:
     {{- include "flagsmith.labels" . | nindent 4 }}
@@ -17,7 +17,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ include "flagsmith.api.secretKeySecretName" . }}
+  name: {{ include "flagsmith.secretInit.name" . }}
   namespace: {{ include "flagsmith.namespace" . | quote }}
   labels:
     {{- include "flagsmith.labels" . | nindent 4 }}
@@ -27,9 +27,9 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ include "flagsmith.api.secretKeySecretName" . }}
+  name: {{ include "flagsmith.secretInit.name" . }}
 subjects:
 - kind: ServiceAccount
-  name: {{ include "flagsmith.api.secretKeySecretName" . }}
+  name: {{ include "flagsmith.secretInit.name" . }}
   namespace: {{ include "flagsmith.namespace" . | quote }}
 {{- end }}
