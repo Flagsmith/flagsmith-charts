@@ -68,6 +68,8 @@ spec:
         args: ["migrate"]
         {{- end }}
         securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" .Values.jobs.migrateDb "key" "securityContext") | nindent 10 }}
+        resources:
+{{ toYaml .Values.jobs.migrateDb.resources | indent 10 }}
         env:
         {{- include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
         {{- if and .Values.jobs.migrateDb.databaseUrl .Values.jobs.migrateDb.databaseUrl.fromExistingSecret.enabled }}
