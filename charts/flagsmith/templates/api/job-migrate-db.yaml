@@ -69,7 +69,7 @@ spec:
         {{- end }}
         securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" .Values.jobs.migrateDb "key" "securityContext") | nindent 10 }}
         env:
-        {{- include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
+        {{- include (print $.Template.BasePath "/api/_environment.yaml") . | nindent 8 }}
         {{- if and .Values.jobs.migrateDb.databaseUrl .Values.jobs.migrateDb.databaseUrl.fromExistingSecret.enabled }}
         {{- /* Override DATABASE_URL with migration-specific credentials */}}
         - name: DATABASE_URL
