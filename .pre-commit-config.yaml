@@ -7,3 +7,8 @@ repos:
     rev: v2.7.1
     hooks:
       - id: prettier
+  - repo: https://github.com/losisin/helm-values-schema-json
+    rev: v2.6.0
+    hooks:
+      - id: helm-schema
+        args: ['--values', 'charts/flagsmith/values.yaml']
