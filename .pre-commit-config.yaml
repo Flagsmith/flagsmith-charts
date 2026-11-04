@@ -11,4 +11,4 @@ repos:
     rev: v2.6.0
     hooks:
       - id: helm-schema
-        args: ['--values', 'charts/flagsmith/values.yaml']
+        args: ['--values', 'charts/flagsmith/values.yaml', '--output', 'charts/flagsmith/values.schema.json']
