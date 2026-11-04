@@ -19,12 +19,12 @@ serviceMonitor:
   annotations: {}
   labels: []
   targetLabels: []
-  jobLabel: ''
+  jobLabel: ""
   interval: 15s
-  scheme: ''
+  scheme: ""
   tlsConfig: {}
   scrapeTimeout: 10s
-  path: '/metrics/'
+  path: "/metrics/"
   honorLabels: true
   metricRelabelings: []
   relabelings: []
@@ -37,8 +37,8 @@ prometheus:
 api:
   image:
     repository: docker.flagsmith.com/flagsmith/flagsmith-api
-    tag: '' # defaults to .Chart.AppVersion
-    imagePullPolicy: ''
+    tag: "" # defaults to .Chart.AppVersion
+    imagePullPolicy: ""
     imagePullSecrets: []
   # Note that if setting this to false, need to set
   # api.image.repository to flagsmith/flagsmith (or some other
@@ -83,7 +83,7 @@ api:
   lifecycle:
     preStop:
       exec:
-        command: ['sleep', '20']
+        command: ["sleep", "20"]
   # Pod termination grace period in seconds. Must exceed the LB's
   # connection-draining timeout so the kubelet does not SIGKILL
   # the pod while the LB is still draining in-flight connections.
@@ -168,8 +168,8 @@ api:
   # See https://docs.djangoproject.com/en/4.2/topics/signing/
   secretKeyFromExistingSecret:
     enabled: false
-    name: ''
-    key: ''
+    name: ""
+    key: ""
 
 frontend:
   # Set this to `false` to switch off the frontend (deployment,
@@ -179,8 +179,8 @@ frontend:
   enabled: true
   image:
     repository: docker.flagsmith.com/flagsmith/flagsmith-frontend
-    tag: '' # defaults to .Chart.AppVersion
-    imagePullPolicy: ''
+    tag: "" # defaults to .Chart.AppVersion
+    imagePullPolicy: ""
     imagePullSecrets: []
   replicacount: 1
   deploymentStrategy: null # @schema type:[object, null]
@@ -194,7 +194,7 @@ frontend:
   apiProxy:
     enabled: true
   extraEnv:
-    FLAGSMITH_API_URL: 'https://flagsmith.local/api/v1'
+    FLAGSMITH_API_URL: "https://flagsmith.local/api/v1"
   extraEnvFromSecret: {}
   nodeSelector: {}
   tolerations: []
@@ -241,9 +241,9 @@ taskProcessor:
     # all values here default to those in .Values.api.image if not configured
     # this is to simplify the logic for those using flagsmith-api image
     # and to maintain backwards compatibility.
-    repository: ''
-    tag: '' # defaults to .Chart.AppVersion
-    imagePullPolicy: ''
+    repository: ""
+    tag: "" # defaults to .Chart.AppVersion
+    imagePullPolicy: ""
     imagePullSecrets: []
 
   command: []
@@ -348,18 +348,18 @@ pgbouncer:
   image:
     repository: bitnamilegacy/pgbouncer
     tag: 1.16.0
-    imagePullPolicy: ''
+    imagePullPolicy: ""
     imagePullSecrets: []
   replicaCount: 1
   deploymentStrategy: null # @schema type:[object, null]
   # Optional: Use to override the password directly instead of extracting from the database URL
-  passwordOverride: ''
+  passwordOverride: ""
   # Optional: Use an existing secret for PgBouncer credentials instead of generating one.
   # The secret must contain keys: POSTGRESQL_HOST, POSTGRESQL_DATABASE, POSTGRESQL_USER, POSTGRESQL_PASSWORD
   # This allows use of PgBouncer with databaseExternal.urlFromExistingSecret.enabled: true
   credentialsFromExistingSecret:
     enabled: false
-    name: ''
+    name: ""
   podAnnotations: {}
   resources: {}
   podLabels: {}
@@ -426,7 +426,7 @@ sse:
   image:
     repository: flagsmith/sse
     tag: 3.6.0
-    imagePullPolicy: ''
+    imagePullPolicy: ""
     imagePullSecrets: []
   # See all supported environment variables here:
   # https://docs.flagsmith.com/deployment/hosting/real-time/deployment#sse-service
@@ -443,8 +443,8 @@ sse:
   # will be created to generate one.
   authenticationTokenFromExistingSecret:
     enabled: false
-    name: ''
-    key: ''
+    name: ""
+    key: ""
   replicaCount: 1
   deploymentStrategy: null # @schema type:[object, null]
   podAnnotations: {}
@@ -660,8 +660,8 @@ experimentation:
   # key defaults to warehouse-credentials-secret.
   warehouseCredentialsSecretFromExistingSecret:
     enabled: false
-    name: ''
-    key: ''
+    name: ""
+    key: ""
 
   kafka:
     # host1:9096,host2:9096
@@ -688,8 +688,8 @@ experimentation:
       key: null # @schema type:[string, null]
     image:
       repository: flagsmith/events-ingestion-api
-      tag: '0.5'
-      imagePullPolicy: ''
+      tag: "0.5"
+      imagePullPolicy: ""
       imagePullSecrets: []
     resources:
       requests:
@@ -746,8 +746,8 @@ experimentation:
       key: null # @schema type:[string, null]
     image:
       repository: flagsmith/warehouse-delivery
-      tag: '0.4.0'
-      imagePullPolicy: ''
+      tag: "0.4.0"
+      imagePullPolicy: ""
       imagePullSecrets: []
     resources:
       requests:
@@ -777,8 +777,9 @@ experimentation:
           - sh
           - -c
           - >-
-            for f in /tmp/heartbeat-events /tmp/heartbeat-retry; do [ $(( $(date +%s) - $(stat -c %Y "$f") )) -lt 900 ]
-            || exit 1; done
+            for f in /tmp/heartbeat-events /tmp/heartbeat-retry; do
+            [ $(( $(date +%s) - $(stat -c %Y "$f") )) -lt 900 ] || exit 1;
+            done
       initialDelaySeconds: 30
       periodSeconds: 30
       failureThreshold: 2
