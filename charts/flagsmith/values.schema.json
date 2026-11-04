@@ -29,7 +29,10 @@
                                     "type": "string"
                                 },
                                 "tag": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 }
                             }
                         },
@@ -69,16 +72,25 @@
                     "type": "object",
                     "properties": {
                         "adminEmail": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "enabled": {
                             "type": "boolean"
                         },
                         "organisationName": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "projectName": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         }
                     }
                 },
@@ -116,7 +128,10 @@
                     }
                 },
                 "deploymentStrategy": {
-                    "type": "null"
+                    "type": [
+                        "object",
+                        "null"
+                    ]
                 },
                 "enableMigrateDbInitContainer": {
                     "type": "boolean"
@@ -310,7 +325,10 @@
                             "type": "boolean"
                         },
                         "host": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "hostFromNodeIp": {
                             "type": "boolean"
@@ -349,16 +367,25 @@
             "type": "object",
             "properties": {
                 "database": {
-                    "type": "null"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "enabled": {
                     "type": "boolean"
                 },
                 "host": {
-                    "type": "null"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "password": {
-                    "type": "null"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "port": {
                     "type": "integer"
@@ -367,7 +394,10 @@
                     "type": "string"
                 },
                 "url": {
-                    "type": "null"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "urlFromExistingSecret": {
                     "type": "object",
@@ -376,15 +406,24 @@
                             "type": "boolean"
                         },
                         "key": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "name": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         }
                     }
                 },
                 "username": {
-                    "type": "null"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 }
             }
         },
@@ -448,10 +487,16 @@
                                     "type": "boolean"
                                 },
                                 "key": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "name": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 }
                             }
                         },
@@ -608,10 +653,16 @@
                             "type": "string"
                         },
                         "bootstrapServers": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "password": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "passwordFromExistingSecret": {
                             "type": "object",
@@ -620,10 +671,16 @@
                                     "type": "boolean"
                                 },
                                 "key": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "name": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 }
                             }
                         },
@@ -640,7 +697,10 @@
                             "type": "integer"
                         },
                         "username": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         }
                     }
                 },
@@ -671,10 +731,16 @@
                                     "type": "boolean"
                                 },
                                 "key": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "name": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 }
                             }
                         },
@@ -856,7 +922,10 @@
                     }
                 },
                 "deploymentStrategy": {
-                    "type": "null"
+                    "type": [
+                        "object",
+                        "null"
+                    ]
                 },
                 "enabled": {
                     "type": "boolean"
@@ -963,7 +1032,10 @@
                     "type": "object"
                 },
                 "terminationGracePeriodSeconds": {
-                    "type": "null"
+                    "type": [
+                        "integer",
+                        "null"
+                    ]
                 },
                 "tolerations": {
                     "type": "array"
@@ -1156,16 +1228,25 @@
             "type": "object",
             "properties": {
                 "bucket": {
-                    "type": "null"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "enabled": {
                     "type": "boolean"
                 },
                 "organization": {
-                    "type": "null"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "token": {
-                    "type": "null"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "tokenFromExistingSecret": {
                     "type": "object",
@@ -1174,15 +1255,24 @@
                             "type": "boolean"
                         },
                         "key": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "name": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         }
                     }
                 },
                 "url": {
-                    "type": "null"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 }
             }
         },
@@ -1216,7 +1306,10 @@
                             }
                         },
                         "ingressClassName": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "tls": {
                             "type": "array"
@@ -1239,7 +1332,10 @@
                             }
                         },
                         "ingressClassName": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "tls": {
                             "type": "array"
@@ -1259,7 +1355,10 @@
                             "type": "array"
                         },
                         "ingressClassName": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "tls": {
                             "type": "array"
@@ -1290,7 +1389,10 @@
                             }
                         },
                         "ingressClassName": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "tls": {
                             "type": "array"
@@ -1363,15 +1465,24 @@
                                             "type": "boolean"
                                         },
                                         "key": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "name": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     }
                                 },
                                 "username": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 }
                             }
                         },
@@ -1470,10 +1581,16 @@
                                             "type": "boolean"
                                         },
                                         "key": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "name": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     }
                                 }
@@ -1637,7 +1754,10 @@
                     }
                 },
                 "deploymentStrategy": {
-                    "type": "null"
+                    "type": [
+                        "object",
+                        "null"
+                    ]
                 },
                 "enabled": {
                     "type": "boolean"
@@ -1742,7 +1862,10 @@
                     "type": "object"
                 },
                 "terminationGracePeriodSeconds": {
-                    "type": "null"
+                    "type": [
+                        "integer",
+                        "null"
+                    ]
                 },
                 "tolerations": {
                     "type": "array"
@@ -1933,7 +2056,10 @@
                     }
                 },
                 "deploymentStrategy": {
-                    "type": "null"
+                    "type": [
+                        "object",
+                        "null"
+                    ]
                 },
                 "enabled": {
                     "type": "boolean"
@@ -2035,7 +2161,10 @@
                     "type": "object"
                 },
                 "serviceAccountName": {
-                    "type": "null"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "shareProcessNamespace": {
                     "type": "boolean"
@@ -2112,7 +2241,10 @@
                     "type": "array"
                 },
                 "gracePeriodMs": {
-                    "type": "null"
+                    "type": [
+                        "integer",
+                        "null"
+                    ]
                 },
                 "image": {
                     "type": "object",
@@ -2164,7 +2296,10 @@
                     "type": "object"
                 },
                 "numThreads": {
-                    "type": "null"
+                    "type": [
+                        "integer",
+                        "null"
+                    ]
                 },
                 "podAnnotations": {
                     "type": "object"
@@ -2176,7 +2311,10 @@
                     "type": "object"
                 },
                 "queuePopSize": {
-                    "type": "null"
+                    "type": [
+                        "integer",
+                        "null"
+                    ]
                 },
                 "readinessProbe": {
                     "type": "object",
@@ -2214,10 +2352,16 @@
                     "type": "object"
                 },
                 "sleepIntervalMs": {
-                    "type": "null"
+                    "type": [
+                        "integer",
+                        "null"
+                    ]
                 },
                 "terminationGracePeriodSeconds": {
-                    "type": "null"
+                    "type": [
+                        "integer",
+                        "null"
+                    ]
                 },
                 "tolerations": {
                     "type": "array"
