@@ -51,8 +51,37 @@ Usage: (dict "root" . "username" <string> "passwordRef" <secretKeyRef body>)
 {{- end }}
 {{- end -}}
 
+{{/*
+True when events go through Kafka and warehouse delivery, rather than straight to ClickHouse.
+*/}}
+{{- define "flagsmith.experimentation.usesKafka" -}}
+{{- if and .Values.experimentation.enabled (eq .Values.experimentation.sink "kafka") -}}
+true
+{{- end -}}
+{{- end -}}
+
+{{- define "flagsmith.experimentation.clickhousePasswordSecretRef" -}}
+{{- with .Values.experimentation.clickhouse.passwordFromExistingSecret -}}
+{{- if .enabled -}}
+name: {{ required "experimentation.clickhouse.passwordFromExistingSecret.name is required" .name }}
+key: {{ required "experimentation.clickhouse.passwordFromExistingSecret.key is required" .key }}
+{{- else -}}
+name: {{ include "flagsmith.experimentation.secretName" $ }}
+key: CLICKHOUSE_PASSWORD
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "flagsmith.experimentation.validate" -}}
 {{- $e := .Values.experimentation -}}
+{{- if not (has $e.sink (list "kafka" "clickhouse")) -}}
+{{- fail "experimentation.sink must be kafka or clickhouse" -}}
+{{- end -}}
+{{- if eq $e.sink "clickhouse" -}}
+{{- if not $e.clickhouse.url -}}
+{{- fail "experimentation.clickhouse.url is required when experimentation.sink is clickhouse" -}}
+{{- end -}}
+{{- else -}}
 {{- if not $e.kafka.bootstrapServers -}}
 {{- fail "experimentation.kafka.bootstrapServers is required" -}}
 {{- end -}}
@@ -67,6 +96,30 @@ Usage: (dict "root" . "username" <string> "passwordRef" <secretKeyRef body>)
 {{- fail "experimentation.kafka.password or experimentation.kafka.passwordFromExistingSecret is required when experimentation.kafka.auth is scram" -}}
 {{- end -}}
 {{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+ClickHouse env for the ingestion service when it writes straight to ClickHouse.
+*/}}
+{{- define "flagsmith.experimentation.clickhouseEnv" -}}
+{{- $clickhouse := .Values.experimentation.clickhouse -}}
+- name: SINK
+  value: clickhouse
+- name: CLICKHOUSE_URL
+  value: {{ $clickhouse.url | quote }}
+- name: CLICKHOUSE_USER
+  value: {{ $clickhouse.user | quote }}
+- name: CLICKHOUSE_DATABASE
+  value: {{ $clickhouse.database | quote }}
+- name: CLICKHOUSE_TABLE
+  value: {{ $clickhouse.table | quote }}
+{{- if or $clickhouse.password $clickhouse.passwordFromExistingSecret.enabled }}
+- name: CLICKHOUSE_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      {{- include "flagsmith.experimentation.clickhousePasswordSecretRef" . | nindent 6 }}
+{{- end }}
 {{- end -}}
 
 {{/*

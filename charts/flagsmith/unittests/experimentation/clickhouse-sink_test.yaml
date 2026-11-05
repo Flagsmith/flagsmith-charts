@@ -1,0 +1,96 @@
+suite: experimentation clickhouse sink
+templates:
+  - experimentation/ingestion-deployment.yaml
+  - experimentation/secret.yaml
+  - experimentation/init-configmap.yaml
+  - experimentation/init-job.yaml
+  - experimentation/warehouse-delivery-deployment.yaml
+  - experimentation/warehouse-delivery-pdb.yaml
+release:
+  name: flagsmith
+set:
+  experimentation:
+    enabled: true
+    sink: clickhouse
+    clickhouse:
+      url: https://clickhouse.example.com:8443
+      password: clickhouse-secret
+    ingestion:
+      image:
+        tag: "1.0.0"
+tests:
+  - it: writes events straight to ClickHouse
+    template: experimentation/ingestion-deployment.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: {name: SINK, value: clickhouse}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: {name: CLICKHOUSE_URL, value: https://clickhouse.example.com:8443}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: {name: CLICKHOUSE_DATABASE, value: flagsmith_exp}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: CLICKHOUSE_PASSWORD
+            valueFrom: {secretKeyRef: {name: flagsmith-experimentation, key: CLICKHOUSE_PASSWORD}}
+      - notContains:
+          path: spec.template.spec.containers[0].env
+          content: {name: KAFKA_BOOTSTRAP_SERVERS}
+          any: true
+
+  - it: stores the ClickHouse password in the experimentation secret
+    template: experimentation/secret.yaml
+    asserts:
+      - equal:
+          path: data.CLICKHOUSE_PASSWORD
+          value: Y2xpY2tob3VzZS1zZWNyZXQ=
+      - notExists:
+          path: data.KAFKA_PASSWORD
+
+  - it: reads the ClickHouse password from an existing secret
+    template: experimentation/ingestion-deployment.yaml
+    set:
+      experimentation.clickhouse.password: null
+      experimentation.clickhouse.passwordFromExistingSecret: {enabled: true, name: clickhouse, key: password}
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: CLICKHOUSE_PASSWORD
+            valueFrom: {secretKeyRef: {name: clickhouse, key: password}}
+
+  - it: runs no Kafka topic job or warehouse delivery
+    set:
+      pdb.warehouseDelivery.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: experimentation/init-configmap.yaml
+      - hasDocuments:
+          count: 0
+        template: experimentation/init-job.yaml
+      - hasDocuments:
+          count: 0
+        template: experimentation/warehouse-delivery-deployment.yaml
+      - hasDocuments:
+          count: 0
+        template: experimentation/warehouse-delivery-pdb.yaml
+
+  - it: requires a ClickHouse URL
+    template: experimentation/secret.yaml
+    set:
+      experimentation.clickhouse.url: null
+    asserts:
+      - failedTemplate:
+          errorMessage: experimentation.clickhouse.url is required when experimentation.sink is clickhouse
+
+  - it: rejects an unknown sink
+    template: experimentation/secret.yaml
+    set:
+      experimentation.sink: s3
+    asserts:
+      - failedTemplate:
+          errorMessage: experimentation.sink must be kafka or clickhouse
