@@ -51,7 +51,7 @@ api:
   separateApiAndFrontend: true
 
   replicacount: 1
-  deploymentStrategy: null
+  deploymentStrategy: null # @schema type:[object, null]
   podAnnotations: {}
   resources: {}
   # limits:
@@ -138,7 +138,7 @@ api:
     timeoutSeconds: 2
   statsd:
     enabled: false
-    host: null
+    host: null # @schema type:[string, null]
     hostFromNodeIp: false
     port: 8125
     prefix: flagsmith.api
@@ -156,9 +156,9 @@ api:
     # If `adminEmail`, `organisationName` or `projectName` not set, defaults are used.
     # Bootstrapping does nothing if app database is not empty.
     enabled: false
-    adminEmail: null
-    organisationName: null
-    projectName: null
+    adminEmail: null # @schema type:[string, null]
+    organisationName: null # @schema type:[string, null]
+    projectName: null # @schema type:[string, null]
 
   extraSpec: {} # Will be added to `spec` for `flagsmith-api` deployment.
   extraTemplateSpec: {} # Will be added to `spec.template.spec` for `flagsmith-api` deployment.
@@ -183,7 +183,7 @@ frontend:
     imagePullPolicy: ""
     imagePullSecrets: []
   replicacount: 1
-  deploymentStrategy: null
+  deploymentStrategy: null # @schema type:[object, null]
   resources: {}
   # limits:
   #   cpu: 500m
@@ -202,7 +202,7 @@ frontend:
   # Container lifecycle hooks (e.g. preStop for graceful shutdown)
   lifecycle: {}
   # Pod termination grace period in seconds
-  terminationGracePeriodSeconds: null
+  terminationGracePeriodSeconds: null # @schema type:[integer, null]
   podSecurityContext: {}
   defaultPodSecurityContext:
     enabled: true
@@ -251,10 +251,10 @@ taskProcessor:
 
   enabled: false
   replicacount: 1
-  sleepIntervalMs: null
-  numThreads: null
-  gracePeriodMs: null
-  queuePopSize: null
+  sleepIntervalMs: null # @schema type:[integer, null]
+  numThreads: null # @schema type:[integer, null]
+  gracePeriodMs: null # @schema type:[integer, null]
+  queuePopSize: null # @schema type:[integer, null]
 
   livenessProbe:
     # path is the API path to be used for health checks. Used if exec is not set.
@@ -295,7 +295,7 @@ taskProcessor:
   # Container lifecycle hooks (e.g. preStop for graceful shutdown)
   lifecycle: {}
   # Pod termination grace period in seconds
-  terminationGracePeriodSeconds: null
+  terminationGracePeriodSeconds: null # @schema type:[integer, null]
   podSecurityContext: {}
   defaultPodSecurityContext:
     enabled: true
@@ -331,17 +331,17 @@ devPostgresql:
 
 databaseExternal:
   enabled: false
-  url: null
+  url: null # @schema type:[string, null]
   type: postgres
-  host: null
+  host: null # @schema type:[string, null]
   port: 5432
-  database: null
-  username: null
-  password: null
+  database: null # @schema type:[string, null]
+  username: null # @schema type:[string, null]
+  password: null # @schema type:[string, null]
   urlFromExistingSecret:
     enabled: false
-    name: null
-    key: null
+    name: null # @schema type:[string, null]
+    key: null # @schema type:[string, null]
 
 pgbouncer:
   enabled: false
@@ -351,7 +351,7 @@ pgbouncer:
     imagePullPolicy: ""
     imagePullSecrets: []
   replicaCount: 1
-  deploymentStrategy: null
+  deploymentStrategy: null # @schema type:[object, null]
   # Optional: Use to override the password directly instead of extracting from the database URL
   passwordOverride: ""
   # Optional: Use an existing secret for PgBouncer credentials instead of generating one.
@@ -370,7 +370,7 @@ pgbouncer:
   # Container lifecycle hooks (e.g. preStop for graceful shutdown)
   lifecycle: {}
   # Pod termination grace period in seconds
-  terminationGracePeriodSeconds: null
+  terminationGracePeriodSeconds: null # @schema type:[integer, null]
   podSecurityContext: {}
   defaultPodSecurityContext:
     enabled: true
@@ -403,14 +403,14 @@ pgbouncer:
 
 influxdbExternal:
   enabled: false
-  url: null
-  bucket: null
-  organization: null
-  token: null
+  url: null # @schema type:[string, null]
+  bucket: null # @schema type:[string, null]
+  organization: null # @schema type:[string, null]
+  token: null # @schema type:[string, null]
   tokenFromExistingSecret:
     enabled: false
-    name: null
-    key: null
+    name: null # @schema type:[string, null]
+    key: null # @schema type:[string, null]
 
 UsePostgresForAnalytics:
   enabled: false
@@ -446,7 +446,7 @@ sse:
     name: ""
     key: ""
   replicaCount: 1
-  deploymentStrategy: null
+  deploymentStrategy: null # @schema type:[object, null]
   podAnnotations: {}
   resources: {}
   # limits:
@@ -487,7 +487,7 @@ sse:
     successThreshold: 1
     timeoutSeconds: 2
   shareProcessNamespace: false
-  serviceAccountName: null
+  serviceAccountName: null # @schema type:[string, null]
   extraInitContainers: []
   extraContainers: []
   extraVolumes: []
@@ -562,7 +562,7 @@ ingress:
   frontend:
     enabled: false
     annotations: {}
-    ingressClassName: null
+    ingressClassName: null # @schema type:[string, null]
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
     hosts:
@@ -574,7 +574,7 @@ ingress:
   api:
     enabled: false
     annotations: {}
-    ingressClassName: null
+    ingressClassName: null # @schema type:[string, null]
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
     hosts:
@@ -591,7 +591,7 @@ ingress:
   sse:
     enabled: false
     annotations: {}
-    ingressClassName: null
+    ingressClassName: null # @schema type:[string, null]
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
     hosts:
@@ -604,7 +604,7 @@ ingress:
   ingestion:
     enabled: false
     annotations: {}
-    ingressClassName: null
+    ingressClassName: null # @schema type:[string, null]
     hosts: []
     #  - host: events.flagsmith.local
     #    paths:
@@ -664,27 +664,28 @@ experimentation:
     key: ""
 
   kafka:
-    bootstrapServers: null # host1:9096,host2:9096
+    # host1:9096,host2:9096
+    bootstrapServers: null # @schema type:[string, null]
     topic: flagsmith_warehouse_events
     # Events warehouse delivery could not insert, tried again later.
     retryTopic: flagsmith_warehouse_events_retry
     topicPartitions: 8
     topicReplicationFactor: 3
     auth: scram # scram | none
-    username: null
-    password: null
+    username: null # @schema type:[string, null]
+    password: null # @schema type:[string, null]
     passwordFromExistingSecret:
       enabled: false
-      name: null
-      key: null
+      name: null # @schema type:[string, null]
+      key: null # @schema type:[string, null]
 
   ingestion:
     # Optional database user that can only read the experimentation_environment_keys view.
     # Defaults to the API's DATABASE_URL.
     databaseUrlFromExistingSecret:
       enabled: false
-      name: null
-      key: null
+      name: null # @schema type:[string, null]
+      key: null # @schema type:[string, null]
     image:
       repository: flagsmith/events-ingestion-api
       tag: "0.5"
@@ -741,8 +742,8 @@ experimentation:
     # experimentation_warehousedeliverystatus. Defaults to the API's DATABASE_URL.
     databaseUrlFromExistingSecret:
       enabled: false
-      name: null
-      key: null
+      name: null # @schema type:[string, null]
+      key: null # @schema type:[string, null]
     image:
       repository: flagsmith/warehouse-delivery
       tag: "0.4.0"
@@ -828,8 +829,8 @@ jobs:
     databaseUrl:
       fromExistingSecret:
         enabled: false
-        name: null
-        key: null
+        name: null # @schema type:[string, null]
+        key: null # @schema type:[string, null]
   migrateAnalyticsData:
     enabled: false
     # Annotations to set on the migrate-analytics-data Job resource
@@ -873,11 +874,11 @@ jobs:
           - ALL
     # Optional admin login for creating the topic. Defaults to experimentation.kafka.
     kafka:
-      username: null
+      username: null # @schema type:[string, null]
       passwordFromExistingSecret:
         enabled: false
-        name: null
-        key: null
+        name: null # @schema type:[string, null]
+        key: null # @schema type:[string, null]
 
 # These tests just make non-destructive requests to the services in
 # the cluster. Enabling this and running helm test is safe.
@@ -904,7 +905,7 @@ _destructiveTests:
     enabled: true
     image:
       repository: flagsmith/flagsmith-e2e-tests
-      tag: null
+      tag: null # @schema type:[string, null]
       imagePullPolicy: IfNotPresent
     resources:
       requests:
