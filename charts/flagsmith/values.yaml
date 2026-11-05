@@ -762,7 +762,7 @@ experimentation:
       key: null # @schema type:[string, null]
     image:
       repository: flagsmith/warehouse-delivery
-      tag: "0.4.0"
+      tag: "0.5.0"
       imagePullPolicy: ""
       imagePullSecrets: []
     resources:
