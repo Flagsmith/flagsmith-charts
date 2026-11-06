@@ -1,4 +1,4 @@
-{{- if .Values.experimentation.enabled }}
+{{- if include "flagsmith.experimentation.usesKafka" . }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

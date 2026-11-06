@@ -1,4 +1,4 @@
-{{- if .Values.experimentation.enabled }}
+{{- if include "flagsmith.experimentation.usesKafka" . }}
 {{- $job := .Values.jobs.experimentationInit }}
 {{- $kafka := .Values.experimentation.kafka }}
 {{- $adminPasswordRef := include "flagsmith.experimentation.kafkaPasswordSecretRef" . }}

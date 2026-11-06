@@ -42,3 +42,38 @@ tests:
           content:
             name: DATABASE_URL
             valueFrom: {secretKeyRef: {name: ingestion-db, key: url}}
+
+  - it: writes events straight to ClickHouse with the clickhouse sink
+    template: experimentation/ingestion-deployment.yaml
+    set:
+      experimentation.sink: clickhouse
+      experimentation.clickhouse: {url: https://clickhouse.example.com:8443, password: clickhouse-secret}
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: {name: SINK, value: clickhouse}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: {name: CLICKHOUSE_URL, value: https://clickhouse.example.com:8443}
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: CLICKHOUSE_PASSWORD
+            valueFrom: {secretKeyRef: {name: flagsmith-experimentation, key: CLICKHOUSE_PASSWORD}}
+      - notContains:
+          path: spec.template.spec.containers[0].env
+          content: {name: KAFKA_BOOTSTRAP_SERVERS, value: kafka-1:9096,kafka-2:9096}
+
+  - it: reads the ClickHouse password from an existing secret
+    template: experimentation/ingestion-deployment.yaml
+    set:
+      experimentation.sink: clickhouse
+      experimentation.clickhouse:
+        url: https://clickhouse.example.com:8443
+        passwordFromExistingSecret: {enabled: true, name: clickhouse, key: password}
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: CLICKHOUSE_PASSWORD
+            valueFrom: {secretKeyRef: {name: clickhouse, key: password}}
