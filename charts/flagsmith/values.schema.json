@@ -471,6 +471,52 @@
         "experimentation": {
             "type": "object",
             "properties": {
+                "clickhouse": {
+                    "type": "object",
+                    "properties": {
+                        "database": {
+                            "type": "string"
+                        },
+                        "password": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        },
+                        "passwordFromExistingSecret": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "key": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                },
+                                "name": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                }
+                            }
+                        },
+                        "table": {
+                            "type": "string"
+                        },
+                        "url": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        },
+                        "user": {
+                            "type": "string"
+                        }
+                    }
+                },
                 "enabled": {
                     "type": "boolean"
                 },
@@ -703,6 +749,9 @@
                             ]
                         }
                     }
+                },
+                "sink": {
+                    "type": "string"
                 },
                 "warehouseCredentialsSecretFromExistingSecret": {
                     "type": "object",
