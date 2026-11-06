@@ -62,7 +62,7 @@ tests:
             valueFrom: {secretKeyRef: {name: flagsmith-experimentation, key: CLICKHOUSE_PASSWORD}}
       - notContains:
           path: spec.template.spec.containers[0].env
-          content: {name: KAFKA_EXTERNAL_TOPIC, value: flagsmith_warehouse_events}
+          content: {name: KAFKA_BOOTSTRAP_SERVERS, value: kafka-1:9096,kafka-2:9096}
 
   - it: reads the ClickHouse password from an existing secret
     template: experimentation/ingestion-deployment.yaml

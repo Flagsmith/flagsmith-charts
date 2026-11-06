@@ -667,13 +667,13 @@ experimentation:
   # warehouse delivery.
   sink: kafka # kafka | clickhouse
 
-  # Used when sink is clickhouse. Connect the same ClickHouse in the dashboard to query it.
+  # Used when sink is clickhouse. Every environment's events go to this ClickHouse, so connect it in the dashboard for
+  # each environment. Run the dashboard's ClickHouse setup SQL before deploying. Events are buffered in memory only.
   clickhouse:
     # https://clickhouse.example.com:8443
     url: null # @schema type:[string, null]
     user: default
     database: flagsmith_exp
-    table: events
     password: null # @schema type:[string, null]
     passwordFromExistingSecret:
       enabled: false

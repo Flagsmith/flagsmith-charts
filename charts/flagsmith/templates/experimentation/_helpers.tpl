@@ -112,8 +112,6 @@ ClickHouse env for the ingestion service when it writes straight to ClickHouse.
   value: {{ $clickhouse.user | quote }}
 - name: CLICKHOUSE_DATABASE
   value: {{ $clickhouse.database | quote }}
-- name: CLICKHOUSE_TABLE
-  value: {{ $clickhouse.table | quote }}
 {{- if or $clickhouse.password $clickhouse.passwordFromExistingSecret.enabled }}
 - name: CLICKHOUSE_PASSWORD
   valueFrom:
