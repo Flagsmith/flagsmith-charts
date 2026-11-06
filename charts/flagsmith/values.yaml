@@ -663,9 +663,9 @@ experimentation:
     name: ""
     key: ""
 
-  # Where the ingestion service writes events: kafka | clickhouse.
-  # clickhouse writes straight to one ClickHouse, with no Kafka or warehouse delivery.
-  sink: kafka
+  # Where the ingestion service writes events. clickhouse writes straight to one ClickHouse, with no Kafka or
+  # warehouse delivery.
+  sink: kafka # kafka | clickhouse
 
   # Used when sink is clickhouse. Connect the same ClickHouse in the dashboard to query it.
   clickhouse:
