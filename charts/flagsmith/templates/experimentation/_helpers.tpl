@@ -60,6 +60,15 @@ true
 {{- end -}}
 {{- end -}}
 
+{{/*
+True when the ingestion service buffers ClickHouse events in a write-ahead log, and so runs as a StatefulSet.
+*/}}
+{{- define "flagsmith.experimentation.usesWal" -}}
+{{- if and .Values.experimentation.enabled (eq .Values.experimentation.sink "clickhouse") .Values.experimentation.clickhouse.wal.enabled -}}
+true
+{{- end -}}
+{{- end -}}
+
 {{- define "flagsmith.experimentation.clickhousePasswordSecretRef" -}}
 {{- with .Values.experimentation.clickhouse.passwordFromExistingSecret -}}
 {{- if .enabled -}}
