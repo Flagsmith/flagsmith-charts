@@ -59,6 +59,8 @@ spec:
             - name: http
               containerPort: 8080
           env:
+            - name: SINK
+              value: {{ .Values.experimentation.sink | quote }}
             {{- if include "flagsmith.experimentation.usesKafka" . }}
             {{- include "flagsmith.experimentation.kafkaEnv" (dict "root" . "username" .Values.experimentation.kafka.username "passwordRef" (include "flagsmith.experimentation.kafkaPasswordSecretRef" .)) | nindent 12 }}
             # One topic for every environment: warehouse delivery routes each to its warehouse.

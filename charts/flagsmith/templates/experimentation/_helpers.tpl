@@ -104,8 +104,6 @@ ClickHouse env for the ingestion service when it writes straight to ClickHouse.
 */}}
 {{- define "flagsmith.experimentation.clickhouseEnv" -}}
 {{- $clickhouse := .Values.experimentation.clickhouse -}}
-- name: SINK
-  value: clickhouse
 - name: CLICKHOUSE_URL
   value: {{ $clickhouse.url | quote }}
 - name: CLICKHOUSE_USER
