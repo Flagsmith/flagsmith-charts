@@ -1,4 +1,4 @@
-{{- if and .Values.experimentation.enabled .Values.pdb.warehouseDelivery.enabled }}
+{{- if and (include "flagsmith.experimentation.usesKafka" .) .Values.pdb.warehouseDelivery.enabled }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:

@@ -43,3 +43,11 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].env
           content: {name: KAFKA_TOPICS, value: events events-retry}
+
+  - it: renders nothing with the clickhouse sink
+    set:
+      experimentation.sink: clickhouse
+      experimentation.clickhouse.url: https://clickhouse.example.com:8443
+    asserts:
+      - hasDocuments:
+          count: 0

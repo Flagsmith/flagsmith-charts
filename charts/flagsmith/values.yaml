@@ -663,6 +663,23 @@ experimentation:
     name: ""
     key: ""
 
+  # Where the ingestion service writes events. clickhouse writes straight to one ClickHouse, with no Kafka or
+  # warehouse delivery.
+  sink: kafka # kafka | clickhouse
+
+  # Used when sink is clickhouse. Every environment's events go to this ClickHouse, so connect it in the dashboard for
+  # each environment. Run the dashboard's ClickHouse setup SQL before deploying. Events are buffered in memory only.
+  clickhouse:
+    # https://clickhouse.example.com:8443
+    url: null # @schema type:[string, null]
+    user: default
+    database: flagsmith_exp
+    password: null # @schema type:[string, null]
+    passwordFromExistingSecret:
+      enabled: false
+      name: null # @schema type:[string, null]
+      key: null # @schema type:[string, null]
+
   kafka:
     # host1:9096,host2:9096
     bootstrapServers: null # @schema type:[string, null]
@@ -688,7 +705,7 @@ experimentation:
       key: null # @schema type:[string, null]
     image:
       repository: flagsmith/events-ingestion-api
-      tag: "0.5"
+      tag: "0.6"
       imagePullPolicy: ""
       imagePullSecrets: []
     resources:
