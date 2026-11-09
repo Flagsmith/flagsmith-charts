@@ -668,8 +668,7 @@ experimentation:
   sink: kafka # kafka | clickhouse
 
   # Used when sink is clickhouse. Every environment's events go to this ClickHouse, so connect it in the dashboard for
-  # each environment. Run the dashboard's ClickHouse setup SQL before deploying. Events are buffered in memory, or on
-  # disk with wal.
+  # each environment. Run the dashboard's ClickHouse setup SQL before deploying. Events are buffered in memory.
   clickhouse:
     # https://clickhouse.example.com:8443
     url: null # @schema type:[string, null]
@@ -680,8 +679,6 @@ experimentation:
       enabled: false
       name: null # @schema type:[string, null]
       key: null # @schema type:[string, null]
-    # Buffers events in a write-ahead log on a volume per pod, so they survive a crash. Runs the ingestion service as
-    # a StatefulSet. To cap the log, set SINK_WAL_MAX_BYTES in ingestion.extraEnv to about 70% of size.
     wal:
       enabled: false
       size: 10Gi

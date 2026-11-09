@@ -16,7 +16,6 @@ metadata:
 spec:
   {{- if $wal }}
   serviceName: {{ include "flagsmith.fullname" . }}-ingestion
-  # Keeps a removed pod's WAL, written when the pod comes back.
   persistentVolumeClaimRetentionPolicy:
     whenScaled: Retain
   {{- end }}
@@ -59,7 +58,6 @@ spec:
       {{- end }}
       securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" $ingestion "key" "podSecurityContext") | nindent 8 }}
       {{- if $wal }}
-      # Above SINK_WAL_DRAIN_TIMEOUT_SECS, so the WAL drains on shutdown.
       terminationGracePeriodSeconds: 120
       {{- end }}
       containers:
