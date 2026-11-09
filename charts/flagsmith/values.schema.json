@@ -566,9 +566,6 @@
                                 "enabled": {
                                     "type": "boolean"
                                 },
-                                "fsGroup": {
-                                    "type": "integer"
-                                },
                                 "runAsNonRoot": {
                                     "type": "boolean"
                                 }

@@ -34,9 +34,8 @@ tests:
       - equal:
           path: spec.template.spec.securityContext.runAsNonRoot
           value: true
-      - equal:
+      - notExists:
           path: spec.template.spec.securityContext.fsGroup
-          value: 10001
 
   - it: reads keys with its own database user when configured
     template: experimentation/ingestion-deployment.yaml
@@ -94,6 +93,12 @@ tests:
     asserts:
       - isKind:
           of: StatefulSet
+      - equal:
+          path: spec.podManagementPolicy
+          value: Parallel
+      - equal:
+          path: spec.template.spec.securityContext.fsGroup
+          value: 10001
       - equal:
           path: spec.persistentVolumeClaimRetentionPolicy.whenScaled
           value: Retain

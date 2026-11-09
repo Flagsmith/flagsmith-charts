@@ -727,7 +727,6 @@ experimentation:
     defaultPodSecurityContext:
       enabled: true
       runAsNonRoot: true
-      fsGroup: 10001
     securityContext: {}
     defaultSecurityContext:
       enabled: true

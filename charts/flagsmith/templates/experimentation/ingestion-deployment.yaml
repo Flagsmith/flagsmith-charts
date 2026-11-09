@@ -16,6 +16,7 @@ metadata:
 spec:
   {{- if $wal }}
   serviceName: {{ include "flagsmith.fullname" . }}-ingestion
+  podManagementPolicy: Parallel
   persistentVolumeClaimRetentionPolicy:
     whenScaled: Retain
   {{- end }}
@@ -56,7 +57,11 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" $ingestion "key" "podSecurityContext") | nindent 8 }}
+      {{- $podSecurityContext := include "flagsmith.mergedSecurityContext" (dict "component" $ingestion "key" "podSecurityContext") | fromYaml }}
+      {{- if $wal }}
+      {{- $podSecurityContext = merge $podSecurityContext (dict "fsGroup" 10001) }}
+      {{- end }}
+      securityContext: {{- toYaml $podSecurityContext | nindent 8 }}
       {{- if $wal }}
       terminationGracePeriodSeconds: 120
       {{- end }}
