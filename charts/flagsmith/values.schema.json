@@ -511,6 +511,23 @@
                         },
                         "user": {
                             "type": "string"
+                        },
+                        "wal": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "size": {
+                                    "type": "string"
+                                },
+                                "storageClassName": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                }
+                            }
                         }
                     }
                 },

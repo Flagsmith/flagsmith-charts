@@ -60,6 +60,12 @@ true
 {{- end -}}
 {{- end -}}
 
+{{- define "flagsmith.experimentation.usesWal" -}}
+{{- if and .Values.experimentation.enabled (eq .Values.experimentation.sink "clickhouse") .Values.experimentation.clickhouse.wal.enabled -}}
+true
+{{- end -}}
+{{- end -}}
+
 {{- define "flagsmith.experimentation.clickhousePasswordSecretRef" -}}
 {{- with .Values.experimentation.clickhouse.passwordFromExistingSecret -}}
 {{- if .enabled -}}

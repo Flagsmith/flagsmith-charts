@@ -1,7 +1,8 @@
 {{- if .Values.experimentation.enabled }}
 {{- $ingestion := .Values.experimentation.ingestion }}
+{{- $wal := include "flagsmith.experimentation.usesWal" . }}
 apiVersion: apps/v1
-kind: Deployment
+kind: {{ if $wal }}StatefulSet{{ else }}Deployment{{ end }}
 metadata:
   namespace: {{ include "flagsmith.namespace" . }}
   name: {{ include "flagsmith.fullname" . }}-ingestion
@@ -13,6 +14,12 @@ metadata:
     {{- include "flagsmith.labels" . | nindent 4 }}
     app.kubernetes.io/component: ingestion
 spec:
+  {{- if $wal }}
+  serviceName: {{ include "flagsmith.fullname" . }}-ingestion
+  podManagementPolicy: Parallel
+  persistentVolumeClaimRetentionPolicy:
+    whenScaled: Retain
+  {{- end }}
   selector:
     matchLabels:
       {{- include "flagsmith.selectorLabels" . | nindent 6 }}
@@ -50,7 +57,14 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" $ingestion "key" "podSecurityContext") | nindent 8 }}
+      {{- $podSecurityContext := include "flagsmith.mergedSecurityContext" (dict "component" $ingestion "key" "podSecurityContext") | fromYaml }}
+      {{- if $wal }}
+      {{- $podSecurityContext = merge $podSecurityContext (dict "fsGroup" 10001) }}
+      {{- end }}
+      securityContext: {{- toYaml $podSecurityContext | nindent 8 }}
+      {{- if $wal }}
+      terminationGracePeriodSeconds: 120
+      {{- end }}
       containers:
         - name: ingestion
           image: {{ printf "%s:%s" $ingestion.image.repository (required "experimentation.ingestion.image.tag is required" $ingestion.image.tag) }}
@@ -68,6 +82,10 @@ spec:
               value: {{ .Values.experimentation.kafka.topic | quote }}
             {{- else }}
             {{- include "flagsmith.experimentation.clickhouseEnv" . | nindent 12 }}
+            {{- if $wal }}
+            - name: SINK_WAL_DIR
+              value: /wal
+            {{- end }}
             {{- end }}
             - name: DATABASE_URL
               valueFrom:
@@ -89,4 +107,23 @@ spec:
           securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" $ingestion "key" "securityContext") | nindent 12 }}
           resources:
             {{- toYaml $ingestion.resources | nindent 12 }}
+          {{- if $wal }}
+          volumeMounts:
+            - name: wal
+              mountPath: /wal
+          {{- end }}
+  {{- if $wal }}
+  volumeClaimTemplates:
+    - metadata:
+        name: wal
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        {{- with .Values.experimentation.clickhouse.wal.storageClassName }}
+        storageClassName: {{ . }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.experimentation.clickhouse.wal.size }}
+  {{- end }}
 {{- end }}

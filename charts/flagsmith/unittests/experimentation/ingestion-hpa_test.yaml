@@ -1,0 +1,22 @@
+suite: ingestion HPA
+templates:
+  - experimentation/ingestion-hpa.yaml
+release:
+  name: flagsmith
+values:
+  - ../values/experimentation.yaml
+tests:
+  - it: scales the Deployment
+    asserts:
+      - equal:
+          path: spec.scaleTargetRef.kind
+          value: Deployment
+
+  - it: scales the StatefulSet with a write-ahead log
+    set:
+      experimentation.sink: clickhouse
+      experimentation.clickhouse: {url: https://clickhouse.example.com:8443, wal: {enabled: true}}
+    asserts:
+      - equal:
+          path: spec.scaleTargetRef.kind
+          value: StatefulSet

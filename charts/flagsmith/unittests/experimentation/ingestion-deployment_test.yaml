@@ -34,6 +34,8 @@ tests:
       - equal:
           path: spec.template.spec.securityContext.runAsNonRoot
           value: true
+      - notExists:
+          path: spec.template.spec.securityContext.fsGroup
 
   - it: reads keys with its own database user when configured
     template: experimentation/ingestion-deployment.yaml
@@ -80,3 +82,38 @@ tests:
           content:
             name: CLICKHOUSE_PASSWORD
             valueFrom: {secretKeyRef: {name: clickhouse, key: password}}
+
+  - it: buffers ClickHouse events in a write-ahead log on a volume per pod
+    template: experimentation/ingestion-deployment.yaml
+    set:
+      experimentation.sink: clickhouse
+      experimentation.clickhouse:
+        url: https://clickhouse.example.com:8443
+        wal: {enabled: true, size: 20Gi, storageClassName: gp3}
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - equal:
+          path: spec.podManagementPolicy
+          value: Parallel
+      - equal:
+          path: spec.template.spec.securityContext.fsGroup
+          value: 10001
+      - equal:
+          path: spec.persistentVolumeClaimRetentionPolicy.whenScaled
+          value: Retain
+      - equal:
+          path: spec.template.spec.terminationGracePeriodSeconds
+          value: 120
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: {name: SINK_WAL_DIR, value: /wal}
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content: {name: wal, mountPath: /wal}
+      - equal:
+          path: spec.volumeClaimTemplates[0].spec
+          value:
+            accessModes: [ReadWriteOnce]
+            storageClassName: gp3
+            resources: {requests: {storage: 20Gi}}
