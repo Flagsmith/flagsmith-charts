@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.86.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.85.0...flagsmith-0.86.0) (2026-11-10)
+
+
+### Features
+
+* Add `values.schema.json` ([#625](https://github.com/Flagsmith/flagsmith-charts/issues/625)) ([fa7221c](https://github.com/Flagsmith/flagsmith-charts/commit/fa7221ce0c392146b75fd620be14cd5b2b0e6314))
+* **experimentation:** optional write-ahead log for the ClickHouse ingestion sink ([#631](https://github.com/Flagsmith/flagsmith-charts/issues/631)) ([04107e2](https://github.com/Flagsmith/flagsmith-charts/commit/04107e2e180e4e99daad1f5ac136e576a8661d4d))
+* **experimentation:** write ingestion events straight to ClickHouse without Kafka ([#629](https://github.com/Flagsmith/flagsmith-charts/issues/629)) ([dfa55ba](https://github.com/Flagsmith/flagsmith-charts/commit/dfa55ba2d3533376a35fd86de21024c1d9b441e0))
+
 ## [0.85.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.84.0...flagsmith-0.85.0) (2026-10-16)
 
 
