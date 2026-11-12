@@ -826,6 +826,9 @@ jobs:
     annotations: {}
     ttlSecondsAfterFinished: 3600
     restartPolicy: OnFailure
+    # Also applies to the migrate-db init container when
+    # api.enableMigrateDbInitContainer is true.
+    resources: {}
     podSecurityContext: {}
     defaultPodSecurityContext:
       enabled: true
