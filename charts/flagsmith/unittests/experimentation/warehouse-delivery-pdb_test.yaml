@@ -1,0 +1,16 @@
+suite: warehouse delivery PDB
+templates:
+  - experimentation/warehouse-delivery-pdb.yaml
+release:
+  name: flagsmith
+values:
+  - ../values/experimentation.yaml
+tests:
+  - it: renders nothing with the clickhouse sink
+    set:
+      pdb.warehouseDelivery.enabled: true
+      experimentation.sink: clickhouse
+      experimentation.clickhouse.url: https://clickhouse.example.com:8443
+    asserts:
+      - hasDocuments:
+          count: 0

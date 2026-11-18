@@ -1,4 +1,4 @@
-{{- if .Values.experimentation.enabled }}
+{{- if include "flagsmith.experimentation.usesKafka" . }}
 {{- $delivery := .Values.experimentation.warehouseDelivery }}
 apiVersion: apps/v1
 kind: Deployment

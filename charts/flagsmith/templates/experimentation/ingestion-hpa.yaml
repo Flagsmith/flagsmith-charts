@@ -10,7 +10,7 @@ metadata:
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
-    kind: Deployment
+    kind: {{ if include "flagsmith.experimentation.usesWal" . }}StatefulSet{{ else }}Deployment{{ end }}
     name: {{ include "flagsmith.fullname" . }}-ingestion
   minReplicas: {{ .Values.hpa.ingestion.minReplicas }}
   maxReplicas: {{ .Values.hpa.ingestion.maxReplicas }}

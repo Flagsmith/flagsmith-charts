@@ -17,3 +17,11 @@ tests:
       - notMatchRegex:
           path: data["init.sh"]
           pattern: clickhouse
+
+  - it: renders nothing with the clickhouse sink
+    set:
+      experimentation.sink: clickhouse
+      experimentation.clickhouse.url: https://clickhouse.example.com:8443
+    asserts:
+      - hasDocuments:
+          count: 0

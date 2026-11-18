@@ -12,3 +12,17 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: experimentation.kafka.password or experimentation.kafka.passwordFromExistingSecret is required when experimentation.kafka.auth is scram
+
+  - it: requires a known sink
+    set:
+      experimentation.sink: s3
+    asserts:
+      - failedTemplate:
+          errorMessage: experimentation.sink must be kafka or clickhouse
+
+  - it: requires a ClickHouse URL with the clickhouse sink
+    set:
+      experimentation.sink: clickhouse
+    asserts:
+      - failedTemplate:
+          errorMessage: experimentation.clickhouse.url is required when experimentation.sink is clickhouse

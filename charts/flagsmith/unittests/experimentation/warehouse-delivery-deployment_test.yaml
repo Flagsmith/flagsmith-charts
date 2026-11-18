@@ -81,3 +81,12 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: experimentation.warehouseCredentialsSecretFromExistingSecret.name is required
+
+  - it: renders nothing with the clickhouse sink
+    template: experimentation/warehouse-delivery-deployment.yaml
+    set:
+      experimentation.sink: clickhouse
+      experimentation.clickhouse.url: https://clickhouse.example.com:8443
+    asserts:
+      - hasDocuments:
+          count: 0
