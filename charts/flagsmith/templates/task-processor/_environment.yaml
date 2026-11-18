@@ -1,4 +1,4 @@
-{{ include (print $.Template.BasePath "/_api_environment.yaml") . }}
+{{ include (print $.Template.BasePath "/api/_environment.yaml") . }}
 {{- if .Values.taskProcessor.sleepIntervalMs }}
 - name: TASK_PROCESSOR_SLEEP_INTERVAL
   value: {{ .Values.taskProcessor.sleepIntervalMs | quote }}

@@ -74,7 +74,7 @@ spec:
         args: ["serve"]
         ports:
         - containerPort: {{ .Values.service.sse.port }}
-        env: {{ include (print $.Template.BasePath "/_sse_environment.yaml") . | nindent 8 }}
+        env: {{ include (print $.Template.BasePath "/sse/_environment.yaml") . | nindent 8 }}
         livenessProbe:
           failureThreshold: {{ .Values.sse.livenessProbe.failureThreshold }}
           httpGet:

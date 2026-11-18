@@ -1,12 +1,12 @@
 suite: API deployment
 templates:
-  - deployment-api.yaml
-  - secrets-api.yaml # deployment-api.yaml includes it for a checksum
+  - api/deployment.yaml
+  - api/secret.yaml # api/deployment.yaml includes it for a checksum
 release:
   name: flagsmith
 tests:
   - it: reads DATABASE_URL from the chart secret by default
-    template: deployment-api.yaml
+    template: api/deployment.yaml
     asserts:
       - contains:
           path: spec.template.spec.containers[0].env
@@ -25,7 +25,7 @@ tests:
           enabled: true
           name: my-db
           key: url
-    template: deployment-api.yaml
+    template: api/deployment.yaml
     asserts:
       - contains:
           path: spec.template.spec.containers[0].env

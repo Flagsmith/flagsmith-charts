@@ -23,9 +23,9 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/secrets-api: {{ include (print $.Template.BasePath "/secrets-api.yaml") . | sha256sum }}
+        checksum/secrets-api: {{ include (print $.Template.BasePath "/api/secret.yaml") . | sha256sum }}
         {{- if and .Values.influxdbExternal.enabled (not .Values.influxdbExternal.tokenFromExistingSecret.enabled) }}
-        checksum/secrets-influxdb-external: {{ include (print $.Template.BasePath "/secrets-influxdb-external.yaml") . | sha256sum }}
+        checksum/secrets-influxdb-external: {{ include (print $.Template.BasePath "/api/secret-influxdb-external.yaml") . | sha256sum }}
         {{- end }}
         {{- if .Values.experimentation.enabled }}
         checksum/secrets-experimentation: {{ include (print $.Template.BasePath "/experimentation/secret.yaml") . | sha256sum }}
@@ -78,7 +78,7 @@ spec:
         image: {{ printf "%s:%s" ( .Values.api.image.repository  ) ( .Values.api.image.tag | default .Chart.AppVersion) }}
         imagePullPolicy: {{ .Values.api.image.imagePullPolicy | default .Values.global.image.imagePullPolicy }}
         args: ["migrate"]
-        env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
+        env: {{ include (print $.Template.BasePath "/api/_environment.yaml") . | nindent 8 }}
         securityContext: {{- include "flagsmith.mergedSecurityContext" (dict "component" .Values.api "key" "securityContext") | nindent 10 }}
         volumeMounts: {{ toYaml .Values.api.volumeMounts | nindent 10 }}
 {{- end }}
@@ -88,7 +88,7 @@ spec:
         imagePullPolicy: {{ .Values.api.image.imagePullPolicy | default .Values.global.image.imagePullPolicy }}
         command: ["/bin/sh", "-c"]
         args: ["python manage.py waitfordb && python manage.py bootstrap"]
-        env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
+        env: {{ include (print $.Template.BasePath "/api/_environment.yaml") . | nindent 8 }}
         - name: ALLOW_ADMIN_INITIATION_VIA_CLI
           value: 'true'
           {{- if .Values.api.bootstrap.adminEmail }}
@@ -132,7 +132,7 @@ spec:
         - name: prom
           containerPort: 9100
         {{- end }}
-        env: {{ include (print $.Template.BasePath "/_api_environment.yaml") . | nindent 8 }}
+        env: {{ include (print $.Template.BasePath "/api/_environment.yaml") . | nindent 8 }}
         {{- include "flagsmith.probe" (dict "name" "livenessProbe" "probe" .Values.api.livenessProbe "port" "http") | nindent 8 }}
         {{- include "flagsmith.probe" (dict "name" "readinessProbe" "probe" .Values.api.readinessProbe "port" "http") | nindent 8 }}
         {{- include "flagsmith.probe" (dict "name" "startupProbe" "probe" .Values.api.startupProbe "port" "http") | nindent 8 }}
