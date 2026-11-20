@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write # For the Docker Hub OIDC token exchange
 
 concurrency:
   group: renovate
@@ -22,6 +23,21 @@ jobs:
         with:
           client-id: ${{ vars.FLAGSMITH_ENGINEERING_GH_APP_ID }}
           private-key: ${{ secrets.FLAGSMITH_ENGINEERING_GH_APP_PRIVATE_KEY }}
+
+      # Docker Hub OIDC, so Renovate can read the private flagsmith/sse image
+      - name: Log in to Docker Hub
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
+        env:
+          DOCKERHUB_OIDC_CONNECTIONID: ${{ vars.DOCKERHUB_OIDC_CONNECTIONID }}
+        with:
+          username: flagsmith
+
+      # Renovate runs in its own container and ignores the runner's Docker config, so pass it the token directly
+      - name: Pass the Docker Hub token to Renovate
+        run: |
+          token=$(jq -r '.auths["https://index.docker.io/v1/"].auth' ~/.docker/config.json | base64 -d | cut -d: -f2-)
+          host_rules=$(jq -nc --arg token "$token" '[{hostType: "docker", matchHost: "docker.io", username: "flagsmith", password: $token}]')
+          echo "RENOVATE_HOST_RULES=$host_rules" >> "$GITHUB_ENV"
 
       - name: Run Renovate
         uses: renovatebot/github-action@266fef21329c44765ad42f9dea1f01f5d2d91084 # v46.3.13
