@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.86.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.85.0...flagsmith-0.86.0) (2026-11-20)
+
+
+### Features
+
+* Add `values.schema.json` ([#625](https://github.com/Flagsmith/flagsmith-charts/issues/625)) ([fa7221c](https://github.com/Flagsmith/flagsmith-charts/commit/fa7221ce0c392146b75fd620be14cd5b2b0e6314))
+* **experimentation:** optional write-ahead log for the ClickHouse ingestion sink ([#631](https://github.com/Flagsmith/flagsmith-charts/issues/631)) ([04107e2](https://github.com/Flagsmith/flagsmith-charts/commit/04107e2e180e4e99daad1f5ac136e576a8661d4d))
+* **experimentation:** write ingestion events straight to ClickHouse without Kafka ([#629](https://github.com/Flagsmith/flagsmith-charts/issues/629)) ([dfa55ba](https://github.com/Flagsmith/flagsmith-charts/commit/dfa55ba2d3533376a35fd86de21024c1d9b441e0))
+
+
+### Bug Fixes
+
+* Add resources to migrate-db container ([#624](https://github.com/Flagsmith/flagsmith-charts/issues/624)) ([aa58b05](https://github.com/Flagsmith/flagsmith-charts/commit/aa58b05ca856413e9cdba2dc103c9bff34c0d263))
+
+
+### Dependency Updates
+
+* bump Flagsmith from 2.286.0 to 2.292.0 ([#633](https://github.com/Flagsmith/flagsmith-charts/issues/633)) ([6a57c55](https://github.com/Flagsmith/flagsmith-charts/commit/6a57c55e4b40f8aa909f52b3e140e890ad9ebb47))
+
+
+### Refactoring
+
+* Group templates by component ([#623](https://github.com/Flagsmith/flagsmith-charts/issues/623)) ([8496020](https://github.com/Flagsmith/flagsmith-charts/commit/849602024d9683352d9178ebeb8388c0062b257b))
+
 ## [0.85.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.84.0...flagsmith-0.85.0) (2026-10-16)
 
 
