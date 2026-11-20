@@ -3,7 +3,7 @@
     "extends": [":semanticCommitTypeAll(deps)"],
     "semanticCommits": "enabled",
     "semanticCommitScope": "",
-    "enabledManagers": ["custom.regex"],
+    "enabledManagers": ["custom.regex", "helm-values"],
     "gitIgnoredAuthors": ["216534828+flagsmith-engineering[bot]@users.noreply.github.com"],
     "customManagers": [
         {
@@ -18,13 +18,26 @@
     "packageRules": [
         {
             "description": "Keep the commit message the release-please changelog already uses, e.g. `deps: bump Flagsmith from 2.285.0 to 2.286.0`",
-            "matchManagers": ["custom.regex"],
             "matchDepNames": ["flagsmith/flagsmith-api"],
-            "commitMessageAction": "bump",
             "commitMessageTopic": "Flagsmith",
-            "commitMessageExtra": "from {{currentValue}} to {{newValue}}",
-            "branchTopic": "flagsmith",
-            "addLabels": ["dependencies"]
+            "branchTopic": "flagsmith"
+        },
+        {
+            "description": "Releases of third-party images must be 3 days old, so a compromised release is more likely to be caught before we ship it",
+            "matchManagers": ["helm-values"],
+            "matchPackageNames": ["!flagsmith/**"],
+            "minimumReleaseAge": "3 days"
+        },
+        {
+            "description": "Major bumps need a manual upgrade of the dev database",
+            "matchManagers": ["helm-values"],
+            "matchPackageNames": ["bitnamilegacy/postgresql"],
+            "matchUpdateTypes": ["major"],
+            "enabled": false
         }
-    ]
+    ],
+    "commitMessageAction": "bump",
+    "commitMessageTopic": "{{depName}}",
+    "commitMessageExtra": "from {{currentValue}} to {{newValue}}",
+    "addLabels": ["dependencies"]
 }
