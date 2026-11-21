@@ -347,7 +347,7 @@ pgbouncer:
   enabled: false
   image:
     repository: bitnamilegacy/pgbouncer
-    tag: 1.16.0
+    tag: 1.24.1
     imagePullPolicy: ""
     imagePullSecrets: []
   replicaCount: 1
