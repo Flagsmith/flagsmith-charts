@@ -425,7 +425,7 @@ sse:
   enabled: false
   image:
     repository: flagsmith/sse
-    tag: 3.6.0
+    tag: v4.0.9
     imagePullPolicy: ""
     imagePullSecrets: []
   # See all supported environment variables here:
