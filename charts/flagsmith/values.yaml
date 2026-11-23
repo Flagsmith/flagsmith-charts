@@ -880,7 +880,7 @@ jobs:
     annotations: {}
     ttlSecondsAfterFinished: 3600
     backoffLimit: 3
-    kafkaImage: apache/kafka:4.3.1
+    kafkaImage: apache/kafka:4.4.0
     imagePullSecrets: []
     resources: {}
     podSecurityContext: {}
