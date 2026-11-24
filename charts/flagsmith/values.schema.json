@@ -1701,6 +1701,9 @@
                         "podSecurityContext": {
                             "type": "object"
                         },
+                        "resources": {
+                            "type": "object"
+                        },
                         "restartPolicy": {
                             "type": "string"
                         },
