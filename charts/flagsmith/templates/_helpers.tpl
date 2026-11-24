@@ -67,11 +67,8 @@ Common annotations
 */}}
 {{- define "flagsmith.annotations" -}}
 {{- if and (hasKey . "customAnnotations") (hasKey . "commonValues") -}}
-{{- with .commonValues.annotations }}
-{{ . | toYaml }}
-{{- end }}
-{{- with .customAnnotations }}
-{{ . | toYaml }}
+{{- with merge (dict) .customAnnotations .commonValues.annotations -}}
+{{- . | toYaml -}}
 {{- end }}
 {{- else -}}
 {{- with .annotations }}
