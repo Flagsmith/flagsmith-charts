@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.86.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.85.0...flagsmith-0.86.0) (2026-11-24)
+
+
+### Features
+
+* Add `values.schema.json` ([#625](https://github.com/Flagsmith/flagsmith-charts/issues/625)) ([fa7221c](https://github.com/Flagsmith/flagsmith-charts/commit/fa7221ce0c392146b75fd620be14cd5b2b0e6314))
+* **experimentation:** optional write-ahead log for the ClickHouse ingestion sink ([#631](https://github.com/Flagsmith/flagsmith-charts/issues/631)) ([04107e2](https://github.com/Flagsmith/flagsmith-charts/commit/04107e2e180e4e99daad1f5ac136e576a8661d4d))
+* **experimentation:** write ingestion events straight to ClickHouse without Kafka ([#629](https://github.com/Flagsmith/flagsmith-charts/issues/629)) ([dfa55ba](https://github.com/Flagsmith/flagsmith-charts/commit/dfa55ba2d3533376a35fd86de21024c1d9b441e0))
+
+
+### Bug Fixes
+
+* Add resources to migrate-db container ([#624](https://github.com/Flagsmith/flagsmith-charts/issues/624)) ([aa58b05](https://github.com/Flagsmith/flagsmith-charts/commit/aa58b05ca856413e9cdba2dc103c9bff34c0d263))
+
+
+### Dependency Updates
+
+* bump apache/kafka docker tag to v4.4.0 ([#636](https://github.com/Flagsmith/flagsmith-charts/issues/636)) ([5639c2c](https://github.com/Flagsmith/flagsmith-charts/commit/5639c2ca9cec0bbdaaf57158db31d85878b63dab))
+* bump bitnamilegacy/pgbouncer from 1.16.0 to 1.24.1 ([#638](https://github.com/Flagsmith/flagsmith-charts/issues/638)) ([9379cd2](https://github.com/Flagsmith/flagsmith-charts/commit/9379cd2396b6d4fbabc025aa0f630bf8320be70c))
+* bump Flagsmith from 2.286.0 to 2.292.0 ([#633](https://github.com/Flagsmith/flagsmith-charts/issues/633)) ([6a57c55](https://github.com/Flagsmith/flagsmith-charts/commit/6a57c55e4b40f8aa909f52b3e140e890ad9ebb47))
+* bump Flagsmith from 2.292.0 to 2.294.0 ([#639](https://github.com/Flagsmith/flagsmith-charts/issues/639)) ([15b79b9](https://github.com/Flagsmith/flagsmith-charts/commit/15b79b98d86017d9afd6198c1e349ba092d21a3e))
+* bump flagsmith/sse from 3.6.0 to v4.0.9 ([#641](https://github.com/Flagsmith/flagsmith-charts/issues/641)) ([b5baee5](https://github.com/Flagsmith/flagsmith-charts/commit/b5baee5d1527826da5a7b3d69314e1151aa2c6f7))
+* bump flagsmith/warehouse-delivery from 0.4.0 to 0.5.0 ([#640](https://github.com/Flagsmith/flagsmith-charts/issues/640)) ([c494b87](https://github.com/Flagsmith/flagsmith-charts/commit/c494b879c556b6717c61aae9ee888882b09c5ba7))
+
+
+### Refactoring
+
+* Group templates by component ([#623](https://github.com/Flagsmith/flagsmith-charts/issues/623)) ([8496020](https://github.com/Flagsmith/flagsmith-charts/commit/849602024d9683352d9178ebeb8388c0062b257b))
+
 ## [0.85.0](https://github.com/Flagsmith/flagsmith-charts/compare/flagsmith-0.84.0...flagsmith-0.85.0) (2026-10-16)
 
 
