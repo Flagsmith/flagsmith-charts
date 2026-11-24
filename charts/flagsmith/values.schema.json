@@ -276,7 +276,43 @@
                     "type": "integer"
                 },
                 "resources": {
-                    "type": "object"
+                    "type": "object",
+                    "properties": {
+                        "limits": {
+                            "type": "object",
+                            "properties": {
+                                "cpu": {
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
+                                },
+                                "memory": {
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
+                                }
+                            }
+                        },
+                        "requests": {
+                            "type": "object",
+                            "properties": {
+                                "cpu": {
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
+                                },
+                                "memory": {
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
+                                }
+                            }
+                        }
+                    }
                 },
                 "secretKeyFromExistingSecret": {
                     "type": "object",
@@ -1089,7 +1125,43 @@
                     "type": "integer"
                 },
                 "resources": {
-                    "type": "object"
+                    "type": "object",
+                    "properties": {
+                        "limits": {
+                            "type": "object",
+                            "properties": {
+                                "cpu": {
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
+                                },
+                                "memory": {
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
+                                }
+                            }
+                        },
+                        "requests": {
+                            "type": "object",
+                            "properties": {
+                                "cpu": {
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
+                                },
+                                "memory": {
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
+                                }
+                            }
+                        }
+                    }
                 },
                 "securityContext": {
                     "type": "object"
@@ -1699,6 +1771,9 @@
                             "type": "array"
                         },
                         "podSecurityContext": {
+                            "type": "object"
+                        },
+                        "resources": {
                             "type": "object"
                         },
                         "restartPolicy": {
@@ -2409,7 +2484,43 @@
                     "type": "integer"
                 },
                 "resources": {
-                    "type": "object"
+                    "type": "object",
+                    "properties": {
+                        "limits": {
+                            "type": "object",
+                            "properties": {
+                                "cpu": {
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
+                                },
+                                "memory": {
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
+                                }
+                            }
+                        },
+                        "requests": {
+                            "type": "object",
+                            "properties": {
+                                "cpu": {
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
+                                },
+                                "memory": {
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
+                                }
+                            }
+                        }
+                    }
                 },
                 "securityContext": {
                     "type": "object"

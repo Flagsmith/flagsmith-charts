@@ -53,13 +53,13 @@ api:
   replicacount: 1
   deploymentStrategy: null # @schema type:[object, null]
   podAnnotations: {}
-  resources: {}
-  # limits:
-  #   cpu: 500m
-  #   memory: 500Mi
-  # requests:
-  #   cpu: 300m
-  #   memory: 300Mi
+  resources:
+    limits:
+      cpu: 1024m # @schema type:[string, number]
+      memory: 2048Mi # @schema type:[string, number]
+    requests:
+      cpu: 1024m # @schema type:[string, number]
+      memory: 2048Mi # @schema type:[string, number]
   podLabels: {}
   # https://docs.flagsmith.com/deployment/hosting/locally-api#environment-variables
   extraEnv:
@@ -184,13 +184,13 @@ frontend:
     imagePullSecrets: []
   replicacount: 1
   deploymentStrategy: null # @schema type:[object, null]
-  resources: {}
-  # limits:
-  #   cpu: 500m
-  #   memory: 500Mi
-  # requests:
-  #   cpu: 300m
-  #   memory: 300Mi
+  resources:
+    limits:
+      cpu: 250m # @schema type:[string, number]
+      memory: 512Mi # @schema type:[string, number]
+    requests:
+      cpu: 250m # @schema type:[string, number]
+      memory: 512Mi # @schema type:[string, number]
   apiProxy:
     enabled: true
   extraEnv:
@@ -281,13 +281,13 @@ taskProcessor:
     timeoutSeconds: 30
 
   podAnnotations: {}
-  resources: {}
-  # limits:
-  #   cpu: 500m
-  #   memory: 500Mi
-  # requests:
-  #   cpu: 300m
-  #   memory: 300Mi
+  resources:
+    limits:
+      cpu: 500m # @schema type:[string, number]
+      memory: 1024Mi # @schema type:[string, number]
+    requests:
+      cpu: 500m # @schema type:[string, number]
+      memory: 1024Mi # @schema type:[string, number]
   podLabels: {}
   nodeSelector: {}
   tolerations: []
