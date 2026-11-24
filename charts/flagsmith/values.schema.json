@@ -282,10 +282,16 @@
                             "type": "object",
                             "properties": {
                                 "cpu": {
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
                                 },
                                 "memory": {
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
                                 }
                             }
                         },
@@ -293,10 +299,16 @@
                             "type": "object",
                             "properties": {
                                 "cpu": {
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
                                 },
                                 "memory": {
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
                                 }
                             }
                         }
@@ -1119,10 +1131,16 @@
                             "type": "object",
                             "properties": {
                                 "cpu": {
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
                                 },
                                 "memory": {
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
                                 }
                             }
                         },
@@ -1130,10 +1148,16 @@
                             "type": "object",
                             "properties": {
                                 "cpu": {
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
                                 },
                                 "memory": {
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
                                 }
                             }
                         }
@@ -2466,10 +2490,16 @@
                             "type": "object",
                             "properties": {
                                 "cpu": {
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
                                 },
                                 "memory": {
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
                                 }
                             }
                         },
@@ -2477,10 +2507,16 @@
                             "type": "object",
                             "properties": {
                                 "cpu": {
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
                                 },
                                 "memory": {
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "number"
+                                    ]
                                 }
                             }
                         }
